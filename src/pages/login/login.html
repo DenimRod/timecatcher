@@ -8,12 +8,12 @@
 
   <p align="center">
     <br> <br>
-    <button ion-button large align="center" class="button button-positive" ng-click="pin(1)">1</button>
+    <button ion-button large align="center" class="button button-positive" (click)="checkUser(1)">1</button>
 
-    <button ion-button large align="center" class="button button-positive" ng-click="pin(2)">2</button>
+    <button ion-button large align="center" class="button button-positive" (click)="checkUser(2)">2</button>
     <br>
-    <button ion-button large class="button button-positive" ng-click="pin(3)">3</button>
-    <button ion-button large class="button button-positive" ng-click="pin(4)">4</button>
+    <button ion-button large class="button button-positive" (click)="checkUser(3)">3</button>
+    <button ion-button large class="button button-positive" (click)="checkUser(4)">4</button>
   </p>
   <span>
     <p align="center">{{loginfehler}} </p>
