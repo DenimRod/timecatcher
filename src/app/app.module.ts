@@ -24,6 +24,8 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 // Facebook login for Ionic web shared in Facebook
 import { FacebookModule } from 'ngx-facebook';
 
+import { GlobalVars } from '../providers/globalvar';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -45,13 +47,14 @@ import { FacebookModule } from 'ngx-facebook';
     CrudPage,
     TabsPage
   ],
-  providers: [ 
+  providers: [
     StatusBar,
     SplashScreen,
-    BackandService, 
+    BackandService,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GooglePlus,
-    Facebook
+    Facebook,
+    GlobalVars
   ]
 })
 export class AppModule {}

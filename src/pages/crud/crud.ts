@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import { BackandService } from '@backand/angular2-sdk'
+import { BackandService } from '@backand/angular2-sdk';
+import { GlobalVars } from '../../providers/globalvar';
 
 @Component({
   templateUrl: 'crud.html',
@@ -7,12 +8,12 @@ import { BackandService } from '@backand/angular2-sdk'
 })
 export class CrudPage {
 
-  name:string = 'World';
+  name:string = this.globalVars.globCurrUserId;
   description:string = 'Wonderful';
   public items:any[] = [];
   searchQuery: string;
 
-  constructor(private backand: BackandService) {
+  constructor(private backand: BackandService, public globalVars: GlobalVars) {
     this.searchQuery = '';
     let that = this;
     this.backand.on("items_updated",

@@ -4,6 +4,7 @@ import 'rxjs/Rx'
 import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
 import { CrudPage } from '../crud/crud';
+import { GlobalVars } from '../../providers/globalvar';
 
 @Component({
     templateUrl: 'login.html',
@@ -27,7 +28,7 @@ export class LoginPage {
   public items:any[] = [];
 
 
-  constructor(private backand: BackandService, public navCtrl: NavController) {
+  constructor(private backand: BackandService, public navCtrl: NavController, public globalVars: GlobalVars) {
     this.backand.user.getUserDetails().then(
       (res: any) => {
         if(res.data) {
@@ -64,6 +65,8 @@ export class LoginPage {
 
            if (this.items.length > 0) {
               this.navCtrl.push(CrudPage);
+              this.globalVars.globCurrUserId = this.items[0].id;
+              alert(this.globalVars.globCurrUserId);
               this.userInput = '';
            }
            else {
