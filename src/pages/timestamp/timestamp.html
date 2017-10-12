@@ -1,0 +1,54 @@
+
+<ion-navbar *navbar>
+  <ion-title>
+    Timestamp
+  </ion-title>
+</ion-navbar>
+
+<ion-content class="page4">
+
+  <h2 style="text-align:center">Hallo, {{GlobalVars.globCurrUserName}}</h2>
+
+  <p align="center">
+    <br> <br>
+    <button ion-button large align="center" class="button button-positive" (click)="checkUser(1)">1</button>
+    <button ion-button large align="center" class="button button-positive" (click)="checkUser(2)">2</button>
+    <br>
+    <button ion-button large class="button button-positive" (click)="checkUser(3)">3</button>
+    <button ion-button large class="button button-positive" (click)="checkUser(4)">4</button>
+  </p>
+
+<!--        <ion-item>
+           <ion-label fixed>Name</ion-label>
+            <ion-input type="text" [value]="name" (input)="name = $event.target.value"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label fixed>Description</ion-label>
+            <ion-input type="text" [value]="description" (input)="description = $event.target.value"></ion-input>
+        </ion-item>
+
+
+
+
+    </ion-list>
+
+    <button ion-button (click)="postItem()" color="warning">Post Item</button>
+
+    <hr/>
+
+    <button ion-button (click)="getItems()">Get Items</button>
+
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      (ionInput)="filterItems($event.target.value)">
+    </ion-searchbar>
+
+    <ion-list>
+        <ion-item *ngFor="let item of items">
+          <h2>{{ item.name }}</h2>
+          <p>{{ item.description }}</p>
+        </ion-item>
+    </ion-list>
+-->
+</ion-content>

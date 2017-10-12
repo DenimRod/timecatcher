@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 import 'rxjs/Rx'
 import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
-import { CrudPage } from '../crud/crud';
+import { TimestampPage } from '../timestamp/timestamp';
 import { GlobalVars } from '../../providers/globalvar';
 
 @Component({
@@ -47,9 +47,7 @@ export class LoginPage {
 
     public checkUser(inputNumber:string){
 
-
       this.userInput += inputNumber;
-
 
       if (this.userInput.length == 2){
 
@@ -64,9 +62,10 @@ export class LoginPage {
            this.items = res.data;
 
            if (this.items.length > 0) {
-              this.navCtrl.push(CrudPage);
+              this.navCtrl.push(TimestampPage);
+
               this.globalVars.globCurrUserId = this.items[0].id;
-              alert(this.globalVars.globCurrUserId);
+              this.globalVars.globCurrUserName = this.items[0].name;
               this.userInput = '';
            }
            else {
@@ -79,11 +78,7 @@ export class LoginPage {
          (err: any) => {
            alert(err.data);
          });
-
-
-
       }
-
     }
 
     public getAuthTokenSimple() {
