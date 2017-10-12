@@ -8,7 +8,7 @@ import { GlobalVars } from '../../providers/globalvar';
 })
 export class TimestampPage {
 
-  name:string = this.globalVars.globCurrUserId;
+  name:string = this.globalVars.globCurrUser.name;
   description:string = 'Wonderful';
   public items:any[] = [];
   searchQuery: string;

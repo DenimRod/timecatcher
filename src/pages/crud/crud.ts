@@ -8,7 +8,7 @@ import { GlobalVars } from '../../providers/globalvar';
 })
 export class CrudPage {
 
-  name:string = this.globalVars.globCurrUserId;
+  name:string = "Name";
   description:string = 'Wonderful';
   public items:any[] = [];
   searchQuery: string;

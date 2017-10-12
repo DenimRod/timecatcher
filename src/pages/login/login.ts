@@ -64,8 +64,7 @@ export class LoginPage {
            if (this.items.length > 0) {
               this.navCtrl.push(TimestampPage);
 
-              this.globalVars.globCurrUserId = this.items[0].id;
-              this.globalVars.globCurrUserName = this.items[0].name;
+              this.globalVars.globCurrUser = this.items[0];
               this.userInput = '';
            }
            else {

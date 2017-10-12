@@ -3,12 +3,11 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class GlobalVars {
 
-public globCurrUserId:string;
-public globCurrUserName: string;
+public globCurrUser:any;
 
   constructor() {
-    this.globCurrUserId = "";
-    this.globCurrUserName = "";
+    this.globCurrUser = null;
+    
   }
 
 /*  setglobCurrUserId(value) {
