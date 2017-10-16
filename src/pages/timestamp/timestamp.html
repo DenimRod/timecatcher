@@ -8,14 +8,15 @@
 <ion-content class="page4">
 
   <h2 style="text-align:center">Hallo, {{name}}</h2>
+  <h3 style="text-align:center"> {{globVars.timer}} </h3>
 
   <p align="center">
     <br> <br>
     <button ion-button large align="center" class="button button-positive" (click)="checkUser(1)">1</button>
-    <button ion-button large align="center" class="button button-positive" (click)="checkUser(2)">2</button>
+  </p>
     <br>
-    <button ion-button large class="button button-positive" (click)="checkUser(3)">3</button>
-    <button ion-button large class="button button-positive" (click)="checkUser(4)">4</button>
+  <p align="center">
+    <button ion-button round color="danger"> Benutzer wechseln </button>
   </p>
 
 <!--        <ion-item>

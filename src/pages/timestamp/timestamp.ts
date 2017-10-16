@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { BackandService } from '@backand/angular2-sdk';
 import { GlobalVars } from '../../providers/globalvar';
+import { NavController } from 'ionic-angular';
+import { LoginPage } from '../login/login';
 
 @Component({
   templateUrl: 'timestamp.html',
@@ -8,12 +10,15 @@ import { GlobalVars } from '../../providers/globalvar';
 })
 export class TimestampPage {
 
-  name:string = this.globalVars.globCurrUser.name;
+  name:string = this.globVars.globCurrUser.name;
   description:string = 'Wonderful';
   public items:any[] = [];
   searchQuery: string;
 
-  constructor(private backand: BackandService, public globalVars: GlobalVars) {
+  //my vars
+//  timer:number = 5+3;
+
+  constructor(private backand: BackandService, public globVars: GlobalVars, public navCtrl: NavController) {
     this.searchQuery = '';
     let that = this;
     this.backand.on("items_updated",
@@ -24,7 +29,19 @@ export class TimestampPage {
         that.items.unshift(newItem);
       }
     );
+  //  this.navCtrl.push(LoginPage);
+  setTimeout(function(){globVars.countDown()}, 1000);
+  setTimeout(function(){globVars.countDown()}, 2000);
+  setTimeout(function(){globVars.countDown()}, 3000);
+  setTimeout(function(){globVars.countDown()}, 4000);
+  setTimeout(function(){globVars.countDown()}, 5000);
+
+  setTimeout(function(){navCtrl.push(LoginPage)}, 6000);
+  //  var TimeoutID = window.setTimeout(alert, 2000, "!");
+
   }
+
+
 
   public postItem() {
     let item = {

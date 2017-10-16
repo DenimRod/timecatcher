@@ -76,7 +76,7 @@ export class LoginPage {
          },
          (err: any) => {
            alert(err.data);
-         });
+         });   
       }
     }
 
