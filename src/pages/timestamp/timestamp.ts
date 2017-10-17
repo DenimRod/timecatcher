@@ -10,13 +10,10 @@ import { LoginPage } from '../login/login';
 })
 export class TimestampPage {
 
-  name:string = this.globVars.globCurrUser.name;
+  name:any="";
   description:string = 'Wonderful';
   public items:any[] = [];
   searchQuery: string;
-
-  //my vars
-//  timer:number = 5+3;
 
   constructor(private backand: BackandService, public globVars: GlobalVars, public navCtrl: NavController) {
     this.searchQuery = '';
@@ -41,8 +38,18 @@ export class TimestampPage {
 
   }
 
+public changeUser(){
+  this.navCtrl.push(LoginPage);
+}
 
-
+public endWork(){
+  this.globVars.globCurrUser.status="off";
+  this.backand.object.update('users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
+}
+public startWork(){
+  this.globVars.globCurrUser.status="on";
+  this.backand.object.update('users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
+}
   public postItem() {
     let item = {
       name: this.name,

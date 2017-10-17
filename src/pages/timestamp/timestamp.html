@@ -7,16 +7,19 @@
 
 <ion-content class="page4">
 
-  <h2 style="text-align:center">Hallo, {{name}}</h2>
+  <h2 style="text-align:center">Hallo, {{globVars.globCurrUser.name}}</h2>
   <h3 style="text-align:center"> {{globVars.timer}} </h3>
 
+  <br>
   <p align="center">
-    <br> <br>
-    <button ion-button large align="center" class="button button-positive" (click)="checkUser(1)">1</button>
+        <!-- user OFFLINE -->
+    <button ion-button *ngIf="globVars.globCurrUser.status=='off'" (click)="startWork()"> Arbeit starten </button>
+      <!-- user ONLINE -->
+    <button ion-button *ngIf="globVars.globCurrUser.status=='on'" (click)="endWork()"> Arbeit beenden </button>
   </p>
-    <br>
+  <br>
   <p align="center">
-    <button ion-button round color="danger"> Benutzer wechseln </button>
+    <button ion-button round color="danger" (click)="changeUser()"> Benutzer wechseln </button>
   </p>
 
 <!--        <ion-item>
