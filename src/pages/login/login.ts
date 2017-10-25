@@ -12,7 +12,7 @@ import { GlobalVars } from '../../providers/globalvar';
 })
 export class LoginPage {
 
-  username:string = 'ionic2@backand.io';
+/*  username:string = 'ionic2@backand.io';
   password:string = '123456';
   auth_type:string = "N/A";
   is_auth_error:boolean = false;
@@ -22,14 +22,14 @@ export class LoginPage {
   oldPassword: string = '';
   newPassword: string = '';
   confirmNewPassword: string = '';
-
+*/
 // Heres tha real code
   userInput:string = '';
   public items:any[] = [];
 
 
   constructor(private backand: BackandService, public navCtrl: NavController, public globalVars: GlobalVars) {
-    this.backand.user.getUserDetails().then(
+/*    this.backand.user.getUserDetails().then(
       (res: any) => {
         if(res.data) {
           this.loggedInUser = res.data.username;
@@ -43,6 +43,7 @@ export class LoginPage {
         this.auth_type = null;
       }
     );
+    */
   }
 
     public checkUser(inputNumber:string){
@@ -76,11 +77,11 @@ export class LoginPage {
          },
          (err: any) => {
            alert(err.data);
-         });   
+         });
       }
     }
 
-    public getAuthTokenSimple() {
+/*    public getAuthTokenSimple() {
       this.auth_type = 'Token';
       this.backand.signin(this.username, this.password)
         .then((res: any) => {
@@ -151,5 +152,5 @@ export class LoginPage {
         }
       );
     }
-
+*/
   }

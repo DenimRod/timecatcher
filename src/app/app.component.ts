@@ -3,8 +3,7 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { TabsPage } from '../pages/tabs/tabs';
-
+import {LoginPage} from '../pages/login/login'
 import { BackandService } from '@backand/angular2-sdk'
 
 @Component({
@@ -29,7 +28,7 @@ export class MyApp {
         runSocket: true,
         mobilePlatform: 'ionic'
       });
-      this.rootPage = TabsPage;
+      this.rootPage = LoginPage;
     });
   }
 }

@@ -6,9 +6,8 @@ window["io"] = io;
 
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
-import { SignupPage } from '../pages/signup/signup';
+
 import { CrudPage } from '../pages/crud/crud';
-import { TabsPage } from '../pages/tabs/tabs';
 import { TimestampPage } from '../pages/timestamp/timestamp';
 
 import { BackandService } from '@backand/angular2-sdk';
@@ -31,9 +30,7 @@ import { GlobalVars } from '../providers/globalvar';
   declarations: [
     MyApp,
     LoginPage,
-    SignupPage,
     CrudPage,
-    TabsPage,
     TimestampPage
   ],
   imports: [
@@ -45,9 +42,7 @@ import { GlobalVars } from '../providers/globalvar';
   entryComponents: [
     MyApp,
     LoginPage,
-    SignupPage,
     CrudPage,
-    TabsPage,
     TimestampPage
   ],
   providers: [
