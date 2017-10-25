@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 // import {bootstrap} from '@angular/platform-browser-dynamic';
 import 'rxjs/Rx'
 import { BackandService } from '@backand/angular2-sdk';
@@ -12,6 +12,8 @@ import { GlobalVars } from '../../providers/globalvar';
 })
 export class LoginPage {
 
+@ViewChild('focusInput') myInput;
+
 /*  username:string = 'ionic2@backand.io';
   password:string = '123456';
   auth_type:string = "N/A";
@@ -24,6 +26,7 @@ export class LoginPage {
   confirmNewPassword: string = '';
 */
 // Heres tha real code
+  public textInput:string = '';
   userInput:string = '';
   public items:any[] = [];
 
@@ -46,9 +49,23 @@ export class LoginPage {
     */
   }
 
+  ionViewDidLoad() {
+
+    setTimeout(() => {
+      this.myInput.setFocus();
+    },150);
+
+ }
+
+  public handleOrder(){
+    alert(this.textInput);
+    this.textInput = '';
+  }
+
     public checkUser(inputNumber:string){
 
       this.userInput += inputNumber;
+      this.textInput += inputNumber;
 
       if (this.userInput.length == 2){
 
@@ -72,6 +89,7 @@ export class LoginPage {
              alert ("This user doesn't exist!");
 
              this.userInput = '';
+             this.textInput='';
            }
 
          },

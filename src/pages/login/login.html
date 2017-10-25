@@ -8,12 +8,20 @@
 
   <p align="center">
     <br> <br>
-    <button ion-button large align="center" class="button button-positive" (click)="checkUser(1)">1</button>
-    <button ion-button large align="center" class="button button-positive" (click)="checkUser(2)">2</button>
+    <button ion-button large align="center" (click)="checkUser(1)">1</button>
+    <button ion-button large align="center" (click)="checkUser(2)">2</button>
     <br>
-    <button ion-button large class="button button-positive" (click)="checkUser(3)">3</button>
-    <button ion-button large class="button button-positive" (click)="checkUser(4)">4</button>
+    <button ion-button large (click)="checkUser(3)">3</button>
+    <button ion-button large (click)="checkUser(4)">4</button>
   </p>
+  <p align="center">
+    <ion-item>
+      <ion-label color="primary" stacked>Befehle:</ion-label>
+      <ion-input [(ngModel)]="textInput" #focusInput (keyup.enter)="handleOrder()"></ion-input>
+    </ion-item>
+
+  </p>
+
   <span>
     <p align="center">{{loginfehler}} </p>
   </span>
