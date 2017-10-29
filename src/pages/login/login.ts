@@ -31,7 +31,7 @@ export class LoginPage {
   public items:any[] = [];
 
 
-  constructor(private backand: BackandService, public navCtrl: NavController, public globalVars: GlobalVars) {
+  constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
 /*    this.backand.user.getUserDetails().then(
       (res: any) => {
         if(res.data) {
@@ -49,8 +49,8 @@ export class LoginPage {
     */
   }
 
-  ionViewDidLoad() {
-
+  ionViewDidEnter() {
+    this.textInput = '';
     setTimeout(() => {
       this.myInput.setFocus();
     },150);
@@ -82,7 +82,7 @@ export class LoginPage {
            if (this.items.length > 0) {
               this.navCtrl.push(TimestampPage);
 
-              this.globalVars.globCurrUser = this.items[0];
+              this.globVars.globCurrUser = this.items[0];
               this.userInput = '';
            }
            else {

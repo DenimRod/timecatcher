@@ -10,6 +10,9 @@ import { LoginPage } from '../login/login';
 })
 export class TimestampPage {
 
+  public currentDate:string="";
+  public localDate:Date= null;
+
   name:any="";
   description:string = 'Wonderful';
   public items:any[] = [];
@@ -27,13 +30,14 @@ export class TimestampPage {
       }
     );
   //  this.navCtrl.push(LoginPage);
+  this.globVars.timer = 5;
   setTimeout(function(){globVars.countDown()}, 1000);
   setTimeout(function(){globVars.countDown()}, 2000);
   setTimeout(function(){globVars.countDown()}, 3000);
   setTimeout(function(){globVars.countDown()}, 4000);
   setTimeout(function(){globVars.countDown()}, 5000);
 
-  setTimeout(function(){navCtrl.push(LoginPage)}, 6000);
+  setTimeout(function(){navCtrl.pop();globVars.timer=5;}, 6000);
   //  var TimeoutID = window.setTimeout(alert, 2000, "!");
 
   }
@@ -42,13 +46,30 @@ public changeUser(){
   this.navCtrl.push(LoginPage);
 }
 
+public startBreak(){
+  this.globVars.globCurrUser.status="Pause";
+  this.backand.object.update('Users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
+}
+
+public endBreak(){
+  if (this.globVars.globCurrUser.status=="Pause"){
+    this.globVars.globCurrUser.status="Arbeit";
+    this.backand.object.update('Users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
+  }
+}
+
 public endWork(){
-  this.globVars.globCurrUser.status="off";
-  this.backand.object.update('users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
+  this.globVars.globCurrUser.status="Außer Dienst";
+  this.backand.object.update('Users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
 }
 public startWork(){
-  this.globVars.globCurrUser.status="on";
-  this.backand.object.update('users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
+  this.globVars.globCurrUser.status="Arbeit";
+  this.backand.object.update('Users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
+
+  this.currentDate = (new Date()).toISOString();
+  this.localDate = new Date(this.currentDate);
+
+  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globVars.globCurrUser.status + "'}")
 }
   public postItem() {
     let item = {

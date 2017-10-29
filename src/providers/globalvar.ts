@@ -4,7 +4,8 @@ import {Injectable} from '@angular/core';
 export class GlobalVars {
 
 public globCurrUser:any;
-public timer:number = 5;
+public timer:number = 0;
+public appNameVers:string="KD-Zeiterfassung v1.0";
 
   constructor() {
     this.globCurrUser = null;
