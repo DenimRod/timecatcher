@@ -4,6 +4,7 @@ import 'rxjs/Rx'
 import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
 import { TabsPage } from '../tabs/tabs';
+import { TabsProPage } from '../tabspro/tabspro';
 import { GlobalVars } from '../../providers/globalvar';
 
 @Component({
@@ -78,9 +79,17 @@ export class LoginPage {
          this.items = res.data;
 
          if (this.items.length > 0) {
-            this.navCtrl.push(TabsPage);
+           this.globVars.globCurrUser = this.items[0];
 
-            this.globVars.globCurrUser = this.items[0];
+          if (this.globVars.globCurrUser.applevel == "pro"){
+            this.navCtrl.push(TabsProPage);
+          }
+          else {
+            this.navCtrl.push(TabsPage);
+          }
+
+
+
             this.userInput = '';
          }
          else {
