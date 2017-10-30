@@ -7,9 +7,8 @@ public globCurrUser:any;
 public timer:number = 0;
 public appNameVers:string="KD-Zeiterfassung v1.0";
 
-  constructor() {
+constructor() {
     this.globCurrUser = null;
-
   }
 
 public countDown(){

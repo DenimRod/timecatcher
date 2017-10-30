@@ -18,12 +18,14 @@ export class CrudPage {
     let that = this;
     this.backand.on("items_updated",
       (res: any) => {
+        alert("!");
         let a = res as any[];
         let newItem = {};
         a.forEach((kv)=> newItem[kv.Key] = kv.Value);
         that.items.unshift(newItem);
       }
     );
+    
   }
 
   public postItem() {

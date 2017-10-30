@@ -3,6 +3,8 @@ import { BackandService } from '@backand/angular2-sdk';
 import { GlobalVars } from '../../providers/globalvar';
 import { NavController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
+import { App } from 'ionic-angular';
+
 
 @Component({
   templateUrl: 'timestamp.html',
@@ -18,18 +20,18 @@ export class TimestampPage {
   public items:any[] = [];
   searchQuery: string;
 
-  constructor(private backand: BackandService, public globVars: GlobalVars, public navCtrl: NavController) {
+  constructor(private backand: BackandService, public globVars: GlobalVars, public navCtrl: NavController, public app: App) {
     this.searchQuery = '';
     let that = this;
     this.backand.on("items_updated",
       (res: any) => {
+        alert("!");
         let a = res as any[];
         let newItem = {};
         a.forEach((kv)=> newItem[kv.Key] = kv.Value);
         that.items.unshift(newItem);
       }
     );
-  //  this.navCtrl.push(LoginPage);
   this.globVars.timer = 5;
   setTimeout(function(){globVars.countDown()}, 1000);
   setTimeout(function(){globVars.countDown()}, 2000);
@@ -37,7 +39,7 @@ export class TimestampPage {
   setTimeout(function(){globVars.countDown()}, 4000);
   setTimeout(function(){globVars.countDown()}, 5000);
 
-  setTimeout(function(){navCtrl.pop();globVars.timer=5;}, 6000);
+  setTimeout(()=>{this.app.getRootNav().setRoot(LoginPage );this.globVars.timer=5;}, 60000);
   //  var TimeoutID = window.setTimeout(alert, 2000, "!");
 
   }

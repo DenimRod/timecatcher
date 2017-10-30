@@ -9,6 +9,8 @@ import { LoginPage } from '../pages/login/login';
 
 import { CrudPage } from '../pages/crud/crud';
 import { TimestampPage } from '../pages/timestamp/timestamp';
+import { TabsPage } from '../pages/tabs/tabs';
+import { ExtrasPage } from '../pages/extras/extras';
 
 import { BackandService } from '@backand/angular2-sdk';
 
@@ -31,7 +33,9 @@ import { GlobalVars } from '../providers/globalvar';
     MyApp,
     LoginPage,
     CrudPage,
-    TimestampPage
+    TimestampPage,
+    ExtrasPage,
+    TabsPage
   ],
   imports: [
     BrowserModule,
@@ -43,7 +47,9 @@ import { GlobalVars } from '../providers/globalvar';
     MyApp,
     LoginPage,
     CrudPage,
-    TimestampPage
+    TimestampPage,
+    ExtrasPage,
+    TabsPage
   ],
   providers: [
     StatusBar,

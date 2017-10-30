@@ -2,16 +2,13 @@ import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
 import {LoginPage} from '../pages/login/login'
 import { BackandService } from '@backand/angular2-sdk'
 
 @Component({
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
-// @Component({
-//   template: `<h1>Hello World!</h1>`
-// })
+
 export class MyApp {
   rootPage;
 

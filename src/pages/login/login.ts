@@ -3,7 +3,7 @@ import {Component, ViewChild} from '@angular/core';
 import 'rxjs/Rx'
 import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
-import { TimestampPage } from '../timestamp/timestamp';
+import { TabsPage } from '../tabs/tabs';
 import { GlobalVars } from '../../providers/globalvar';
 
 @Component({
@@ -62,42 +62,38 @@ export class LoginPage {
     this.textInput = '';
   }
 
-    public checkUser(inputNumber:string){
+  public checkUser(inputNumber:string){
+    this.userInput += inputNumber;
+    this.textInput += inputNumber;
 
-      this.userInput += inputNumber;
-      this.textInput += inputNumber;
-
-      if (this.userInput.length == 2){
-
-                    let params = {
-              filter: [
-                this.backand.helpers.filter.create('password', this.backand.helpers.filter.operators.text.equals, this.userInput),
-              ],
-            }
-
-        this.backand.object.getList('Users', params)
-         .then((res: any) => {
-           this.items = res.data;
-
-           if (this.items.length > 0) {
-              this.navCtrl.push(TimestampPage);
-
-              this.globVars.globCurrUser = this.items[0];
-              this.userInput = '';
-           }
-           else {
-             alert ("This user doesn't exist!");
-
-             this.userInput = '';
-             this.textInput='';
-           }
-
-         },
-         (err: any) => {
-           alert(err.data);
-         });
+    if (this.userInput.length == 2){
+      let params = {
+        filter: [
+          this.backand.helpers.filter.create('password', this.backand.helpers.filter.operators.text.equals, this.userInput),
+        ],
       }
+
+      this.backand.object.getList('Users', params)
+       .then((res: any) => {
+         this.items = res.data;
+
+         if (this.items.length > 0) {
+            this.navCtrl.push(TabsPage);
+
+            this.globVars.globCurrUser = this.items[0];
+            this.userInput = '';
+         }
+         else {
+           alert ("This user doesn't exist!");
+           this.userInput = '';
+           this.textInput='';
+         }
+       },
+       (err: any) => {
+         alert(err.data);
+       });
     }
+  }
 
 /*    public getAuthTokenSimple() {
       this.auth_type = 'Token';
