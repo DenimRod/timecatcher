@@ -1,5 +1,4 @@
 import {Component, ViewChild} from '@angular/core';
-// import {bootstrap} from '@angular/platform-browser-dynamic';
 import 'rxjs/Rx'
 import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
