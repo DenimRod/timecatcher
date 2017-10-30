@@ -15,23 +15,16 @@
 
   <br>
   <p align="center">
-    <button ion-button icon-left large (click)="startWork()">
-    <ion-icon name="briefcase"></ion-icon> Arbeit EIN</button>
+    <button ion-button icon-left large (click)="globVars.makeStamp('Arbeit')">
+    <ion-icon name="briefcase"></ion-icon> Arbeit EIN (1)</button>
   <br><br>
-    <button ion-button icon-left large color="secondary" (click)="startBreak()">
-    <ion-icon name="cafe"></ion-icon> Pause EIN </button>
+    <button ion-button icon-left large color="secondary" (click)="globVars.makeStamp('Pause')">
+    <ion-icon name="cafe"></ion-icon> Pause EIN (5) </button>
   <br><br>
-    <button ion-button icon-left color="danger" large (click)="endWork()">
-      <ion-icon name="home"></ion-icon> Arbeit AUS </button>
-<!--    <button ion-button color="secondary" outline (click)="endBreak()" > AUS </button> -->
-  </p>
-  <br>
-<!--  <p align="center">
-    <button ion-button round color="danger" (click)="changeUser()"> Benutzer wechseln </button>
+    <button ion-button icon-left color="danger" large (click)="globVars.makeStamp('Freizeit')">
+      <ion-icon name="home"></ion-icon> Arbeit AUS (7)</button>
 
-  </p>
--->
-<p align="center"> {{localDate}} </p>
+<p align="center"> {{globVars.localDate}} </p>
 
 <!--        <ion-item>
            <ion-label fixed>Name</ion-label>

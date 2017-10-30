@@ -12,8 +12,8 @@ import { App } from 'ionic-angular';
 })
 export class TimestampProPage {
 
-  public currentDate:string="";
-  public localDate:Date= null;
+//  public currentDate:string="";
+//  public localDate:Date= null;
 
   name:any="";
   description:string = 'Wonderful';
@@ -39,7 +39,7 @@ export class TimestampProPage {
   setTimeout(function(){globVars.countDown()}, 4000);
   setTimeout(function(){globVars.countDown()}, 5000);
 
-  setTimeout(()=>{this.app.getRootNav().setRoot(LoginPage );this.globVars.timer=5;}, 60000);
+  setTimeout(()=>{this.app.getRootNav().setRoot(LoginPage );this.globVars.timer=5;}, 6000);
   //  var TimeoutID = window.setTimeout(alert, 2000, "!");
 
   }
@@ -48,31 +48,6 @@ public changeUser(){
   this.navCtrl.push(LoginPage);
 }
 
-public startBreak(){
-  this.globVars.globCurrUser.status="Pause";
-  this.backand.object.update('Users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
-}
-
-public endBreak(){
-  if (this.globVars.globCurrUser.status=="Pause"){
-    this.globVars.globCurrUser.status="Arbeit";
-    this.backand.object.update('Users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
-  }
-}
-
-public endWork(){
-  this.globVars.globCurrUser.status="Außer Dienst";
-  this.backand.object.update('Users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
-}
-public startWork(){
-  this.globVars.globCurrUser.status="Arbeit";
-  this.backand.object.update('Users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
-
-  this.currentDate = (new Date()).toISOString();
-  this.localDate = new Date(this.currentDate);
-
-  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globVars.globCurrUser.status + "'}")
-}
   public postItem() {
     let item = {
       name: this.name,

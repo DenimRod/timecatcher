@@ -9,7 +9,7 @@
 
 <ion-content class="page4">
 
-  <h2 style="text-align:center">Hallo, PRO {{globVars.globCurrUser.name}}!</h2>
+  <h2 style="text-align:center">Hallo, {{globVars.globCurrUser.name}}!</h2>
   <p align="right"> {{globVars.timer}} </p>
   <h3 style="text-align:center"> Aktueller Status: {{globVars.globCurrUser.status}} </h3>
 
@@ -18,62 +18,41 @@
   <ion-grid>
     <ion-row>
       <ion-col align="right">
-        <button ion-button block  icon-left (click)="startWork()">
-        <ion-icon name="briefcase"></ion-icon> Arbeit EIN </button></ion-col>
+        <button ion-button block  icon-left (click)="globVars.makeStamp('Arbeit')">
+        <ion-icon name="briefcase"></ion-icon> Arbeit EIN &nbsp; (1)</button></ion-col>
       <ion-col>
-        <button ion-button block  icon-right (click)="startWork()">
-        Außendienst <ion-icon name="car"></ion-icon> </button></ion-col>
+        <button ion-button block icon-left (click)="globVars.makeStamp('Außendienst')">
+        <ion-icon name="car"></ion-icon> Außendienst &nbsp; (2)</button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  (click)="startBreak()">
-        <ion-icon name="wifi"></ion-icon> Tele-Arbeit </button></ion-col>
+        <button ion-button icon-left block  (click)="globVars.makeStamp('Tele-Arbeit')">
+        <ion-icon name="wifi"></ion-icon> Tele-Arbeit &nbsp; (3)</button></ion-col>
       <ion-col>
-        <button ion-button icon-right block  (click)="startWork()">
-        Projekt 1 <ion-icon name="podium"></ion-icon> </button></ion-col>
+        <button ion-button icon-left block  (click)="globVars.makeStamp('Projekt 1')">
+        <ion-icon name="podium"></ion-icon>Projekt 1 &nbsp;(4)  </button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  color="secondary" (click)="startBreak()">
-        <ion-icon name="cafe"></ion-icon> Pause EIN </button></ion-col>
+        <button ion-button icon-left block  color="secondary" (click)="globVars.makeStamp('Pause')">
+        <ion-icon name="cafe"></ion-icon> Pause EIN &nbsp;(5)</button></ion-col>
       <ion-col>
-        <button ion-button icon-right block  color="secondary"  (click)="endWork()"> Urlaub <ion-icon name="sunny"></ion-icon> </button></ion-col>
+        <button ion-button icon-left block  color="secondary"  (click)="globVars.makeStamp('Urlaub')"><ion-icon name="sunny"></ion-icon> Urlaub &nbsp;(6) </button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  color="danger" (click)="startBreak()"><ion-icon name="home"></ion-icon> Arbeit AUS </button></ion-col>
+        <button ion-button icon-left block  color="danger" (click)="globVars.makeStamp('Freizeit')"><ion-icon name="home"></ion-icon>Arbeit AUS &nbsp;(7) </button></ion-col>
       <ion-col>
-        <button ion-button icon-right block  color="danger"  (click)="endWork()">
-        Krankenstand <ion-icon name="medkit"></ion-icon>  </button></ion-col>
+        <button ion-button icon-left block  color="danger"  (click)="globVars.makeStamp('Krankenstand')">
+        <ion-icon name="medkit"></ion-icon> Krankenstand &nbsp;(8)</button></ion-col>
     </ion-row>
 
   </ion-grid>
 
-
-  <br>
-  <p align="center">
-
-  <br><br>
-
-
-  <br><br>
-
-
-  <br><br>
-
-
-<!--    <button ion-button color="secondary" outline (click)="endBreak()" > AUS </button> -->
-  </p>
-  <br>
-<!--  <p align="center">
-    <button ion-button round color="danger" (click)="changeUser()"> Benutzer wechseln </button>
-
-  </p>
--->
-<p align="center"> {{localDate}} </p>
+<p align="center"> {{globVars.localDate}} </p>
 
 <!--        <ion-item>
            <ion-label fixed>Name</ion-label>
