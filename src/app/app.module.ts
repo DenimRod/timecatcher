@@ -12,6 +12,7 @@ import { TimestampPage } from '../pages/timestamp/timestamp';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ExtrasPage } from '../pages/extras/extras';
 import { TabsProPage } from '../pages/tabspro/tabspro';
+import { TimestampProPage } from '../pages/timestamppro/timestamppro';
 
 import { BackandService } from '@backand/angular2-sdk';
 
@@ -37,7 +38,8 @@ import { GlobalVars } from '../providers/globalvar';
     TimestampPage,
     ExtrasPage,
     TabsPage,
-    TabsProPage
+    TabsProPage,
+    TimestampProPage
   ],
   imports: [
     BrowserModule,
@@ -52,7 +54,8 @@ import { GlobalVars } from '../providers/globalvar';
     TimestampPage,
     ExtrasPage,
     TabsPage,
-    TabsProPage
+    TabsProPage,
+    TimestampProPage
   ],
   providers: [
     StatusBar,
