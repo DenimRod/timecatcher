@@ -32,14 +32,15 @@ export class TimestampPage {
         that.items.unshift(newItem);
       }
     );
-  this.globVars.timer = 5;
+  //this.globVars.timer = 5;
+  this.globVars.logouttime=60000;
   setTimeout(function(){globVars.countDown()}, 1000);
   setTimeout(function(){globVars.countDown()}, 2000);
   setTimeout(function(){globVars.countDown()}, 3000);
   setTimeout(function(){globVars.countDown()}, 4000);
   setTimeout(function(){globVars.countDown()}, 5000);
 
-  setTimeout(()=>{this.app.getRootNav().setRoot(LoginPage );this.globVars.timer=5;}, 60000);
+  setTimeout(()=>{this.app.getRootNav().setRoot(LoginPage );this.globVars.timer=5;}, this.globVars.logouttime);
   //  var TimeoutID = window.setTimeout(alert, 2000, "!");
 
   }

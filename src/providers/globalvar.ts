@@ -1,23 +1,31 @@
 import {Injectable} from '@angular/core';
 import { BackandService } from '@backand/angular2-sdk';
+import { App } from 'ionic-angular';
+import { LoginPage } from '../pages/login/login';
 
 @Injectable()
 export class GlobalVars {
 
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.12";
+public appNameVers:string="KD-Zeiterfassung v0.14";
+public logouttime:number = 10;
+public pinlength:number = 2;
 public currentDate:string = "";
 public localDate:Date = null;
-
-constructor(public backand: BackandService) {
+constructor(public backand: BackandService, public app:App) {
     this.globCurrUser = null;
   }
 
 public countDown(){
-  console.log(this.timer);
 this.timer = this.timer - 1;
-  console.log(this.timer);
+if (this.timer > 0 ){
+  setTimeout(()=>{this.countDown()},1000);
+}
+else{
+  this.app.getRootNav().setRoot(LoginPage);
+}
+  //alert(this.timer);
 }
 
 /*
