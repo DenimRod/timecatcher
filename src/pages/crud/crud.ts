@@ -14,7 +14,7 @@ export class CrudPage {
   searchQuery: string;
 
   constructor(private backand: BackandService, public globalVars: GlobalVars) {
-    this.searchQuery = '';
+/*    this.searchQuery = '';
     let that = this;
     this.backand.on("items_updated",
       (res: any) => {
@@ -25,11 +25,11 @@ export class CrudPage {
         that.items.unshift(newItem);
       }
     );
-    
+  */
   }
-
+/*
   public postItem() {
-    let item = {
+   let item = {
       name: this.name,
       description: this.description
     };
@@ -85,5 +85,5 @@ export class CrudPage {
       alert(err.data);
     });
   }
-
+*/
 }

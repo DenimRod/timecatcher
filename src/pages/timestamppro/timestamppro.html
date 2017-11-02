@@ -1,6 +1,6 @@
 
 <ion-header>
-<ion-navbar hideBackButton>
+<ion-navbar> <!-- hideBackButton wird vermutlich nicht notwendig sein -->
   <ion-title>
     {{globVars.appNameVers}}
   </ion-title>
@@ -51,6 +51,11 @@
     </ion-row>
 
   </ion-grid>
+
+  <ion-item>
+    <ion-label color="primary" stacked>Kommentar:</ion-label>
+    <ion-input [(ngModel)]="globVars.comment" #focusInput (keyup.enter)="handleComment()"></ion-input>
+  </ion-item>
 
 <p align="center"> {{globVars.localDate}} </p>
 

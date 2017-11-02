@@ -21,34 +21,16 @@ export class TimestampPage {
   searchQuery: string;
 
   constructor(private backand: BackandService, public globVars: GlobalVars, public navCtrl: NavController, public app: App) {
-    this.searchQuery = '';
-    let that = this;
-    this.backand.on("items_updated",
-      (res: any) => {
-        alert("!");
-        let a = res as any[];
-        let newItem = {};
-        a.forEach((kv)=> newItem[kv.Key] = kv.Value);
-        that.items.unshift(newItem);
-      }
-    );
-  //this.globVars.timer = 5;
-  this.globVars.logouttime=60000;
-  setTimeout(function(){globVars.countDown()}, 1000);
-  setTimeout(function(){globVars.countDown()}, 2000);
-  setTimeout(function(){globVars.countDown()}, 3000);
-  setTimeout(function(){globVars.countDown()}, 4000);
-  setTimeout(function(){globVars.countDown()}, 5000);
 
-  setTimeout(()=>{this.app.getRootNav().setRoot(LoginPage );this.globVars.timer=5;}, this.globVars.logouttime);
-  //  var TimeoutID = window.setTimeout(alert, 2000, "!");
+    this.globVars.timer=this.globVars.logouttime;
+    this.globVars.countDown();
 
   }
 
 public changeUser(){
   this.navCtrl.push(LoginPage);
 }
-
+/*
 public startBreak(){
   this.globVars.globCurrUser.status="Pause";
   this.backand.object.update('Users', this.globVars.globCurrUser.id, this.globVars.globCurrUser);
@@ -73,7 +55,7 @@ public startWork(){
   this.localDate = new Date(this.currentDate);
 
   this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globVars.globCurrUser.status + "'}")
-}
+}*/
   public postItem() {
     let item = {
       name: this.name,

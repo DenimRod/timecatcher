@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild } from '@angular/core';
 import { BackandService } from '@backand/angular2-sdk';
 import { GlobalVars } from '../../providers/globalvar';
 import { NavController } from 'ionic-angular';
@@ -11,16 +11,19 @@ import { App } from 'ionic-angular';
   selector: 'page-timestamppro'
 })
 export class TimestampProPage {
+@ViewChild('focusInput') myInput;
 
 //  public currentDate:string="";
 //  public localDate:Date= null;
 
+  
   name:any="";
   description:string = 'Wonderful';
   public items:any[] = [];
   searchQuery: string;
 
   constructor(private backand: BackandService, public globVars: GlobalVars, public navCtrl: NavController, public app: App) {
+/*
     this.searchQuery = '';
     let that = this;
     this.backand.on("items_updated",
@@ -31,7 +34,7 @@ export class TimestampProPage {
         a.forEach((kv)=> newItem[kv.Key] = kv.Value);
         that.items.unshift(newItem);
       }
-    );
+    );*/
     this.globVars.timer=this.globVars.logouttime;
     this.globVars.countDown();
   /*this.globVars.timer = 5;
@@ -47,6 +50,18 @@ export class TimestampProPage {
   //  var TimeoutID = window.setTimeout(alert, 2000, "!");
 */
   }
+
+ionViewDidEnter() {
+    this.comment = '';
+    setTimeout(() => {
+      this.myInput.setFocus();
+    },400);
+
+ }
+
+public handleComment(){
+
+}
 
 public changeUser(){
   this.navCtrl.push(LoginPage);

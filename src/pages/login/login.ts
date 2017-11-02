@@ -11,7 +11,6 @@ import { GlobalVars } from '../../providers/globalvar';
     selector: 'page-login',
 })
 export class LoginPage {
-
 @ViewChild('focusInput') myInput;
 
 /*  username:string = 'ionic2@backand.io';
@@ -49,13 +48,13 @@ export class LoginPage {
     */
   }
 
-  ionViewDidEnter() {
-    this.textInput = '';
-    setTimeout(() => {
-      this.myInput.setFocus();
-    },150);
+ionViewDidEnter() {
+  this.textInput = '';
+  setTimeout(() => {
+    this.myInput.setFocus();
+  },150);
 
- }
+}
 
   public handleOrder(){
     alert(this.textInput);
