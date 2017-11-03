@@ -16,7 +16,7 @@ export class TimestampProPage {
 //  public currentDate:string="";
 //  public localDate:Date= null;
 
-  
+
   name:any="";
   description:string = 'Wonderful';
   public items:any[] = [];
@@ -52,7 +52,7 @@ export class TimestampProPage {
   }
 
 ionViewDidEnter() {
-    this.comment = '';
+    this.globVars.comment = '';
     setTimeout(() => {
       this.myInput.setFocus();
     },400);

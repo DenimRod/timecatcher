@@ -14,8 +14,8 @@ import { ExtrasPage } from '../pages/extras/extras';
 import { TabsProPage } from '../pages/tabspro/tabspro';
 import { TimestampProPage } from '../pages/timestamppro/timestamppro';
 
+import { Device } from '@ionic-native/device';
 import { BackandService } from '@backand/angular2-sdk';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -52,7 +52,8 @@ import { GlobalVars } from '../providers/globalvar';
     SplashScreen,
     BackandService,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    GlobalVars
+    GlobalVars,
+    Device
   ]
 })
 export class AppModule {}

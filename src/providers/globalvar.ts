@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import { BackandService } from '@backand/angular2-sdk';
 import { App } from 'ionic-angular';
 import { LoginPage } from '../pages/login/login';
+import { Device } from '@ionic-native/device';
 
 @Injectable()
 export class GlobalVars {
@@ -9,12 +10,12 @@ export class GlobalVars {
 public comment:string="";
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.14";
+public appNameVers:string="KD-Zeiterfassung v0.15";
 public logouttime:number = 1000;
 public pinlength:number = 2;
 public currentDate:string = "";
 public localDate:Date = null;
-constructor(public backand: BackandService, public app:App) {
+constructor(public backand: BackandService, public app:App, private device:Device) {
     this.globCurrUser = null;
   }
 
@@ -36,9 +37,8 @@ public makeStamp(stampType:string){
   this.currentDate = (new Date()).toISOString();
   this.localDate = new Date(this.currentDate);
 
-  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "'}")
+  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','comment':'" + this.comment + "','device':'" + this.device.uuid + " / " + this.device.model +  "'}")
 
-  //comment: 'comment'
 }
 
 /*
