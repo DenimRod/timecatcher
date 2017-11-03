@@ -11,7 +11,9 @@
 
   <h2 style="text-align:center">Hallo, {{globVars.globCurrUser.name}}!</h2>
   <p align="right"> {{globVars.timer}} </p>
-  <h3 style="text-align:center"> Aktueller Status: {{globVars.globCurrUser.status}} </h3>
+  <h3 style="text-align:center"> Aktueller Status: {{globVars.globCurrUser.status}}
+  <span *ngIf="globVars.globCurrUser.lastcomment"> ({{globVars.globCurrUser.lastcomment}}) </span> </h3>
+  <h3  style="text-align:center"> seit: {{globVars.globCurrUser.lasttimestamp}} </h3>
 
   <br>
 

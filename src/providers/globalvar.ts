@@ -32,13 +32,28 @@ else{
 
 public makeStamp(stampType:string){
   this.globCurrUser.status=stampType;
-  this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
 
   this.currentDate = (new Date()).toISOString();
   this.localDate = new Date(this.currentDate);
 
+  this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + this.localDate.getHours() + ":" + this.localDate.getMinutes();
+
+  this.globCurrUser.lastcomment = this.comment;
+
+  this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
+
   this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','comment':'" + this.comment + "','device':'" + this.device.uuid + " / " + this.device.model +  "'}")
 
+/*    READ ID OF CREATED TIMESTAMP
+  .then((res: any) => {
+    let items:any;
+    items = res.data.__metadata;
+    alert(items.id);
+  },
+  (err: any) => {
+    alert(err.data);
+  });
+*/
 }
 
 /*

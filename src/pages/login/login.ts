@@ -54,6 +54,10 @@ ionViewDidEnter() {
     this.myInput.setFocus();
   },150);
 
+//crazy workaround for no login
+this.userInput = "2";
+this.checkUser("2");
+
 }
 
   public handleOrder(){
@@ -85,8 +89,6 @@ ionViewDidEnter() {
           else {
             this.navCtrl.push(TabsPage);
           }
-
-
 
             this.userInput = '';
          }
