@@ -10,7 +10,7 @@ export class GlobalVars {
 public comment:string="";
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.15";
+public appNameVers:string="KD-Zeiterfassung v0.16";
 public logouttime:number = 1000;
 public pinlength:number = 2;
 public currentDate:string = "";
