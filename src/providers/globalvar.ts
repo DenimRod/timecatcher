@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BackandService } from '@backand/angular2-sdk';
 import { App } from 'ionic-angular';
 import { LoginPage } from '../pages/login/login';
@@ -55,34 +55,6 @@ public makeStamp(stampType:string){
   });
 */
 }
-
-/*
-public startBreak(){
-  this.globCurrUser.status="Pause";
-  this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-}
-
-public endBreak(){
-  if (this.globCurrUser.status=="Pause"){
-    this.globCurrUser.status="Arbeit";
-    this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-  }
-}
-
-public endWork(){
-  this.globCurrUser.status="Freizeit";
-  this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-}
-public startWork(){
-  this.globCurrUser.status="Arbeit";
-  this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-
-  this.currentDate = (new Date()).toISOString();
-  this.localDate = new Date(this.currentDate);
-
-  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "'}")
-}
-*/
 
 /*  setglobCurrUserId(value) {
    this.globCurrUserId = value;

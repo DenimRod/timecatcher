@@ -12,16 +12,16 @@
 
   <p align="center">
     <br> <br>
-    <button ion-button large align="center" (click)="checkUser(1)">1</button>
-    <button ion-button large align="center" (click)="checkUser(2)">2</button>
+    <button ion-button large align="center" (click)="handlePIN(1)">1</button>
+    <button ion-button large align="center" (click)="handlePIN(2)">2</button>
     <br>
-    <button ion-button large (click)="checkUser(3)">3</button>
-    <button ion-button large (click)="checkUser(4)">4</button>
+    <button ion-button large (click)="handlePIN(3)">3</button>
+    <button ion-button large (click)="handlePIN(4)">4</button>
   </p>
   <p align="center">
     <ion-item>
       <ion-label color="primary" stacked>Befehle:</ion-label>
-      <ion-input [(ngModel)]="textInput" #focusInput (keyup.enter)="handleOrder()"></ion-input>
+      <ion-input [(ngModel)]="textInput" #focusInput (keyup.enter)="handleText()"></ion-input>
     </ion-item>
 
   </p>

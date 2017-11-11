@@ -24,7 +24,11 @@ ionViewDidEnter() {
 
  }
 
-public handleComment(){
+public handleTEXT(){
+  let stampType = this.globVars.comment.charAt(0);
+
+  // if stamptype= ... globars.makeStamp("Pause") ...
+
 
 }
 

@@ -30,7 +30,7 @@ export class LoginPage {
 */
 // Heres tha real code
   public textInput:string = '';
-  userInput:string = '';
+  inputID:string = '';
   public items:any[] = [];
 
 
@@ -57,31 +57,45 @@ ionViewDidEnter() {
   setTimeout(() => {
     this.myInput.setFocus();
   },150);
-  if (this.plt.is('core')) {
+
+
+/*  if (this.plt.is('core')) {
       // This will only print when on Desktop
       alert("Zeiterfassung läuft auf Desktop-PC!")
   }
   else alert("Zeiterfassung läuft auf Handy!");
-//  alert("platforms:"(this.plt.platforms()));
+
+ABFRAGE FÜR HANDY/DESKTOP */
+
 //crazy workaround for no login
-this.userInput = "2";
-this.checkUser("2");
+//this.inputID = "2";
+//this.checkUser("2");
 
 }
 
-  public handleOrder(){
-//    alert(this.textInput);
-    this.textInput = '';
+  public handleText(){
+    let tempId = "";
+
+    for(var i=0;i<this.globVars.pinlength;i++){
+      tempId += this.textInput.charAt(i);
+    }
+    this.inputID = tempId;
+    this.checkUser();
   }
 
-  public checkUser(inputNumber:string){
-    this.userInput += inputNumber;
+  public handlePIN(inputNumber:string){
+    this.inputID += inputNumber;
     this.textInput += inputNumber;
 
-    if (this.userInput.length == 2){
+    if (this.inputID.length == this.globVars.pinlength){
+      this.checkUser();
+    }
+  }
+
+  public checkUser(){
       let params = {
         filter: [
-          this.backand.helpers.filter.create('password', this.backand.helpers.filter.operators.text.equals, this.userInput),
+          this.backand.helpers.filter.create('password', this.backand.helpers.filter.operators.text.equals, this.inputID),
         ],
       }
 
@@ -98,20 +112,19 @@ this.checkUser("2");
           else {
             this.navCtrl.push(TabsPage);
           }
-
-            this.userInput = '';
+            this.inputID = '';
          }
          else {
            alert ("This user doesn't exist!");
-           this.userInput = '';
-           this.textInput='';
-         }
+           this.inputID = '';
+           this.textInput = '';
+           }
        },
        (err: any) => {
          alert(err.data);
        });
     }
-  }
+
 
 /*    public getAuthTokenSimple() {
       this.auth_type = 'Token';

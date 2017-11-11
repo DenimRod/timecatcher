@@ -10,7 +10,7 @@
 <ion-content class="page4">
 
   <h2 style="text-align:center">Hallo, {{globVars.globCurrUser.name}}!</h2>
-  <p align="right"> {{globVars.timer}} </p>
+<!--  <p align="right"> {{globVars.timer}} </p> -->
   <h3 style="text-align:center"> Aktueller Status: {{globVars.globCurrUser.status}}
   <span *ngIf="globVars.globCurrUser.lastcomment"> ({{globVars.globCurrUser.lastcomment}}) </span> </h3>
   <h3  style="text-align:center"> seit: {{globVars.globCurrUser.lasttimestamp}} </h3>
@@ -33,7 +33,7 @@
         <ion-icon name="wifi"></ion-icon> Tele-Arbeit &nbsp; (3)</button></ion-col>
       <ion-col>
         <button ion-button icon-left block  (click)="globVars.makeStamp('AD-Kunde')">
-        <ion-icon name="podium"></ion-icon>AD-Kunde &nbsp;(4)  </button></ion-col>
+        <ion-icon name="contact"></ion-icon>AD-Kunde &nbsp;(4)  </button></ion-col>
     </ion-row>
 
     <ion-row>
@@ -56,7 +56,7 @@
 
   <ion-item>
     <ion-label color="primary" stacked>Kommentar:</ion-label>
-    <ion-input [(ngModel)]="globVars.comment" #focusInput (keyup.enter)="handleComment()"></ion-input>
+    <ion-input [(ngModel)]="globVars.comment" #focusInput (keyup.enter)="handleTEXT()"></ion-input>
   </ion-item>
 
 <p align="center"> {{globVars.localDate}} </p>
