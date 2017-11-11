@@ -10,11 +10,12 @@ export class GlobalVars {
 public comment:string="";
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.16";
+public appNameVers:string="KD-Zeiterfassung v0.17d";
 public logouttime:number = 1000;
 public pinlength:number = 2;
 public currentDate:string = "";
 public localDate:Date = null;
+public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"]; //Timestamp-Typ
 constructor(public backand: BackandService, public app:App, private device:Device) {
     this.globCurrUser = null;
   }

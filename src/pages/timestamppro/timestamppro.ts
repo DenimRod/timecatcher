@@ -26,8 +26,17 @@ ionViewDidEnter() {
 
 public handleTEXT(){
   let stampType = this.globVars.comment.charAt(0);
-
-  // if stamptype= ... globars.makeStamp("Pause") ...
+  switch (stampType){
+    case "0": globVars.makeStamp(this.globVars.tsTyp[0]);
+    case "1": globVars.makeStamp(this.globVars.tsTyp[1]);
+    case "2": globVars.makeStamp(this.globVars.tsTyp[2]);
+    case "3": globVars.makeStamp(this.globVars.tsTyp[3]);
+    case "4": globVars.makeStamp(this.globVars.tsTyp[4]);
+    case "7": globVars.makeStamp(this.globVars.tsTyp[7]);
+    case "8": globVars.makeStamp(this.globVars.tsTyp[8]);
+    case "9": globVars.makeStamp(this.globVars.tsTyp[9]);
+  }
+    // if stamptype= ... globars.makeStamp("Pause") ...
 
 
 }

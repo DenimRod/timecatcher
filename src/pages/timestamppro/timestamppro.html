@@ -20,36 +20,38 @@
   <ion-grid>
     <ion-row>
       <ion-col align="right">
-        <button ion-button block  icon-left (click)="globVars.makeStamp('Arbeit')">
-        <ion-icon name="briefcase"></ion-icon> Arbeit EIN &nbsp; (1)</button></ion-col>
+        <button ion-button block  icon-left (click)="globVars.makeStamp(this.globVars.tsTyp[1])">
+        <ion-icon name="briefcase"></ion-icon>{{globVars.tsTyp[1]}} &nbsp; (1)</button></ion-col>
       <ion-col>
-        <button ion-button block icon-left (click)="globVars.makeStamp('AD-Fahrt')">
-        <ion-icon name="car"></ion-icon>AD-Fahrt &nbsp; (2)</button></ion-col>
+        <button ion-button block icon-left (click)="globVars.makeStamp(this.globVars.tsTyp[2])">
+        <ion-icon name="car"></ion-icon>{{globVars.tsTyp[2]}} &nbsp; (2)</button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  (click)="globVars.makeStamp('Tele-Arbeit')">
-        <ion-icon name="wifi"></ion-icon> Tele-Arbeit &nbsp; (3)</button></ion-col>
+        <button ion-button icon-left block  (click)="globVars.makeStamp(this.globVars.tsTyp[3])">
+        <ion-icon name="wifi"></ion-icon>{{globVars.tsTyp[3]}} &nbsp; (3)</button></ion-col>
       <ion-col>
-        <button ion-button icon-left block  (click)="globVars.makeStamp('AD-Kunde')">
-        <ion-icon name="contact"></ion-icon>AD-Kunde &nbsp;(4)  </button></ion-col>
+        <button ion-button icon-left block  (click)="globVars.makeStamp(this.globVars.tsTyp[4])">
+        <ion-icon name="contact"></ion-icon>{{globVars.tsTyp[4]}} &nbsp;(4)  </button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  color="secondary" (click)="globVars.makeStamp('Pause')">
-        <ion-icon name="cafe"></ion-icon> Pause EIN &nbsp;(7)</button></ion-col>
+        <button ion-button icon-left block  color="secondary" (click)="globVars.makeStamp(this.globVars.tsTyp[7])">
+        <ion-icon name="cafe"></ion-icon>{{globVars.tsTyp[7]}} &nbsp;(7)</button></ion-col>
       <ion-col>
-        <button ion-button icon-left block  color="secondary"  (click)="globVars.makeStamp('Urlaub')"><ion-icon name="sunny"></ion-icon> Urlaub &nbsp;(8) </button></ion-col>
+        <button ion-button icon-left block  color="secondary"  (click)="globVars.makeStamp(this.globVars.tsTyp[8])">
+        <ion-icon name="sunny"></ion-icon>{{globVars.tsTyp[8]}} &nbsp;(8) </button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  color="danger" (click)="globVars.makeStamp('Freizeit')"><ion-icon name="home"></ion-icon>Arbeit AUS &nbsp;(9) </button></ion-col>
+        <button ion-button icon-left block  color="danger" (click)="globVars.makeStamp(this.globVars.tsTyp[9])">
+        <ion-icon name="home"></ion-icon>{{globVars.tsTyp[9]}} &nbsp;(9) </button></ion-col>
       <ion-col>
-        <button ion-button icon-left block  color="danger"  (click)="globVars.makeStamp('Krank')">
-        <ion-icon name="medkit"></ion-icon> Krank &nbsp;(0)</button></ion-col>
+        <button ion-button icon-left block  color="danger"  (click)="globVars.makeStamp(this.globVars.tsTyp[0])">
+        <ion-icon name="medkit"></ion-icon>{{globVars.tsTyp[0]}} &nbsp;(0)</button></ion-col>
     </ion-row>
 
   </ion-grid>
