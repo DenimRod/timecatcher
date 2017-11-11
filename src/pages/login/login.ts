@@ -5,6 +5,9 @@ import { NavController } from 'ionic-angular';
 import { TabsPage } from '../tabs/tabs';
 import { TabsProPage } from '../tabspro/tabspro';
 import { GlobalVars } from '../../providers/globalvar';
+import { Platform } from 'ionic-angular';
+
+
 
 @Component({
     templateUrl: 'login.html',
@@ -12,6 +15,7 @@ import { GlobalVars } from '../../providers/globalvar';
 })
 export class LoginPage {
 @ViewChild('focusInput') myInput;
+
 
 /*  username:string = 'ionic2@backand.io';
   password:string = '123456';
@@ -30,7 +34,7 @@ export class LoginPage {
   public items:any[] = [];
 
 
-  constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
+  constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars, public plt: Platform) {
 /*    this.backand.user.getUserDetails().then(
       (res: any) => {
         if(res.data) {
@@ -53,7 +57,12 @@ ionViewDidEnter() {
   setTimeout(() => {
     this.myInput.setFocus();
   },150);
-
+  if (this.plt.is('core')) {
+      // This will only print when on Desktop
+      alert("Zeiterfassung läuft auf Desktop-PC!")
+  }
+  else alert("Zeiterfassung läuft auf Handy!");
+//  alert("platforms:"(this.plt.platforms()));
 //crazy workaround for no login
 this.userInput = "2";
 this.checkUser("2");
@@ -61,7 +70,7 @@ this.checkUser("2");
 }
 
   public handleOrder(){
-    alert(this.textInput);
+//    alert(this.textInput);
     this.textInput = '';
   }
 
