@@ -32,7 +32,7 @@ export class LoginPage {
   public textInput:string = ''; // = eingegebene Textzeile für Commandos und User-PIN
   inputID:string = ''; // = User-ID aus Text-Input-String
   public items:any[] = [];
-
+  public allusers:any[] = [];
 
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars, public plt: Platform) {
 /*    this.backand.user.getUserDetails().then(
@@ -67,9 +67,9 @@ ionViewDidEnter() {
 
 ABFRAGE FÜR HANDY/DESKTOP */
 
-//crazy workaround for no login
-//this.inputID = "2";
-//this.checkUser("2");
+//not so crazy workaround for no login
+this.inputID = "22";
+this.checkUser();
 
 }
 
@@ -106,6 +106,52 @@ ABFRAGE FÜR HANDY/DESKTOP */
          if (this.items.length > 0) {
            this.globVars.globCurrUser = this.items[0];
 
+         // COMPANY QUERY
+           let params2 = {
+             filter: [
+               this.backand.helpers.filter.create('id', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.companyid),
+             ],
+           }
+
+           this.backand.object.getList('Companies', params2)
+            .then((res: any) => {
+              this.globVars.globCurrComp = res.data[0];
+
+              // Check if last login was before today
+                // if monatstag != last monatstag  ...
+                let currentDate = new Date();
+                this.globVars.globCurrComp.lastLoginDay = currentDate.getDate();
+
+
+            //get every user of this company and set worktimeToday = 0
+                let params3 = {
+                  filter: [
+                    this.backand.helpers.filter.create('companyid', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrComp.id),
+                  ],
+                }
+
+                this.backand.object.getList('Users', params3)
+                 .then((res: any) => {
+                   this.allusers = res.data;
+                   var d = new Date(0);
+                   for (let i=0;i<this.allusers.length;i++){
+                     this.allusers[i].worktimeToday=d;
+                     this.backand.object.update('Users', i+1, this.allusers[i]);
+                   }
+
+                 },
+                 (err: any) => {
+                   alert(err.data);
+                 });
+
+
+            },
+            (err: any) => {
+              alert(err.data);
+            });
+
+
+      // SHOW Timestamp dependig on user level
           if (this.globVars.globCurrUser.applevel == "pro"){
             this.navCtrl.push(TabsProPage);
           }

@@ -3,27 +3,28 @@ import { BackandService } from '@backand/angular2-sdk';
 import { App } from 'ionic-angular';
 import { LoginPage } from '../pages/login/login';
 import { Device } from '@ionic-native/device';
+import { Platform } from 'ionic-angular';
 
 @Injectable()
 export class GlobalVars {
 
 public comment:string="";
+public globCurrComp:any;
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.18b";
+public appNameVers:string="KD-Zeiterfassung v0.19";
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinlength:number = 2; // Länge des User-Pin-codes
 public currentDate:string = "";
 public localDate:Date = null;
-public farbe=",color:secondary";
-public KW_akt="";
+// public farbe="text-align:center,color:secondary";
+public KW_akt:number = 0;
 // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
 public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
 
-constructor(public backand: BackandService, public app:App, private device:Device) {
+constructor(public backand: BackandService, public app:App, private device:Device, public platform:Platform) {
     this.globCurrUser = null;
     this.KW_akt = this.KW();
-    alert(this.KW_akt);
   }
 
 public countDown(){
@@ -36,6 +37,34 @@ this.timer = this.timer - 1;
   }
     //alert(this.timer);
   }
+
+public makeStamp(stampType:string){
+  this.globCurrUser.status=stampType;
+  this.currentDate = (new Date()).toISOString();
+  this.localDate = new Date(this.currentDate);
+  this.globCurrUser.lastcomment = this.comment;
+
+  this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + this.localDate.getHours() + ":" + this.localDate.getMinutes();
+
+  let currPlatform = "";
+  if (this.platform.is('core')) currPlatform = "Desktop";
+  else currPlatform = "Handy";
+
+  this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
+  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" + this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + currPlatform +  "'}")
+  this.comment = "";
+
+/*    READ ID OF CREATED TIMESTAMP
+  .then((res: any) => {
+    let items:any;
+    items = res.data.__metadata;
+    alert(items.id);
+  },
+  (err: any) => {
+    alert(err.data);
+  });
+*/
+}
 
 public KW(){
   var date = new Date();
@@ -62,30 +91,6 @@ public KW(){
   return KW;
 }
 
-public makeStamp(stampType:string){
-  this.globCurrUser.status=stampType;
-  this.currentDate = (new Date()).toISOString();
-  this.localDate = new Date(this.currentDate);
-  this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + this.localDate.getHours() + ":" + this.localDate.getMinutes();
-  this.globCurrUser.lastcomment = this.comment;
-  this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','comment':'" + this.comment + "','device':'" + this.device.uuid + " / " + this.device.model +  "'}")
-  this.comment = "";
-//  this.myInput.setFocus();
-//Fokus auf comment
-
-
-/*    READ ID OF CREATED TIMESTAMP
-  .then((res: any) => {
-    let items:any;
-    items = res.data.__metadata;
-    alert(items.id);
-  },
-  (err: any) => {
-    alert(err.data);
-  });
-*/
-}
 
 /*  setglobCurrUserId(value) {
    this.globCurrUserId = value;

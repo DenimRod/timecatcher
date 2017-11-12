@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { TimestampProPage } from '../timestamppro/timestamppro';
 import { ExtrasPage } from '../extras/extras';
 
@@ -14,4 +13,6 @@ export class TabsProPage {
 
 
   constructor() {}
+
+  
 }

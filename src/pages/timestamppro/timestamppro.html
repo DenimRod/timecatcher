@@ -9,48 +9,67 @@
 
 <ion-content class="page4">
 
-  <h2 style="text-align:center">Hallo, {{globVars.globCurrUser.name}}!</h2>
+  <ion-grid>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+      <h2 style="text-align:center">Hallo, {{globVars.globCurrUser.name}}! </h2>
+      </ion-col>
+      <ion-col align="right">
+      <h2>[KW:{{globVars.KW_akt}}]</h2>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 <!--  <p align="right"> {{globVars.timer}} </p> -->
-  <h3 style="text-align:center"+"globVars.farbe"> Aktueller Status: {{globVars.globCurrUser.status}}
-  <span *ngIf="globVars.globCurrUser.lastcomment"> ({{globVars.globCurrUser.lastcomment}}) </span> </h3>
-  <h3  style="text-align:center"> seit: {{globVars.globCurrUser.lasttimestamp}} </h3>
+
+  <h3 style="text-align:center"> Status:
+
+    <span style="color:#488aff" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[1]||globVars.globCurrUser.status==globVars.tsTyp[2]||globVars.globCurrUser.status==globVars.tsTyp[3]||globVars.globCurrUser.status==globVars.tsTyp[4]||globVars.globCurrUser.status==globVars.tsTyp[5]||globVars.globCurrUser.status==globVars.tsTyp[6]">{{globVars.globCurrUser.status}} </span>
+    <span style="color:#32db64" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[7]||globVars.globCurrUser.status==globVars.tsTyp[8]">{{globVars.globCurrUser.status}} </span>
+    <span style="color:#f53d3d" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[9]||globVars.globCurrUser.status==globVars.tsTyp[0]">{{globVars.globCurrUser.status}} </span>
+
+  <span *ngIf="globVars.globCurrUser.lastcomment">
+ ({{globVars.globCurrUser.lastcomment}}) </span>
+
+ seit: {{globVars.globCurrUser.lasttimestamp}} </h3>
 
   <br>
 
   <ion-grid>
     <ion-row>
       <ion-col align="right">
-        <button ion-button block  icon-left (click)="globVars.makeStamp(this.globVars.tsTyp[1])">
+        <button ion-button block  icon-left (click)="timestampClick(1)">
         <ion-icon name="briefcase"></ion-icon>{{globVars.tsTyp[1]}} &nbsp; (1)</button></ion-col>
       <ion-col>
-        <button ion-button block icon-left (click)="globVars.makeStamp(this.globVars.tsTyp[2])">
+        <button ion-button block icon-left (click)="timestampClick(2)">
         <ion-icon name="car"></ion-icon>{{globVars.tsTyp[2]}} &nbsp; (2)</button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  (click)="globVars.makeStamp(this.globVars.tsTyp[3])">
+        <button ion-button icon-left block  (click)="timestampClick(3)">
         <ion-icon name="wifi"></ion-icon>{{globVars.tsTyp[3]}} &nbsp; (3)</button></ion-col>
       <ion-col>
-        <button ion-button icon-left block  (click)="globVars.makeStamp(this.globVars.tsTyp[4])">
+        <button ion-button icon-left block  (click)="timestampClick(4)">
         <ion-icon name="contact"></ion-icon>{{globVars.tsTyp[4]}} &nbsp;(4)  </button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  color='secondary' (click)="globVars.makeStamp(this.globVars.tsTyp[7])">
+        <button ion-button icon-left block  color='secondary' (click)="timestampClick(7)">
         <ion-icon name="cafe"></ion-icon>{{globVars.tsTyp[7]}} &nbsp;(7)</button></ion-col>
       <ion-col>
-        <button ion-button icon-left block  color="secondary"  (click)="globVars.makeStamp(this.globVars.tsTyp[8])">
+        <button ion-button icon-left block  color="secondary"  (click)="timestampClick(8)">
         <ion-icon name="sunny"></ion-icon>{{globVars.tsTyp[8]}} &nbsp;(8) </button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  color="danger" (click)="globVars.makeStamp(this.globVars.tsTyp[9])">
+        <button ion-button icon-left block  color="danger" (click)="timestampClick(9)">
         <ion-icon name="home"></ion-icon>{{globVars.tsTyp[9]}} &nbsp;(9) </button></ion-col>
       <ion-col>
-        <button ion-button icon-left block  color="danger"  (click)="globVars.makeStamp(this.globVars.tsTyp[0])">
+        <button ion-button icon-left block  color="danger"  (click)="timestampClick(0)">
         <ion-icon name="medkit"></ion-icon>{{globVars.tsTyp[0]}} &nbsp;(0)</button></ion-col>
     </ion-row>
 
@@ -61,6 +80,6 @@
     <ion-input [(ngModel)]="globVars.comment" #focusInput (keyup.enter)="handleTEXT()"></ion-input>
   </ion-item>
 
-<p align="center"> {{globVars.localDate}} </p>
+<!-- <p align="center"> {{globVars.localDate}} </p> -->
 
 </ion-content>

@@ -10,10 +10,13 @@ import { GlobalVars } from '../../providers/globalvar';
 })
 export class ExtrasPage {
 
-  public items:any[]=[];
+  public users:any[]=[];
 
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
     this.globVars.timer=30;
+  }
+
+  ionViewWillEnter() {
     let params = {
       filter: [
         this.backand.helpers.filter.create('companyid', this.backand.helpers.filter.operators.text.equals, 1),
@@ -22,12 +25,13 @@ export class ExtrasPage {
 
     this.backand.object.getList('Users', params)
      .then((res: any) => {
-       this.items = res.data;
+       this.users = res.data;
+       //alert("!");
 
   },
   (err: any) => {
     alert(err.data);
   });
-
   }
+
 }

@@ -37,35 +37,10 @@ export class TimestampProPage {
     }
   }
 
-/*                break;
-      case "1": this.globVars.makeStamp(this.globVars.tsTyp[1]);
-                this.globVars.comment="";
-                break;
-      case "2": this.globVars.makeStamp(this.globVars.tsTyp[2]);
-                this.globVars.comment="";
-                break;
-      case "3": this.globVars.makeStamp(this.globVars.tsTyp[3]);
-                this.globVars.comment="";
-                break;
-      case "4": this.globVars.makeStamp(this.globVars.tsTyp[4]);
-                this.globVars.comment="";
-                break;
-// 5 und 6 noch nicht gebraucht = Projekt 1, Projekt 2, aber löschen der Eingabe notwendig
-
-      case "5": this.globVars.comment="";
-                break;
-      case "6": this.globVars.comment="";
-                break;
-//
-      case "7": this.globVars.makeStamp(this.globVars.tsTyp[7]);
-                this.globVars.comment="";
-                break;
-      case "8": this.globVars.makeStamp(this.globVars.tsTyp[8]);
-                this.globVars.comment="";
-                break;
-      case "9": this.globVars.makeStamp(this.globVars.tsTyp[9]);
-                this.globVars.comment="";
-      } //end switch  */
+public timestampClick(tsTypeNr:number){
+  this.globVars.makeStamp(this.globVars.tsTyp[tsTypeNr]);
+  this.myInput.setFocus();
+}
 
   public changeUser(){
     this.navCtrl.push(LoginPage);
