@@ -29,8 +29,8 @@ export class LoginPage {
   confirmNewPassword: string = '';
 */
 // Heres tha real code
-  public textInput:string = '';
-  inputID:string = '';
+  public textInput:string = ''; // = eingegebene Textzeile für Commandos und User-PIN
+  inputID:string = ''; // = User-ID aus Text-Input-String
   public items:any[] = [];
 
 
@@ -53,6 +53,7 @@ export class LoginPage {
   }
 
 ionViewDidEnter() {
+  this.globVars.KW(); // Kalenderwoche berechnen
   this.textInput = '';
   setTimeout(() => {
     this.myInput.setFocus();

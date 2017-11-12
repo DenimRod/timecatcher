@@ -10,40 +10,67 @@ export class GlobalVars {
 public comment:string="";
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.17d";
-public logouttime:number = 1000;
-public pinlength:number = 2;
+public appNameVers:string="KD-Zeiterfassung v0.17g";
+public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
+public pinlength:number = 2; // Länge des User-Pin-codes
 public currentDate:string = "";
 public localDate:Date = null;
-public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"]; //Timestamp-Typ
+public farbe="color='secondary'";
+public KW_akt="";
+// tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
+public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
 constructor(public backand: BackandService, public app:App, private device:Device) {
     this.globCurrUser = null;
   }
 
 public countDown(){
 this.timer = this.timer - 1;
-if (this.timer > 0 ){
-  setTimeout(()=>{this.countDown()},1000);
-}
-else{
-  this.app.getRootNav().setRoot(LoginPage);
-}
-  //alert(this.timer);
+  if (this.timer > 0 ){
+    setTimeout(()=>{this.countDown()},1000);
+  }
+  else{
+    this.app.getRootNav().setRoot(LoginPage);
+  }
+    //alert(this.timer);
+  }
+
+public KW(){
+  var date = new Date();
+  // Get thursday
+  // In JavaScript the Sunday has value 0 as return value of getDay() function.
+  // So we have to order them first ascending from Monday to Sunday
+  // Monday: ((1+6) % 7) = 0
+  // Tuesday ((2+6) % 7) = 1
+  // Wednesday: ((3+6) % 7) = 2
+  // Thursday: ((4+6) % 7) = 3
+  // Friday: ((5+6) % 7) = 4
+  // Saturday: ((6+6) % 7) = 5
+  // Sunday: ((0+6) % 7) = 6
+  // (3 - result) is necessary to get the Thursday of the current week.
+  // If we want to have Tuesday it would be (1-result)
+  var currentThursday = new Date(date.getTime() +(3-((date.getDay()+6) % 7)) * 86400000);
+  // At the beginnig or end of a year the thursday could be in another year.
+  var yearOfThursday = currentThursday.getFullYear();
+  // Get first Thursday of the year
+  var firstThursday = new Date(new Date(yearOfThursday,0,4).getTime() +(3-((new Date(yearOfThursday,0,4).getDay()+6) % 7)) * 86400000);
+  // +1 we start with week number 1
+  // +0.5 an easy and dirty way to round result (in combinationen with Math.floor)
+  var KW = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000/7);
+  alert (KW);
 }
 
 public makeStamp(stampType:string){
   this.globCurrUser.status=stampType;
-
   this.currentDate = (new Date()).toISOString();
   this.localDate = new Date(this.currentDate);
-
   this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + this.localDate.getHours() + ":" + this.localDate.getMinutes();
-
   this.globCurrUser.lastcomment = this.comment;
-
   this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-
   this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','comment':'" + this.comment + "','device':'" + this.device.uuid + " / " + this.device.model +  "'}")
+  this.comment = "";
+//  this.myInput.setFocus();
+//Fokus auf comment
+
 
 /*    READ ID OF CREATED TIMESTAMP
   .then((res: any) => {
