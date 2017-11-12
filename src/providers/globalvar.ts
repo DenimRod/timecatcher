@@ -15,7 +15,7 @@ public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pr
 public pinlength:number = 2; // Länge des User-Pin-codes
 public currentDate:string = "";
 public localDate:Date = null;
-public farbe="color='secondary'";
+public farbe=",color:secondary";
 public KW_akt="";
 // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
 public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
