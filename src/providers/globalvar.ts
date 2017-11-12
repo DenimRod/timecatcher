@@ -12,7 +12,7 @@ public comment:string="";
 public globCurrComp:any;
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.19";
+public appNameVers:string="KD-Zeiterfassung v0.2.0";
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinlength:number = 2; // Länge des User-Pin-codes
 public currentDate:string = "";
