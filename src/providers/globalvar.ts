@@ -10,7 +10,7 @@ export class GlobalVars {
 public comment:string="";
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.17g";
+public appNameVers:string="KD-Zeiterfassung v0.18b";
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinlength:number = 2; // Länge des User-Pin-codes
 public currentDate:string = "";
@@ -19,8 +19,11 @@ public farbe="color='secondary'";
 public KW_akt="";
 // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
 public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
+
 constructor(public backand: BackandService, public app:App, private device:Device) {
     this.globCurrUser = null;
+    this.KW_akt = this.KW();
+    alert(this.KW_akt);
   }
 
 public countDown(){
@@ -56,7 +59,7 @@ public KW(){
   // +1 we start with week number 1
   // +0.5 an easy and dirty way to round result (in combinationen with Math.floor)
   var KW = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000/7);
-  alert (KW);
+  return KW;
 }
 
 public makeStamp(stampType:string){

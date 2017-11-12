@@ -24,8 +24,9 @@ export class TimestampProPage {
 
   public handleTEXT(){
     let stampType=Number(this.globVars.comment.charAt(0));
-    this.globVars.comment=this.globVars.comment.substr(1); // außer 1. Buchstabe wird alles gestrichen
+
     if (stampType>=0) {  // wenn 1. Buchstabe eine Zahl ist
+      this.globVars.comment=this.globVars.comment.substr(1); // außer 1. Zahl wird alles gestrichen
       this.globVars.makeStamp(this.globVars.tsTyp[stampType]);
       this.globVars.comment="";
       this.myInput.setFocus();

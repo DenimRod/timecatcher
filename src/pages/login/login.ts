@@ -53,7 +53,6 @@ export class LoginPage {
   }
 
 ionViewDidEnter() {
-  this.globVars.KW(); // Kalenderwoche berechnen
   this.textInput = '';
   setTimeout(() => {
     this.myInput.setFocus();
