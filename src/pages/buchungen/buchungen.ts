@@ -5,13 +5,13 @@ import { NavController } from 'ionic-angular';
 import { TimestampPage } from '../timestamp/timestamp';
 import { GlobalVars } from '../../providers/globalvar';
 @Component({
-    templateUrl: 'extras.html',
-    selector: 'page-extras',
+    templateUrl: 'buchungen.html',
+    selector: 'page-buchungen',
 })
-export class ExtrasPage {
+export class BuchungenPage {
 
   public users:any[]=[];
-
+  
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
     //this.globVars.timer=30;
   }

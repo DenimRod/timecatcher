@@ -11,19 +11,19 @@
 
   <ion-grid>
     <ion-row>
-      <ion-col></ion-col>
       <ion-col>
-      <h2 style="text-align:center">Hallo, {{globVars.globCurrUser.name}}! </h2>
+      </ion-col>
+      <ion-col>
+        <h3 style="text-align:center">{{globVars.globCurrUser.name}} </h3>
       </ion-col>
       <ion-col align="right">
-      <h2>[KW:{{globVars.KW_akt}}]</h2>
+        <h3>[KW:{{globVars.KW_akt}}]</h3>
       </ion-col>
     </ion-row>
   </ion-grid>
 
 <!--  <p align="right"> {{globVars.timer}} </p> -->
-
-  <h3 style="text-align:center"> Status:
+  <h4 style="text-align:center"> Status:
 
     <span style="color:#488aff" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[1]||globVars.globCurrUser.status==globVars.tsTyp[2]||globVars.globCurrUser.status==globVars.tsTyp[3]||globVars.globCurrUser.status==globVars.tsTyp[4]||globVars.globCurrUser.status==globVars.tsTyp[5]||globVars.globCurrUser.status==globVars.tsTyp[6]">{{globVars.globCurrUser.status}} </span>
     <span style="color:#32db64" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[7]||globVars.globCurrUser.status==globVars.tsTyp[8]">{{globVars.globCurrUser.status}} </span>
@@ -32,9 +32,12 @@
   <span *ngIf="globVars.globCurrUser.lastcomment">
  ({{globVars.globCurrUser.lastcomment}}) </span>
 
- seit: {{globVars.globCurrUser.lasttimestamp}} </h3>
+ seit: {{globVars.globCurrUser.lasttimestamp}} </h4>
 
-  <br>
+  <ion-item>
+    <ion-label color="primary" stacked>Kommentar:</ion-label>
+    <ion-input [(ngModel)]="globVars.comment" #focusInput (keyup.enter)="handleTEXT()"></ion-input>
+  </ion-item>
 
   <ion-grid>
     <ion-row>
@@ -75,11 +78,6 @@
 
   </ion-grid>
 
-  <ion-item>
-    <ion-label color="primary" stacked>Kommentar:</ion-label>
-    <ion-input [(ngModel)]="globVars.comment" #focusInput (keyup.enter)="handleTEXT()"></ion-input>
-  </ion-item>
-
-<!-- <p align="center"> {{globVars.localDate}} </p> -->
+  <!-- <p align="center"> {{globVars.localDate}} </p> -->
 
 </ion-content>

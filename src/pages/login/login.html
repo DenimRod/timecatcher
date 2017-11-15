@@ -20,14 +20,16 @@
   </p>
   <p align="center">
     <ion-item>
-      <ion-label color="primary" stacked>Befehle:</ion-label>
+      <ion-label color="primary" stacked>PIN:</ion-label>
       <ion-input [(ngModel)]="textInput" #focusInput (keyup.enter)="handleText()"></ion-input>
     </ion-item>
 
   </p>
-
+  <ion-item>
+    <ion-label> auf Handy:</ion-label>
+    <ion-checkbox [(ngModel)]="onHandy" color="dark" checked="false"></ion-checkbox>
+  </ion-item>
   <span>
-    <p align="center">{{loginfehler}} </p>
-  </span>
+    <p align="center">{{loginfehler}} </span>
 
 </ion-content>

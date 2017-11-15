@@ -1,25 +1,29 @@
 import { Component,ViewChild } from '@angular/core';
 import { GlobalVars } from '../../providers/globalvar';
 import { NavController } from 'ionic-angular';
-import { LoginPage } from '../login/login';
-
+import { Keyboard } from '@ionic-native/keyboard';
 @Component({
   templateUrl: 'timestamppro.html',
   selector: 'page-timestamppro'
 })
+
 export class TimestampProPage {
 @ViewChild('focusInput') myInput;
 
-  constructor(public globVars: GlobalVars, public navCtrl: NavController) {
+  constructor(public globVars: GlobalVars, public navCtrl: NavController,public keyboard: Keyboard) {
     this.globVars.timer=this.globVars.logouttime;
     this.globVars.countDown();
+  //  alert("in Timestamppro1:"+this.globVars.currPlatform);
   }
+
 
   ionViewDidEnter() {
     this.globVars.comment = '';
-    setTimeout(() => {
-      this.myInput.setFocus();
-    },400);
+    if (this.globVars.currPlatform=="Desktop")
+      setTimeout(() => {
+        this.myInput.setFocus();
+      },400);
+    if (this.globVars.currPlatform=="Handy") this.keyboard.close();
   }
 
   public handleTEXT(){
@@ -29,18 +33,22 @@ export class TimestampProPage {
       this.globVars.comment=this.globVars.comment.substr(1); // außer 1. Zahl wird alles gestrichen
       this.globVars.makeStamp(this.globVars.tsTyp[stampType]);
       this.globVars.comment="";
-      this.myInput.setFocus();
+      if (this.globVars.currPlatform=="Desktop") this.myInput.setFocus();
+      if (this.globVars.currPlatform=="Handy") this.keyboard.close();
     }
     else {    //1. Buchstabe keine Zahl;
       this.globVars.comment="";
-      this.myInput.setFocus();
+      if (this.globVars.currPlatform=="Desktop") this.myInput.setFocus();
+      if (this.globVars.currPlatform=="Handy") this.keyboard.close();
     }
   }
 
 public timestampClick(tsTypeNr:number){
   this.globVars.makeStamp(this.globVars.tsTyp[tsTypeNr]);
-  this.myInput.setFocus();
+  if (this.globVars.currPlatform=="Desktop") this.myInput.setFocus();
+  if (this.globVars.currPlatform=="Handy") this.keyboard.close();
 }
+
 
   public changeUser(){
     this.navCtrl.push(LoginPage);

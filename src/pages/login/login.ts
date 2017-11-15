@@ -14,7 +14,7 @@ import { Platform } from 'ionic-angular';
     selector: 'page-login',
 })
 export class LoginPage {
-@ViewChild('focusInput') myInput;
+  @ViewChild('focusInput') myInput;
 
 
 /*  username:string = 'ionic2@backand.io';
@@ -33,9 +33,10 @@ export class LoginPage {
   inputID:string = ''; // = User-ID aus Text-Input-String
   public items:any[] = [];
   public allusers:any[] = [];
-
+  public onHandy:boolean=false;
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars, public plt: Platform) {
-/*    this.backand.user.getUserDetails().then(
+  /* ??? noch benutzt ???
+    this.backand.user.getUserDetails().then(
       (res: any) => {
         if(res.data) {
           this.loggedInUser = res.data.username;
@@ -49,7 +50,7 @@ export class LoginPage {
         this.auth_type = null;
       }
     );
-    */
+*/
   }
 
 ionViewDidEnter() {
@@ -68,10 +69,11 @@ ionViewDidEnter() {
 ABFRAGE FÜR HANDY/DESKTOP */
 
 //not so crazy workaround for no login
-this.inputID = "22";
-this.checkUser();
+//this.inputID = "22";
+//this.checkUser();
 
 }
+
 
   public handleText(){
     let tempId = "";
@@ -122,7 +124,6 @@ this.checkUser();
                 let currentDate = new Date();
                 this.globVars.globCurrComp.lastLoginDay = currentDate.getDate();
 
-
             //get every user of this company and set worktimeToday = 0
                 let params3 = {
                   filter: [
@@ -138,19 +139,18 @@ this.checkUser();
                      this.allusers[i].worktimeToday=d;
                      this.backand.object.update('Users', i+1, this.allusers[i]);
                    }
-
                  },
                  (err: any) => {
                    alert(err.data);
                  });
-
-
             },
             (err: any) => {
               alert(err.data);
             });
 
-
+      // auf Handy?
+         if (this.onHandy) this.globVars.currPlatform="Handy"
+         else this.globVars.currPlatform="Desktop";
       // SHOW Timestamp dependig on user level
           if (this.globVars.globCurrUser.applevel == "pro"){
             this.navCtrl.push(TabsProPage);

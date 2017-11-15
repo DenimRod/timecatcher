@@ -12,11 +12,12 @@ public comment:string="";
 public globCurrComp:any;
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.2.0";
+public appNameVers:string="KD-Zeiterfassung v0.2.1B";
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinlength:number = 2; // Länge des User-Pin-codes
 public currentDate:string = "";
 public localDate:Date = null;
+public currPlatform = "Desktop";
 // public farbe="text-align:center,color:secondary";
 public KW_akt:number = 0;
 // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
@@ -25,7 +26,10 @@ public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projek
 constructor(public backand: BackandService, public app:App, private device:Device, public platform:Platform) {
     this.globCurrUser = null;
     this.KW_akt = this.KW();
-  }
+// Handy/Desktop geht nur, wenn Native, Browser-Angabe auf Handy unsicher
+//   if (this.platform.is('core')) this.currPlatform = "Desktop";
+//    else this.currPlatform = "Handy";
+}
 
 public countDown(){
 this.timer = this.timer - 1;
@@ -40,18 +44,25 @@ this.timer = this.timer - 1;
 
 public makeStamp(stampType:string){
   this.globCurrUser.status=stampType;
-  this.currentDate = (new Date()).toISOString();
+  let currMillisec= Date.now();
+  // Server-Zeitproblem auf KD -> geht 10 min vor - Workaround
+  if (this.currPlatform == "Desktop") currMillisec-=(600*1000);
+  // Workaround-Ende
+  this.currentDate = (new Date(currMillisec)).toISOString();
   this.localDate = new Date(this.currentDate);
   this.globCurrUser.lastcomment = this.comment;
+  // Stunden,Minuten mit führender 0
 
-  this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + this.localDate.getHours() + ":" + this.localDate.getMinutes();
-
-  let currPlatform = "";
-  if (this.platform.is('core')) currPlatform = "Desktop";
-  else currPlatform = "Handy";
+  let Hours="";
+  let Minutes="";
+  if (this.localDate.getHours()<10) let Hours="0"+this.localDate.getHours()
+  else Hours=this.localDate.getHours();
+  if (this.localDate.getMinutes()<10) let Minutes="0"+this.localDate.getMinutes()
+  else Minutes=this.localDate.getMinutes();
+  this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
 
   this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" + this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + currPlatform +  "'}")
+  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" + this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +  "'}")
   this.comment = "";
 
 /*    READ ID OF CREATED TIMESTAMP
@@ -90,7 +101,6 @@ public KW(){
   var KW = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000/7);
   return KW;
 }
-
 
 /*  setglobCurrUserId(value) {
    this.globCurrUserId = value;

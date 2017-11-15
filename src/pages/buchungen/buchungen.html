@@ -1,0 +1,51 @@
+<ion-header>
+<ion-navbar hideBackButton>
+  <ion-title>
+    {{globVars.appNameVers}}
+  </ion-title>
+</ion-navbar>
+<!-- <p align="right"> {{globVars.timer}} </p> -->
+
+</ion-header>
+
+<ion-content padding class="page5">
+
+  <ion-grid>
+    <ion-row class="titles">
+      <ion-col>
+        Name
+      </ion-col>
+      <ion-col>
+        Status
+      </ion-col>
+      <ion-col>
+        Letzte Buchung
+      </ion-col>
+      <ion-col>
+        Kommentar
+      </ion-col>
+<!--      <ion-col>
+        Arbeitszeit
+      </ion-col> -->
+    </ion-row>
+    <ion-row *ngFor="let user of users">
+      <ion-col>
+        {{user.name}}
+      </ion-col>
+      <ion-col>
+        {{user.status}}
+      </ion-col>
+      <ion-col>
+        {{user.lasttimestamp}}
+      </ion-col>
+      <ion-col>
+        {{user.lastcomment}}
+      </ion-col>
+<!-- <ion-col>
+
+      </ion-col>  -->
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>
