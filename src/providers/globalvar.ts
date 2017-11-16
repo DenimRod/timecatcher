@@ -12,9 +12,9 @@ public comment:string="";
 public globCurrComp:any;
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.2.1B";
+public appNameVers:string="KD-Zeiterfassung v0.2.2";
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
-public pinlength:number = 2; // Länge des User-Pin-codes
+public pinLength:number = 2;
 public currentDate:string = "";
 public localDate:Date = null;
 public currPlatform = "Desktop";
@@ -22,13 +22,168 @@ public currPlatform = "Desktop";
 public KW_akt:number = 0;
 // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
 public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
+//#Register-------------
+public currDevice:any;
+public companies =[
+  {
+    ID: 1,
+    name: "Kutschera"
+  },
+  { ID: 2,
+    name: "TestCompany"
+  }
+];
+public devAnzahl = 6;
+public ZEN_Devices = [              // alle Devices werden hier eingetragen
+  {
+    devID: 1,
+    usrPin:"21",  // !!!! Pin für Eingabe in Login - muss parallel bleiben zu Datenbank-Users
+                 // als Abkürzung, damit CheckUser genutzt werden kann -> später suche aus DB
+    regDate: "15112017",
+    companyID: 1,
+    MA: "Richie",
+    devMAno: 1,
+    devTyp:"Handy",
+    devOs: "Android6",
+    devBrowser:"Samsung",
+    devName: "SamsungA5",
+    devCode: "r143241"
+  },
+  {
+    devID: 2,
+    usrPin:"21",
+    regDate: "r15112017",
+    companyID: 1,
+    MA: "Richie",
+    devMAno: 2,
+    devTyp:"Desktop",
+    devOs: "Windows10",
+    devBrowser:"Firefox",
+    devName: "Ri-Erazer",
+    devCode: "r143242"
+  },
+  {
+    devID: 3,
+    usrPin:"21",
+    regDate: "15112017",
+    companyID: 1,
+    MA: "Richie",
+    devMAno: 3,
+    devTyp:"Desktop",
+    devOs: "Windows7",
+    devBrowser:"Firefox",
+    devName: "Ri-Toshiba",
+    devCode: "r143243"
+  },
+  {
+    devID: 4,
+    usrPin:"11",
+    regDate: "15112017",
+    companyID: 1,
+    MA: "Horst",
+    devMAno: 1,
+    devTyp:"Handy",
+    devOs: "iOS6",
+    devBrowser:"Safari",
+    devName: "Ho-iPhone",
+    devCode: "r343241"
+  },
+  {
+    devID: 5,
+    usrPin:"11",
+    regDate: "15112017",
+    companyID: 1,
+    MA: "Horst",
+    devMAno: 2,
+    devTyp:"Desktop",
+    devBrowser:"Firefox",
+    devOs: "Windows7",
+    devName: "Horst-PC",
+    devCode: "r432241"
+  },
+  {
+    devID: 6,
+    usrPin:"23",
+    regDate: "15112017",
+    companyID: 1,
+    MA: "Emir",
+    devMAno: 1,
+    devTyp:"Desktop",
+    devBrowser:"Firefox",
+    devOs: "Windows7",
+    devName: "Emir-PC",
+    devCode: "r331241"
+  },
+  {  // nur als Abschluss-Element, damit kein Überlauf bei Abfrage - muss immer letztes bleiben
+    devID: 99999,
+    usrPin:"9a9b9c",
+    regDate: "15112017",
+    companyID: 1,
+    MA: "Dummy",
+    devMAno: 1,
+    devTyp:"Desktop",
+    devBrowser:"Firefox",
+    devOs: "Windows7",
+    devName: "Dummy-PC",
+    devCode: "r9a9b9c99999"
+  }
+];
 
 constructor(public backand: BackandService, public app:App, private device:Device, public platform:Platform) {
     this.globCurrUser = null;
     this.KW_akt = this.KW();
+    //this.currDevice.MA="noch leer";
+    //Erkennung, ob bereits registriert
+        // save it
+    //    window.localStorage.setItem( "ZEN-Device", JSON.stringify(this.ZEN_Devices[0]));
+        // retrieve it
+        // Test, ob Browser "Storage" unterstützt
+        if (typeof(Storage) !== "undefined") {
+          this.currDevice = JSON.parse( window.localStorage.getItem( "ZEN-Device1" ));
+          //alert("currDevice:" + this.currDevice.MA + this.currDevice.devTyp)
+          if (this.currDevice !== null)  // dieses Device ist  REGISTRIERT!!!
+            alert("Da ist ein Device-Objekt")
+          else {            // dieses Device ist noch nicht registriert!!! - weiter zum LOGIN
+          //  alert("KEIN Device-Objekt gespeichert-weiter zum Login")
+          };
+        }
+        else alert("Ihr Browser unterstützt keine lokale Speicherung");
+
+        //-------------------
+        // User muss anfragen (TG) um Gerät-Regist:
+        //     dabei Daten über Gerät an Zentrale: Handy(Android/iOS)/PC(Browser(Firefox/Google)/W10)/
+        //     Exclusiv-Zugriff, etc.
+        //     -> Zentrale trägt Daten in ProgCode ein und in User-DB ein ->User Code wird per TG rückübermittelt)
+        // keine USER-DB nötig - wird vor ORT gespeichert und im ZEN(+Reg)-Programm-Code
+        // Link für ZEN-Reg wird per TG zugestellt (KD=nur 1Link, da alles vorbereitet)
+        //bei APP "ZEN-Term-Reg" muss User Code eingeben(wird per TG übermittelt)
+        // -> Bestätigungsmeldung: Dieses Gerät wird als Device Nr.X für MA[] registriert
+        // es werden Daten von der Zentrale Daten über das Gerät erhoben
+        // wird auf Device im localStorage eingetragen: nur ein Schlüsselwert:"143241" - "Richie"
+        // in USER-DB wird vermerkt, welches Gerät welchen Code bekommt und dass Code schon vergeben
+        // Beschreibung Gerät:
+        // bei App "ZEN"-Programmstart wird getestet, ob es Gerät1 oder 2/3/4 ist also 4 Keys werden getestet, dann steht fest
+        // Gerät(x) von MA -> in USER-DB suchen -> Voreinstellungen laden (Handy/PC, TimeOffset, etc.)
+        //  -> statt "Login" (wie Cookie)
+        //-------------
+
+        // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
+
+    // storage-Test
+    //window.localStorage.setItem( "Richie", "Strausz" );
+    //    if (window.localStorage.getItem( "Richie" )==null)
+    //      alert(window.localStorage.getItem( "Richie1" ))
+    //    else alert("doch anders");
+
+//.................MAIN ...............
 // Handy/Desktop geht nur, wenn Native, Browser-Angabe auf Handy unsicher
-//   if (this.platform.is('core')) this.currPlatform = "Desktop";
-//    else this.currPlatform = "Handy";
+
+    if (this.platform.is('core')) this.currPlatform = "Desktop";
+    else {
+      this.currPlatform = "Handy";        //--> Melden, dass jemand als "Handy" beim START schon gesetzt ist!
+  //    this.MARKIERUNG, dass hier etwas wichtiges ist! -> in Timestamp eintragen
+
+    }
 }
 
 public countDown(){

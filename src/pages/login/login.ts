@@ -76,25 +76,47 @@ ABFRAGE FÜR HANDY/DESKTOP */
 
 
   public handleText(){
+    // wenn Eingabe mit "r" beginnt, dann RegistrierungsCode !!!
+    if (this.textInput[0]=="r"){
+      let i=-1;
+      do {
+        i++;
+  //      alert("handleText--I: "+i+"Anz:"+this.globVars.devAnzahl);
+      }
+      while ((i<this.globVars.devAnzahl) && (this.globVars.ZEN_Devices[i].devCode!==this.textInput));
+      if (this.globVars.ZEN_Devices[i].devCode==this.textInput) {        // soll registriert werden!
+        alert("Eingabe-Text ist ein Reg.Code"+this.globVars.ZEN_Devices[i].MA+"---geplant: Registrierung schreiben+Eintrag, dass registriert")//Registrierung schreiben
+        //weiter zu CheckUser
+        this.inputID=this.globVars.ZEN_Devices[i].usrPin;
+        this.checkUser();
+        return;
+      }
+      // wenn kein Reg-Code gefunden, obwohl "r" erster Buchstabe ist
+      alert("es wurde kein Reg-Code gefunden, obwohl 'r' erster Buchstabe ist");
+      this.textInput="";
+      return;
+    };
+    //else {     // es ist eine normale PIN-Eingabe -> Suche nach User
+    //alert("normale PIN oder hinter Reg-Code");
     let tempId = "";
-
-    for(var i=0;i<this.globVars.pinlength;i++){
+    for(var i=0;i<this.globVars.pinLength;i++){
       tempId += this.textInput.charAt(i);
     }
     this.inputID = tempId;
     this.checkUser();
-  }
+    }
 
   public handlePIN(inputNumber:string){
     this.inputID += inputNumber;
     this.textInput += inputNumber;
 
-    if (this.inputID.length == this.globVars.pinlength){
+    if (this.inputID.length == this.globVars.pinLength){
       this.checkUser();
     }
   }
 
   public checkUser(){
+  //  alert("checkUser-InputID:"+this.inputID);
       let params = {
         filter: [
           this.backand.helpers.filter.create('password', this.backand.helpers.filter.operators.text.equals, this.inputID),
