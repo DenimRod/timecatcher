@@ -12,7 +12,7 @@ public comment:string="";
 public globCurrComp:any;
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.2.2";
+public appNameVers:string="KD-Zeiterfassung v0.2.2a";
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;
 public currentDate:string = "";
@@ -21,6 +21,7 @@ public currPlatform = "Desktop";
 // public farbe="text-align:center,color:secondary";
 public KW_akt:number = 0;
 // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
+//                0         1           2           3            4           5          6            7          8          9
 public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
 //#Register-------------
 public currDevice:any;
@@ -130,44 +131,37 @@ public ZEN_Devices = [              // alle Devices werden hier eingetragen
 ];
 
 constructor(public backand: BackandService, public app:App, private device:Device, public platform:Platform) {
-    this.globCurrUser = null;
-    this.KW_akt = this.KW();
-    //this.currDevice.MA="noch leer";
-    //Erkennung, ob bereits registriert
-        // save it
-    //    window.localStorage.setItem( "ZEN-Device", JSON.stringify(this.ZEN_Devices[0]));
-        // retrieve it
-        // Test, ob Browser "Storage" unterstützt
-        if (typeof(Storage) !== "undefined") {
-          this.currDevice = JSON.parse( window.localStorage.getItem( "ZEN-Device1" ));
-          //alert("currDevice:" + this.currDevice.MA + this.currDevice.devTyp)
-          if (this.currDevice !== null)  // dieses Device ist  REGISTRIERT!!!
-            alert("Da ist ein Device-Objekt")
-          else {            // dieses Device ist noch nicht registriert!!! - weiter zum LOGIN
-          //  alert("KEIN Device-Objekt gespeichert-weiter zum Login")
-          };
-        }
-        else alert("Ihr Browser unterstützt keine lokale Speicherung");
-
-        //-------------------
-        // User muss anfragen (TG) um Gerät-Regist:
-        //     dabei Daten über Gerät an Zentrale: Handy(Android/iOS)/PC(Browser(Firefox/Google)/W10)/
-        //     Exclusiv-Zugriff, etc.
-        //     -> Zentrale trägt Daten in ProgCode ein und in User-DB ein ->User Code wird per TG rückübermittelt)
-        // keine USER-DB nötig - wird vor ORT gespeichert und im ZEN(+Reg)-Programm-Code
-        // Link für ZEN-Reg wird per TG zugestellt (KD=nur 1Link, da alles vorbereitet)
-        //bei APP "ZEN-Term-Reg" muss User Code eingeben(wird per TG übermittelt)
-        // -> Bestätigungsmeldung: Dieses Gerät wird als Device Nr.X für MA[] registriert
-        // es werden Daten von der Zentrale Daten über das Gerät erhoben
-        // wird auf Device im localStorage eingetragen: nur ein Schlüsselwert:"143241" - "Richie"
-        // in USER-DB wird vermerkt, welches Gerät welchen Code bekommt und dass Code schon vergeben
-        // Beschreibung Gerät:
-        // bei App "ZEN"-Programmstart wird getestet, ob es Gerät1 oder 2/3/4 ist also 4 Keys werden getestet, dann steht fest
-        // Gerät(x) von MA -> in USER-DB suchen -> Voreinstellungen laden (Handy/PC, TimeOffset, etc.)
-        //  -> statt "Login" (wie Cookie)
-        //-------------
-
-        // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
+  this.globCurrUser = null;
+  this.KW_akt = this.KW();
+  //------------Erkennung, ob bereits registriert
+    // Test, ob Browser "Storage" unterstützt
+  if (typeof(Storage) !== "undefined") {
+    this.currDevice = JSON.parse( window.localStorage.getItem( "ZEN-Device1" ));
+    //alert("currDevice:" + this.currDevice.MA + this.currDevice.devTyp)
+    if (this.currDevice !== null) {  // Erkennung, ob bereits registriert
+      alert("Bereits registriert! - Da ist ein Device-Objekt")
+    };
+    // dieses Device ist noch nicht registriert!!! - weiter zum LOGIN
+    //  alert("KEIN Device-Objekt gespeichert-weiter zum Login")
+  }
+  else alert("Ihr Browser unterstützt keine lokale Speicherung");
+}
+    //-------------------
+    // User muss anfragen (TG) um Device-Registrierung:
+    //     dabei Daten über Gerät an Zentrale: Handy(Android/iOS)/PC(Browser(Firefox/Google)/W10)/
+    //     Exclusiv-Zugriff, etc.
+    //     -> Zentrale trägt Daten in ProgCode ein und in User-DB ein ->User-Registrierungs-Code wird per TG rückübermittelt)
+    //        User-Reg-Code beginnt mit "r" - dient zur Unterscheidung von einer PIN-Eingabe
+    // keine USER-DB nötig - wird vor ORT gespeichert und im ZEN-Programm-Code
+    // statt PIN wird der Reg-Code eingegebene
+    // -> Bestätigungsmeldung: Dieses Gerät wird als Device Nr.X für MA[] registriert
+    // wird auf Device im localStorage eingetragen: nur ein Schlüsselwert:"r143241" - "Richie"
+    // ???in USER-DB wird vermerkt, welches Gerät welchen Code bekommt und dass Code schon vergeben
+    // Beschreibung Gerät:
+    // Bei ZEN-Programmstart wird getestet, welches Device es ist
+    // Gerät(x) von MA -> in Array(in Prog-Code) suchen -> Voreinstellungen laden (Handy/PC, TimeOffset, etc.)
+    //  -> statt "Login" (wie Cookie)
+    //-------------
 
     // storage-Test
     //window.localStorage.setItem( "Richie", "Strausz" );
@@ -175,16 +169,13 @@ constructor(public backand: BackandService, public app:App, private device:Devic
     //      alert(window.localStorage.getItem( "Richie1" ))
     //    else alert("doch anders");
 
-//.................MAIN ...............
 // Handy/Desktop geht nur, wenn Native, Browser-Angabe auf Handy unsicher
+//    if (this.platform.is('core')) this.currPlatform = "Desktop";
+//    else {
+//      this.currPlatform = "Handy";        //--> Melden, dass jemand als "Handy" beim START schon gesetzt ist!
 
-    if (this.platform.is('core')) this.currPlatform = "Desktop";
-    else {
-      this.currPlatform = "Handy";        //--> Melden, dass jemand als "Handy" beim START schon gesetzt ist!
-  //    this.MARKIERUNG, dass hier etwas wichtiges ist! -> in Timestamp eintragen
 
-    }
-}
+
 
 public countDown(){
 this.timer = this.timer - 1;
@@ -198,6 +189,15 @@ this.timer = this.timer - 1;
   }
 
 public makeStamp(stampType:string){
+// im Folgenden: Def:Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
+//               Def: Arbeits-Stop-Typ= (Pause, Urlaub, Krank, Arbeit AUS)
+// if "alter Status"=(Arbeit AUS,Urlaub,Krank) && "neuer Status" = Arbeits-Typ -> worktimeToday auf 0!
+  if ((this.globCurrUser.status=9) && ((stampType>0) && (stampType<7)))
+    //T-Arbeitszeit = 0
+    this.globCurrUser.worktimeToday= new Date(0);
+  // else-> wenn "alter Status"=Arbeit EIN && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
+  // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ)-> Zeit weiterlaufen lassen
+  // else if (this.clobCurrUser.status=.....)
   this.globCurrUser.status=stampType;
   let currMillisec= Date.now();
   // Server-Zeitproblem auf KD -> geht 10 min vor - Workaround
@@ -206,8 +206,8 @@ public makeStamp(stampType:string){
   this.currentDate = (new Date(currMillisec)).toISOString();
   this.localDate = new Date(this.currentDate);
   this.globCurrUser.lastcomment = this.comment;
-  // Stunden,Minuten mit führender 0
 
+  // Stunden,Minuten mit führender 0
   let Hours="";
   let Minutes="";
   if (this.localDate.getHours()<10) let Hours="0"+this.localDate.getHours()
