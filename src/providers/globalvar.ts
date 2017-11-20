@@ -12,7 +12,7 @@ public comment:string="";
 public globCurrComp:any;
 public globCurrUser:any;
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.2.2a";
+public appNameVers:string="KD-Zeiterfassung v0.2.3a";
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;
 public currentDate:string = "";
@@ -191,12 +191,13 @@ this.timer = this.timer - 1;
 public makeStamp(stampType:string){
 // im Folgenden: Def:Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
 //               Def: Arbeits-Stop-Typ= (Pause, Urlaub, Krank, Arbeit AUS)
-// if "alter Status"=(Arbeit AUS,Urlaub,Krank) && "neuer Status" = Arbeits-Typ -> worktimeToday auf 0!
-  if ((this.globCurrUser.status=9) && ((stampType>0) && (stampType<7)))
-    //T-Arbeitszeit = 0
+// if "alter Status"=(Arbeit AUS,Urlaub,Krank) && "neuer Status" = Arbeits-Typ (1..6) -> worktimeToday auf 0!
+  if (((this.globCurrUser.status==0 || this.globCurrUser.status==8 )|| this.globCurrUser.status==9)
+     && ((stampType>0) && (stampType<7)))
+    //T-Arbeitszeit auf Null setzen = 0
     this.globCurrUser.worktimeToday= new Date(0);
-  // else-> wenn "alter Status"=Arbeit EIN && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
-  // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ)-> Zeit weiterlaufen lassen
+  // else-> wenn "alter Status"=Arbeits-Typ (1..6) && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
+  // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ(1..60))-> Zeit weiterlaufen lassen
   // else if (this.clobCurrUser.status=.....)
   this.globCurrUser.status=stampType;
   let currMillisec= Date.now();

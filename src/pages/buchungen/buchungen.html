@@ -1,7 +1,7 @@
 <ion-header>
 <ion-navbar hideBackButton>
   <ion-title>
-    {{globVars.appNameVers}}
+    {{globVars.appNameVers}} - Buchungen: {{globVars.globCurrUser.name}}
   </ion-title>
 </ion-navbar>
 <!-- <p align="right"> {{globVars.timer}} </p> -->
@@ -13,13 +13,13 @@
   <ion-grid>
     <ion-row class="titles">
       <ion-col>
-        Name
+        Datum/Zeit +1h
       </ion-col>
       <ion-col>
-        Status
+        Zeit-Typ
       </ion-col>
       <ion-col>
-        Letzte Buchung
+        Device
       </ion-col>
       <ion-col>
         Kommentar
@@ -28,18 +28,18 @@
         Arbeitszeit
       </ion-col> -->
     </ion-row>
-    <ion-row *ngFor="let user of users">
+    <ion-row *ngFor="let buchung of buchungen">
       <ion-col>
-        {{user.name}}
+        {{buchung.date}}
       </ion-col>
       <ion-col>
-        {{user.status}}
+        {{buchung.status}}
       </ion-col>
       <ion-col>
-        {{user.lasttimestamp}}
+        {{buchung.device}}
       </ion-col>
       <ion-col>
-        {{user.lastcomment}}
+        {{buchung.comment}}
       </ion-col>
 <!-- <ion-col>
 

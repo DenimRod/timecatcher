@@ -18,9 +18,9 @@ export class ExtrasPage {
 
   ionViewWillEnter() {
     let params = {
-      filter: [
+      filter:
         this.backand.helpers.filter.create('companyid', this.backand.helpers.filter.operators.text.equals, 1),
-      ],
+      sort:   this.backand.helpers.sort.create('name', this.backand.helpers.sort.orders.asc)
     }
 
     this.backand.object.getList('Users', params)
