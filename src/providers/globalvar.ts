@@ -5,6 +5,7 @@ import { LoginPage } from '../pages/login/login';
 import { Device } from '@ionic-native/device';
 import { Platform } from 'ionic-angular';
 
+
 @Injectable()
 export class GlobalVars {
 
@@ -16,7 +17,7 @@ public globCurrUser:any;
 //
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.2.4";
+public appNameVers:string="KD-Zeiterfassung v0.2.4B";
 
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
@@ -201,7 +202,7 @@ public makeStamp(stampType:string){
 //               Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
 
   // if "alter Status"= Arbeits-Stop-Typ=(Urlaub=8,Arbeit AUS=9,Krank=0) && "neuer Status" = Arbeits-Typ (1..6) -> worktimeToday auf 0!
-  if ((this.globCurrUser.status==0 || this.globCurrUser.status==8 )|| this.globCurrUser.status==9)
+/*  if ((this.globCurrUser.status==0 || this.globCurrUser.status==8 )|| this.globCurrUser.status==9)
     if (stampTypeNr>=1 && stampTypeNr<=6) {    //Übergang von Arbeits-Stop auf Arbeit
       alert("Tagesarbeitszeit wird auf 0 gesetzt!"); //T-Arbeitszeit auf Null setzen = 0
       this.globCurrUser.worktimeToday= new Date(0);
@@ -229,6 +230,7 @@ public makeStamp(stampType:string){
   // else-> wenn "alter Status"=Arbeits-Typ (1..6) && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
   // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ(1..60))-> Zeit weiterlaufen lassen
   // else if (this.clobCurrUser.status=.....)
+*/
   if (makeStamp) {
     this.globCurrUser.status=stampType;
     let currMillisec= Date.now();
