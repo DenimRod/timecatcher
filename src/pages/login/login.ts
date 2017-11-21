@@ -116,7 +116,6 @@ ABFRAGE FÜR HANDY/DESKTOP */
     };
     this.inputID += inputNumber;
     this.textInput += inputNumber;
-
     if (this.inputID.length == this.globVars.pinLength){
       this.checkUser();
     }

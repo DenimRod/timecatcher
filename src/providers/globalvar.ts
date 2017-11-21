@@ -195,62 +195,69 @@ this.timer = this.timer - 1;
   }
 
 public makeStamp(stampType:string){
-  var makeNoStamp = false;
+  var makeStamp = true;
 // im Folgenden: Def:Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
-//               Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=0)
-// if "alter Status"= Arbeits-Stop-Typ=(Urlaub=8,Arbeit AUS=9,Krank=0) && "neuer Status" = Arbeits-Typ (1..6) -> worktimeToday auf 0!
+//               Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
+
+  // if "alter Status"= Arbeits-Stop-Typ=(Urlaub=8,Arbeit AUS=9,Krank=0) && "neuer Status" = Arbeits-Typ (1..6) -> worktimeToday auf 0!
   if ((this.globCurrUser.status==0 || this.globCurrUser.status==8 )|| this.globCurrUser.status==9)
     if (stampType>=1 && stampType<=6) {    //Übergang von Arbeits-Stop auf Arbeit
       alert("Tagesarbeitszeit wird auf 0 gesetzt!"); //T-Arbeitszeit auf Null setzen = 0
       this.globCurrUser.worktimeToday= new Date(0);
     }
     else // neuer Stempel ist auch Arbeits-Stop-Typ+Pause (7,8,9,0) -> Zweitstempel, warum auch immer
-      if (stampType=7) {
-        alert("Übergang von Arbeit AUS auf Pause ist nicht erlaubt!");
-        makeNoStamp=true;
+      if (stampType==7) {
+        alert("Übergang von Status:"+this.globCurrUser.status+" auf Pause ist nicht erlaubt!");
+        makeStamp=false;
       }
-      else alert("Arbeitszeit läuft weiterhin nicht");
-  else // alter Stempel ist Arbeits-Typ (1..6) oder Pause=7
-    if (stampType>=1 && stampType<=6) {    // neuer Stempel = Arbeits-Typen
-      alert("Tagesarbeitszeit läuft weiter"); //T-Arbeitszeit auf Null setzen = 0
-      //this.globCurrUser.worktimeToday= new Date(0);
-    }
-    else // neuer Stempel = 7,8,9,0
-      alert("neuer Stempel= 7,8,9,0");
+      else alert("Übergang von Status: "+this.globCurrUser.status+" auf: "+ stampType+ "- Arbeitszeit läuft weiterhin nicht");
+    //else-Ende
+  else // alter Status ist Arbeits-Typ (1..6) oder Pause=7
+    if (this.globCurrUser.status==7) {
+      alert("alter Stempel= Pause");
+      if (stampType>=1 && stampType<=6) {    // neuer Stempel = Arbeits-Typen
+        alert("Tagesarbeitszeit läuft jetzt weiter");
+      }      //this.globCurrUser.worktimeToday= new Date(0);
+      else // neuer Stempel = 7,8,9,0
+        alert("alter Stempel= 1..6||7  neuer Stempel= 7,8,9,0");
+    };
+
   //Ende der Abfrage bzgl worktimeToday
   alert("Ende der worktimeToday-Behandlung erreicht");
   // else wenn neuer Status = Pause,Arbeits-Ende,krank,Urlaub
   // else-> wenn "alter Status"=Arbeits-Typ (1..6) && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
   // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ(1..60))-> Zeit weiterlaufen lassen
   // else if (this.clobCurrUser.status=.....)
-  this.globCurrUser.status=stampType;
-  let currMillisec= Date.now();
-  //this.currentDate = new Date();
-  // Server-Zeitproblem auf KD -> geht 10 min vor - Workaround
-  if (this.currPlatform == "Desktop") currMillisec-=(600*1000);
-  // Workaround-Ende
-  this.currentDate = (new Date(currMillisec).toISOString()); // ISO-damit alphabet.Sortierung möglich
-  // Test im GMT-Format:
-  //this.currentDate = new Date(currMillisec); //kommt im GMT-Format
-  //this.currentDateUTC =new Date();
-  //date_string= this.currentDate.toString();; //kommt im GMT-Format
-  //Umwandlung von String-> Date-Objekt OK:
-  this.localDate = new Date(this.currentDate);
-  // Stunden,Minuten mit führender 0
-  let Hours="";
-  let Minutes="";
-  if (this.localDate.getHours()<10) let Hours="0"+this.localDate.getHours()
-  else Hours=this.localDate.getHours();
-  if (this.localDate.getMinutes()<10) let Minutes="0"+this.localDate.getMinutes()
-  else Minutes=this.localDate.getMinutes();
-  this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
-  this.globCurrUser.lasttimestampUTC = this.localDate.toString(); //schreibt in Orts-Zeit
-//this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
-//  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
-  this.globCurrUser.lastcomment = this.comment;
-  this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-  this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" + this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +  "'}")
-  this.comment = "";
+  if (makeStamp) {
+    this.globCurrUser.status=stampType;
+    let currMillisec= Date.now();
+    //this.currentDate = new Date();
+    // Server-Zeitproblem auf KD -> geht 10 min vor - Workaround
+    if (this.currPlatform == "Desktop") currMillisec-=(600*1000);
+    // Workaround-Ende
+    this.currentDate = (new Date(currMillisec).toISOString()); // ISO-damit alphabet.Sortierung möglich
+    // Test im GMT-Format:
+    //this.currentDate = new Date(currMillisec); //kommt im GMT-Format
+    //this.currentDateUTC =new Date();
+    //date_string= this.currentDate.toString();; //kommt im GMT-Format
+    //Umwandlung von String-> Date-Objekt OK:
+    this.localDate = new Date(this.currentDate);
+    // Stunden,Minuten mit führender 0
+    let Hours="";
+    let Minutes="";
+    if (this.localDate.getHours()<10) let Hours="0"+this.localDate.getHours()
+    else Hours=this.localDate.getHours();
+    if (this.localDate.getMinutes()<10) let Minutes="0"+this.localDate.getMinutes()
+    else Minutes=this.localDate.getMinutes();
+    this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
+    this.globCurrUser.lasttimestampUTC = this.localDate.toString(); //schreibt in Orts-Zeit
+    //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
+    //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
+    this.globCurrUser.lastcomment = this.comment;
+    this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
+    this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" + this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +  "'}")
+    this.comment = "";
+  }
 
 /*    READ ID OF CREATED TIMESTAMP
   .then((res: any) => {
