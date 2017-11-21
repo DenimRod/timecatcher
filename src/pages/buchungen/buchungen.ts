@@ -26,12 +26,33 @@ export class BuchungenPage {
 
     this.backand.object.getList('Timestamps', params)
      .then((res: any) => {
+       let i=0;
+       let weekDay="";
+       while (i<res.data.length) {
+         res.data[i].datum = new Date(res.data[i].date);
+         res.data[i].date = res.data[i].datum.toString()+"!";
+         res.data[i].date = res.data[i].date.substr(0,21);
+         weekDay=res.data[i].date.substr(0,3)
+         switch (weekDay) {
+           case "Mon": weekDay ="Mo";
+             break;
+           case "Tue": weekDay ="Di";
+             break;
+           case "Wed": weekDay ="Mi";
+             break;
+           case "Thu": weekDay ="Do";
+               break;
+           case "Fri": weekDay ="Fr";
+               break;
+         }
+         res.data[i].date = weekDay+res.data[i].date.substr(3,21);
+         //  alert(i+"-Datum:"+res.data[i].datum+"----"+res.data[i].date);
+         ++i;
+       };
        this.buchungen = res.data;
-       //alert("!");
   },
   (err: any) => {
     alert(err.data);
   });
   }
-
 }
