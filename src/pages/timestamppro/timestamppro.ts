@@ -50,8 +50,8 @@ public timestampClick(tsTypeNr:number){
 }
 
 
-  public changeUser(){
+/*  public changeUser(){
     this.navCtrl.push(LoginPage);
   }
-
+*/
 }

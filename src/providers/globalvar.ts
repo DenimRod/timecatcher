@@ -16,7 +16,7 @@ public globCurrUser:any;
 //
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.2.3b";
+public appNameVers:string="KD-Zeiterfassung v0.2.4";
 
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
@@ -196,17 +196,18 @@ this.timer = this.timer - 1;
 
 public makeStamp(stampType:string){
   var makeStamp = true;
+  var stampTypeNr = Number(stampType);
 // im Folgenden: Def:Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
 //               Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
 
   // if "alter Status"= Arbeits-Stop-Typ=(Urlaub=8,Arbeit AUS=9,Krank=0) && "neuer Status" = Arbeits-Typ (1..6) -> worktimeToday auf 0!
   if ((this.globCurrUser.status==0 || this.globCurrUser.status==8 )|| this.globCurrUser.status==9)
-    if (stampType>=1 && stampType<=6) {    //Übergang von Arbeits-Stop auf Arbeit
+    if (stampTypeNr>=1 && stampTypeNr<=6) {    //Übergang von Arbeits-Stop auf Arbeit
       alert("Tagesarbeitszeit wird auf 0 gesetzt!"); //T-Arbeitszeit auf Null setzen = 0
       this.globCurrUser.worktimeToday= new Date(0);
     }
     else // neuer Stempel ist auch Arbeits-Stop-Typ+Pause (7,8,9,0) -> Zweitstempel, warum auch immer
-      if (stampType==7) {
+      if (stampTypeNr==7) {
         alert("Übergang von Status:"+this.globCurrUser.status+" auf Pause ist nicht erlaubt!");
         makeStamp=false;
       }
@@ -215,7 +216,7 @@ public makeStamp(stampType:string){
   else // alter Status ist Arbeits-Typ (1..6) oder Pause=7
     if (this.globCurrUser.status==7) {
       alert("alter Stempel= Pause");
-      if (stampType>=1 && stampType<=6) {    // neuer Stempel = Arbeits-Typen
+      if (stampTypeNr>=1 && stampTypeNr<=6) {    // neuer Stempel = Arbeits-Typen
         alert("Tagesarbeitszeit läuft jetzt weiter");
       }      //this.globCurrUser.worktimeToday= new Date(0);
       else // neuer Stempel = 7,8,9,0
@@ -245,10 +246,10 @@ public makeStamp(stampType:string){
     // Stunden,Minuten mit führender 0
     let Hours="";
     let Minutes="";
-    if (this.localDate.getHours()<10) let Hours="0"+this.localDate.getHours()
-    else Hours=this.localDate.getHours();
-    if (this.localDate.getMinutes()<10) let Minutes="0"+this.localDate.getMinutes()
-    else Minutes=this.localDate.getMinutes();
+    if (this.localDate.getHours()<10) Hours="0"+this.localDate.getHours()
+    else Hours=this.localDate.getHours().toString();
+    if (this.localDate.getMinutes()<10) Minutes="0"+this.localDate.getMinutes()
+    else Minutes=this.localDate.getMinutes().toString();
     this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
     this.globCurrUser.lasttimestampUTC = this.localDate.toString(); //schreibt in Orts-Zeit
     //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit

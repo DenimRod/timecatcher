@@ -28,10 +28,10 @@ export class BuchungenPage {
      .then((res: any) => {
        let i=0;
        let weekDay="";
+       let datumHelper=null;
        while (i<res.data.length) {
-         res.data[i].datum = new Date(res.data[i].date);
-         res.data[i].date = res.data[i].datum.toString()+"!";
-         res.data[i].date = res.data[i].date.substr(0,21);
+         datumHelper = new Date(res.data[i].date);
+         res.data[i].date = datumHelper.toString().substr(0,21);
          weekDay=res.data[i].date.substr(0,3)
          switch (weekDay) {
            case "Mon": weekDay ="Mo";
@@ -43,6 +43,10 @@ export class BuchungenPage {
            case "Thu": weekDay ="Do";
                break;
            case "Fri": weekDay ="Fr";
+               break;
+           case "Sat": weekDay ="Sa";
+               break;
+           case "Sun": weekDay ="So";
                break;
          }
          res.data[i].date = weekDay+res.data[i].date.substr(3,21);
