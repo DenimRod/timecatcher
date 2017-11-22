@@ -18,7 +18,7 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.2.5d"
+public appVers:string="v0.5B"
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
 public currentDate:string = "";
@@ -149,7 +149,8 @@ constructor(public backand: BackandService, public app:App, private device:Devic
   //------------Erkennung, ob bereits registriert
     // Test, ob Browser "Storage" unterstützt
   if (typeof(Storage) !== "undefined") {
-    this.currDevice = JSON.parse( window.localStorage.getItem( "ZEN-Device" ));
+    this.currDevice = JSON.parse( window.localStorage.getItem( "ZEN-Device1" )); //Device1 steht, weil auf
+    //     meinem PC bereits ein "ZEN-Device"-Registrierungs-Eintrag vorhanden ist
     //alert("currDevice:" + this.currDevice.MA + this.currDevice.devTyp)
     if (this.currDevice !== null) {  // Erkennung, ob bereits registriert
       alert("Bereits registriert! - Da ist ein Device-Objekt")
@@ -233,7 +234,7 @@ public makeStamp(stampType:string){
     //&& NS = Arbeits-Typ (1..6)= Übergang von Arbeits-Stop auf Arbeit -> worktimeToday auf 0!
     if (neuStampTypeNr>=1 && neuStampTypeNr<=6) {
       // !!! könnte auch Re-Start von Arbeit am selben Tag(oder nach Mitternacht) sein
-      alert("Tagesarbeitszeit wird auf 0 gesetzt!"); //T-Arbeitszeit auf Null setzen = 0
+    //  alert("Tagesarbeitszeit wird auf 0 gesetzt!"); //T-Arbeitszeit auf Null setzen = 0
       this.globCurrUser.worktimeToday= 0;
       this.workTimeRuns=true;
 
@@ -241,36 +242,39 @@ public makeStamp(stampType:string){
     // NS ist AUCH Arbeits-Stop-Typ+Pause (7,8,9,0) -> Zweitstempel, warum auch immer
     else
       if (neuStampTypeNr==7) { // NS=Pause=7
-        alert("Übergang von Arbeits-Stop-Typ auf Pause");
+      //  alert("Übergang von Arbeits-Stop-Typ auf Pause");
       } // else NS=(8,9,0)
-      else alert("Übergang von Status: "+this.globCurrUser.status+" auf: "+ stampType+ "- Arbeitszeit läuft weiterhin nicht");
+      else {
+      //  alert("Übergang von Status: "+this.globCurrUser.status+" auf: "+ stampType+ "- Arbeitszeit läuft weiterhin nicht");
+      }
     //else-Ende
   else // = AS ist Arbeits-Typ (1..6) oder Pause=7
 
     if (altStampTypeNr==7) { // AS = Pause=7
       // AS=Pause=7 && NS = Arbeits-Typen
       if (neuStampTypeNr>=1 && neuStampTypeNr<=6) {
-        alert("Tagesarbeitszeit läuft ab jetzt weiter");
+        //alert("Tagesarbeitszeit läuft ab jetzt weiter");
         this.workTimeRuns=true;
       }
       else { // AS=Pause=7 && NS = 7,8,9,0 = Pause+Arbeits-Stop-Typ
         //workTimeRuns bleibt auf STOP
         this.workTimeRuns=false;
-        alert("alter Status= Pause=7 && neuer Status= 7,8,9,0"+this.workTimeRuns);
+        //alert("alter Status= Pause=7 && neuer Status= 7,8,9,0"+this.workTimeRuns);
       }  //else-Ende
     }
     else // AS = Arbeits-Typ (1..6)
-      if (neuStampTypeNr>=1 && neuStampTypeNr<=6) // Arbeit läuft weiter
-        alert("alter Status= Arbeits-Typ(=1..6) && neuer Status= Arbeits-Typ (=1..6)");
+      if (neuStampTypeNr>=1 && neuStampTypeNr<=6) {// Arbeit läuft weiter
+        //alert("alter Status= Arbeits-Typ(=1..6) && neuer Status= Arbeits-Typ (=1..6)");
+      }
       else
         if (neuStampTypeNr==7) {// von Arbeit auf Pause
-          alert ("von Arbeit auf Pause");
+      //    alert ("von Arbeit auf Pause");
           // letzte Arbeitszeit wird zu worktimeToday hinzugezählt
               // aktuelle Zeit - lasttimestamp = Arbeitszeit (ms)
           this.workTimeRuns=false;
         }
         else {  // von Arbeit auf Arbeits-Stop
-          alert("alter Status= Arbeits-Typ(=1..6) && neuer Status= Arbeits-Stop-Typ(=8,9,0)");
+        //  alert("alter Status= Arbeits-Typ(=1..6) && neuer Status= Arbeits-Stop-Typ(=8,9,0)");
           // letzte Arbeitszeit wird zu worktimeToday hinzugezählt
           this.workTimeRuns=false;
         }
