@@ -11,13 +11,18 @@ export class TimestampProPage {
 @ViewChild('focusInput') myInput;
 
   constructor(public globVars: GlobalVars, public navCtrl: NavController,public keyboard: Keyboard) {
+    var currStatusNr = 0;
     this.globVars.timer=this.globVars.logouttime;
-  //  this.globVars.countDown();
+    //  this.globVars.countDown();
+    while (this.globVars.globCurrUser.status != this.globVars.tsTyp[currStatusNr]) {
+      ++currStatusNr;
+    }
+    if (currStatusNr >=1 && currStatusNr <=6 ) globVars.workTimeRuns=true
+    else globVars.workTimeRuns=false;
     this.globVars.globCurrUser.worktimeToday=0;
     this.globVars.workTimeCounter();
   //  alert("in Timestamppro1:"+this.globVars.currPlatform);
   }
-
 
   ionViewDidEnter() {
     this.globVars.comment = '';

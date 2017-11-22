@@ -2,7 +2,9 @@
 <ion-header>
 <ion-navbar> <!-- hideBackButton wird vermutlich nicht notwendig sein -->
   <ion-title>
-    {{globVars.appNameVers}} - {{globVars.globCurrUser.worktimeToday}}
+    {{globVars.appNameVers}} - {{globVars.workTimeTodayHour}}H{{globVars.workTimeTodayMin}}m -
+    <span style="color:#32db64" *ngIf="globVars.workTimeRuns">{{globVars.workTimeRuns}} </span>
+    <span style="color:#f53d3d" *ngIf="globVars.workTimeRuns==false">{{globVars.workTimeRuns}} </span>
   </ion-title>
 </ion-navbar>
 </ion-header>
@@ -25,8 +27,8 @@
 <!--  <p align="right"> {{globVars.timer}} </p> -->
   <h4 style="text-align:center"> Status:
 
-    <span style="color:#488aff" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[1]||globVars.globCurrUser.status==globVars.tsTyp[2]||globVars.globCurrUser.status==globVars.tsTyp[3]||globVars.globCurrUser.status==globVars.tsTyp[4]||globVars.globCurrUser.status==globVars.tsTyp[5]||globVars.globCurrUser.status==globVars.tsTyp[6]">{{globVars.globCurrUser.status}} </span>
-    <span style="color:#32db64" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[7]||globVars.globCurrUser.status==globVars.tsTyp[8]">{{globVars.globCurrUser.status}} </span>
+    <span style="color:#32db64" stacked *ngIf="globVars.globCurrUser.status==globVars.tsTyp[1]||globVars.globCurrUser.status==globVars.tsTyp[2]||globVars.globCurrUser.status==globVars.tsTyp[3]||globVars.globCurrUser.status==globVars.tsTyp[4]||globVars.globCurrUser.status==globVars.tsTyp[5]||globVars.globCurrUser.status==globVars.tsTyp[6]">{{globVars.globCurrUser.status}} </span>
+    <span style="color:#488aff" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[7]||globVars.globCurrUser.status==globVars.tsTyp[8]">{{globVars.globCurrUser.status}} </span>
     <span style="color:#f53d3d" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[9]||globVars.globCurrUser.status==globVars.tsTyp[0]">{{globVars.globCurrUser.status}} </span>
 
   <span *ngIf="globVars.globCurrUser.lastcomment">
@@ -42,28 +44,28 @@
   <ion-grid>
     <ion-row>
       <ion-col align="right">
-        <button ion-button block  icon-left (click)="timestampClick(1)">
+        <button ion-button block icon-left color='secondary' (click)="timestampClick(1)">
         <ion-icon name="briefcase"></ion-icon>{{globVars.tsTyp[1]}} &nbsp; (1)</button></ion-col>
       <ion-col>
-        <button ion-button block icon-left (click)="timestampClick(2)">
+        <button ion-button block icon-left color='secondary' (click)="timestampClick(2)">
         <ion-icon name="car"></ion-icon>{{globVars.tsTyp[2]}} &nbsp; (2)</button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  (click)="timestampClick(3)">
+        <button ion-button icon-left block color='secondary' (click)="timestampClick(3)">
         <ion-icon name="wifi"></ion-icon>{{globVars.tsTyp[3]}} &nbsp; (3)</button></ion-col>
       <ion-col>
-        <button ion-button icon-left block  (click)="timestampClick(4)">
+        <button ion-button icon-left block color='secondary' (click)="timestampClick(4)">
         <ion-icon name="contact"></ion-icon>{{globVars.tsTyp[4]}} &nbsp;(4)  </button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
-        <button ion-button icon-left block  color='secondary' (click)="timestampClick(7)">
+        <button ion-button icon-left block (click)="timestampClick(7)">
         <ion-icon name="cafe"></ion-icon>{{globVars.tsTyp[7]}} &nbsp;(7)</button></ion-col>
       <ion-col>
-        <button ion-button icon-left block  color="secondary"  (click)="timestampClick(8)">
+        <button ion-button icon-left block (click)="timestampClick(8)">
         <ion-icon name="sunny"></ion-icon>{{globVars.tsTyp[8]}} &nbsp;(8) </button></ion-col>
     </ion-row>
 

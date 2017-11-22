@@ -17,8 +17,8 @@ public globCurrUser:any;
 //
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.2.5a";
-
+public appNameVers:string="KD-ZEN";
+public appVers:string="v0.2.5b"
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
 public currentDate:string = "";
@@ -31,7 +31,12 @@ public KW_akt:number = 0;
 //                0         1           2           3            4           5          6            7          8          9
 public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
 //#Register-------------
+//     worktimeToday = muss time kleingeschrieben werden, weil in DB so definiert!
 public workTimeRuns:boolean // Arbeitszeit läuft/gestoppt
+public workTimeTodayShow = new Date(); //dient zur Anzeige der aktuellen Arbeitszeit
+public workTimeTodayHour = 0; // dient zur Anzeige der Stunden
+public workTimeTodayMin  = 0; // dient zur Anzeige der Minuten
+public workTimeTimeout:any;   // zum Löschen des laufenden Timeouts für workTime-
 public currDevice:any;
 public companies =[
   {
@@ -183,10 +188,16 @@ constructor(public backand: BackandService, public app:App, private device:Devic
 //      this.currPlatform = "Handy";        //--> Melden, dass jemand als "Handy" beim START schon gesetzt ist!
 
 public workTimeCounter(){
-//  alert("workTimeCounter");
-//  if (this.workTimeRuns) this.globCurrUser.worktimeToday=this.globCurrUser.worktimeToday+10000;
-  this.globCurrUser.worktimeToday=this.globCurrUser.worktimeToday+10000;
-  setTimeout(()=>{this.workTimeCounter()}, 10000);
+// update alle 60 sec
+  let update = 60000;
+  this.workTimeTodayShow = new Date(this.globCurrUser.worktimeToday);
+  this.workTimeTodayHour = this.workTimeTodayShow.getUTCHours();
+  this.workTimeTodayMin  = this.workTimeTodayShow.getUTCMinutes();
+  //alert("WTT:"+this.globCurrUser.worktimeToday+" - Show: "+this.workTimeTodayShow.toISOString()+"-Hour:"+this.workTimeTodayHour+"-Min:"+this.workTimeTodayMin);
+  if (this.workTimeRuns) this.globCurrUser.worktimeToday=this.globCurrUser.worktimeToday+update;
+  //  else this.workPauseToday=  --> könnte Pausenzeiten auch miterfassen
+  this.workTimeTimeout = setTimeout(()=>{this.workTimeCounter()}, update);
+  //  clearTimeout(this.workTimeTimout);
 }
 
 public countDown(){
@@ -243,7 +254,7 @@ public makeStamp(stampType:string){
         this.workTimeRuns=true;
       }
       else { // AS=Pause=7 && NS = 7,8,9,0 = Pause+Arbeits-Stop-Typ
-        //workRuns bleibt auf STOP
+        //workTimeRuns bleibt auf STOP
         this.workTimeRuns=false;
         alert("alter Status= Pause=7 && neuer Status= 7,8,9,0"+this.workTimeRuns);
       }  //else-Ende
@@ -267,7 +278,7 @@ public makeStamp(stampType:string){
     //else-ende
   //else-ende
   //Ende der Abfrage bzgl worktimeToday
-  alert("Ende der worktimeToday-Behandlung erreicht");
+  //alert("Ende der worktimeToday-Behandlung erreicht");
   // else-> wenn "alter Status"=Arbeits-Typ (1..6) && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
   // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ(1..60))-> Zeit weiterlaufen lassen
   // else if (this.clobCurrUser.status=.....)
