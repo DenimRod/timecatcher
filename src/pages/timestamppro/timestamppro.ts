@@ -12,7 +12,9 @@ export class TimestampProPage {
 
   constructor(public globVars: GlobalVars, public navCtrl: NavController,public keyboard: Keyboard) {
     this.globVars.timer=this.globVars.logouttime;
-    this.globVars.countDown();
+  //  this.globVars.countDown();
+    this.globVars.globCurrUser.worktimeToday=0;
+    this.globVars.workTimeCounter();
   //  alert("in Timestamppro1:"+this.globVars.currPlatform);
   }
 

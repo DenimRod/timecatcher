@@ -108,12 +108,12 @@ ABFRAGE FÜR HANDY/DESKTOP */
     }
 
   public handlePIN(inputNumber:string){
-    if (inputNumber == "1"){
+    //if (inputNumber == "1"){
     //  alert("1 wurde eingegeben-Zeit läuft");
-    };
-    if (inputNumber == "2"){
+    //};
+    //if (inputNumber == "2"){
     //  alert("2 wurde eingegeben-Zeit angehalten");
-    };
+    //};
     this.inputID += inputNumber;
     this.textInput += inputNumber;
     if (this.inputID.length == this.globVars.pinLength){

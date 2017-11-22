@@ -17,7 +17,7 @@ public globCurrUser:any;
 //
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
-public appNameVers:string="KD-Zeiterfassung v0.2.4B";
+public appNameVers:string="KD-Zeiterfassung v0.2.5a";
 
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
@@ -31,6 +31,7 @@ public KW_akt:number = 0;
 //                0         1           2           3            4           5          6            7          8          9
 public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
 //#Register-------------
+public workTimeRuns:boolean // Arbeitszeit läuft/gestoppt
 public currDevice:any;
 public companies =[
   {
@@ -181,8 +182,12 @@ constructor(public backand: BackandService, public app:App, private device:Devic
 //    else {
 //      this.currPlatform = "Handy";        //--> Melden, dass jemand als "Handy" beim START schon gesetzt ist!
 
-
-
+public workTimeCounter(){
+//  alert("workTimeCounter");
+//  if (this.workTimeRuns) this.globCurrUser.worktimeToday=this.globCurrUser.worktimeToday+10000;
+  this.globCurrUser.worktimeToday=this.globCurrUser.worktimeToday+10000;
+  setTimeout(()=>{this.workTimeCounter()}, 10000);
+}
 
 public countDown(){
 this.timer = this.timer - 1;
@@ -197,40 +202,76 @@ this.timer = this.timer - 1;
 
 public makeStamp(stampType:string){
   var makeStamp = true;
-  var stampTypeNr = Number(stampType);
-// im Folgenden: Def:Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
+  var neuStampTypeNr: number;
+  var altStampTypeNr: number;
+// im Folgenden: Def: Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
 //               Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
-
-  // if "alter Status"= Arbeits-Stop-Typ=(Urlaub=8,Arbeit AUS=9,Krank=0) && "neuer Status" = Arbeits-Typ (1..6) -> worktimeToday auf 0!
-/*  if ((this.globCurrUser.status==0 || this.globCurrUser.status==8 )|| this.globCurrUser.status==9)
-    if (stampTypeNr>=1 && stampTypeNr<=6) {    //Übergang von Arbeits-Stop auf Arbeit
+//               Def: AS = alter status, NS = neuer Status
+  //stampTypNr wird gesetzt durch Vergleich, bis passt
+  altStampTypeNr=0;
+  while (this.globCurrUser.status != this.tsTyp[altStampTypeNr]) {
+    ++altStampTypeNr;
+  };
+  neuStampTypeNr=0;
+  while (stampType != this.tsTyp[neuStampTypeNr]) {
+    ++neuStampTypeNr;
+  };
+  //alert("MAKESTAMP-Start- alter Status:"+this.globCurrUser.status+"-altStampTypeNr:"+altStampTypeNr+"-neuer Status:"+stampType+"-neuStampTypeNr:"+neuStampTypeNr);
+  //if AS = Arbeits-Stop-Typ=(Urlaub=8,Arbeit AUS=9,Krank=0)
+  if ((altStampTypeNr==0 || altStampTypeNr==8 )|| altStampTypeNr==9)
+    //&& NS = Arbeits-Typ (1..6)= Übergang von Arbeits-Stop auf Arbeit -> worktimeToday auf 0!
+    if (neuStampTypeNr>=1 && neuStampTypeNr<=6) {
+      // !!! könnte auch Re-Start von Arbeit am selben Tag(oder nach Mitternacht) sein
       alert("Tagesarbeitszeit wird auf 0 gesetzt!"); //T-Arbeitszeit auf Null setzen = 0
-      this.globCurrUser.worktimeToday= new Date(0);
+      this.globCurrUser.worktimeToday= 0;
+      this.workTimeRuns=true;
+
     }
-    else // neuer Stempel ist auch Arbeits-Stop-Typ+Pause (7,8,9,0) -> Zweitstempel, warum auch immer
-      if (stampTypeNr==7) {
-        alert("Übergang von Status:"+this.globCurrUser.status+" auf Pause ist nicht erlaubt!");
-        makeStamp=false;
-      }
+    // NS ist AUCH Arbeits-Stop-Typ+Pause (7,8,9,0) -> Zweitstempel, warum auch immer
+    else
+      if (neuStampTypeNr==7) { // NS=Pause=7
+        alert("Übergang von Arbeits-Stop-Typ auf Pause");
+      } // else NS=(8,9,0)
       else alert("Übergang von Status: "+this.globCurrUser.status+" auf: "+ stampType+ "- Arbeitszeit läuft weiterhin nicht");
     //else-Ende
-  else // alter Status ist Arbeits-Typ (1..6) oder Pause=7
-    if (this.globCurrUser.status==7) {
-      alert("alter Stempel= Pause");
-      if (stampTypeNr>=1 && stampTypeNr<=6) {    // neuer Stempel = Arbeits-Typen
-        alert("Tagesarbeitszeit läuft jetzt weiter");
-      }      //this.globCurrUser.worktimeToday= new Date(0);
-      else // neuer Stempel = 7,8,9,0
-        alert("alter Stempel= 1..6||7  neuer Stempel= 7,8,9,0");
-    };
+  else // = AS ist Arbeits-Typ (1..6) oder Pause=7
 
+    if (altStampTypeNr==7) { // AS = Pause=7
+      // AS=Pause=7 && NS = Arbeits-Typen
+      if (neuStampTypeNr>=1 && neuStampTypeNr<=6) {
+        alert("Tagesarbeitszeit läuft ab jetzt weiter");
+        this.workTimeRuns=true;
+      }
+      else { // AS=Pause=7 && NS = 7,8,9,0 = Pause+Arbeits-Stop-Typ
+        //workRuns bleibt auf STOP
+        this.workTimeRuns=false;
+        alert("alter Status= Pause=7 && neuer Status= 7,8,9,0"+this.workTimeRuns);
+      }  //else-Ende
+    }
+    else // AS = Arbeits-Typ (1..6)
+      if (neuStampTypeNr>=1 && neuStampTypeNr<=6) // Arbeit läuft weiter
+        alert("alter Status= Arbeits-Typ(=1..6) && neuer Status= Arbeits-Typ (=1..6)");
+      else
+        if (neuStampTypeNr==7) {// von Arbeit auf Pause
+          alert ("von Arbeit auf Pause");
+          // letzte Arbeitszeit wird zu worktimeToday hinzugezählt
+              // aktuelle Zeit - lasttimestamp = Arbeitszeit (ms)
+          this.workTimeRuns=false;
+        }
+        else {  // von Arbeit auf Arbeits-Stop
+          alert("alter Status= Arbeits-Typ(=1..6) && neuer Status= Arbeits-Stop-Typ(=8,9,0)");
+          // letzte Arbeitszeit wird zu worktimeToday hinzugezählt
+          this.workTimeRuns=false;
+        }
+      //else-ende
+    //else-ende
+  //else-ende
   //Ende der Abfrage bzgl worktimeToday
   alert("Ende der worktimeToday-Behandlung erreicht");
-  // else wenn neuer Status = Pause,Arbeits-Ende,krank,Urlaub
   // else-> wenn "alter Status"=Arbeits-Typ (1..6) && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
   // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ(1..60))-> Zeit weiterlaufen lassen
   // else if (this.clobCurrUser.status=.....)
-*/
+
   if (makeStamp) {
     this.globCurrUser.status=stampType;
     let currMillisec= Date.now();
