@@ -5,8 +5,8 @@
 <ion-navbar> <!-- hideBackButton wird vermutlich nicht notwendig sein -->
   <ion-title>
     {{globVars.appNameVers}} - <span *ngIf="globVars.workTimeTodayHour">{{globVars.workTimeTodayHour}}h </span> {{globVars.workTimeTodayMin}}m -
-    <span style="color:#3dcc82" *ngIf="globVars.workTimeRuns">{{globVars.workTimeRuns}} </span>
-    <span style="color:#f53d3d" *ngIf="globVars.workTimeRuns==false">{{globVars.workTimeRuns}} </span>
+    <span style="color:#3dcc82" *ngIf="globVars.workTimeRuns"><ion-icon name="clock"></ion-icon>  </span>
+    <span style="color:#f53d3d" *ngIf="globVars.workTimeRuns==false"><ion-icon name="clock"></ion-icon> </span>
   </ion-title>
 </ion-navbar>
 </ion-header>

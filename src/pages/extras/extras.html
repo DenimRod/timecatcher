@@ -34,6 +34,8 @@
       </ion-col>
       <ion-col>
         {{user.status}}
+        <span style="color:#f53d3d" *ngIf="user.status=='Arbeit AUS'"><ion-icon name="ionic"></ion-icon>  </span>
+        <span style="color:#3dcc82" *ngIf="user.status!='Arbeit AUS'"><ion-icon name="ionic"></ion-icon> </span>
       </ion-col>
       <ion-col>
         {{user.lasttimestamp}}
