@@ -1,9 +1,11 @@
 
+<title> KD-ZEN </title>
 <ion-header>
+
 <ion-navbar> <!-- hideBackButton wird vermutlich nicht notwendig sein -->
   <ion-title>
-    {{globVars.appNameVers}} - {{globVars.workTimeTodayHour}}H{{globVars.workTimeTodayMin}}m -
-    <span style="color:#32db64" *ngIf="globVars.workTimeRuns">{{globVars.workTimeRuns}} </span>
+    {{globVars.appNameVers}} - <span *ngIf="globVars.workTimeTodayHour">{{globVars.workTimeTodayHour}}h </span> {{globVars.workTimeTodayMin}}m -
+    <span style="color:#3dcc82" *ngIf="globVars.workTimeRuns">{{globVars.workTimeRuns}} </span>
     <span style="color:#f53d3d" *ngIf="globVars.workTimeRuns==false">{{globVars.workTimeRuns}} </span>
   </ion-title>
 </ion-navbar>
@@ -27,7 +29,7 @@
 <!--  <p align="right"> {{globVars.timer}} </p> -->
   <h4 style="text-align:center"> Status:
 
-    <span style="color:#32db64" stacked *ngIf="globVars.globCurrUser.status==globVars.tsTyp[1]||globVars.globCurrUser.status==globVars.tsTyp[2]||globVars.globCurrUser.status==globVars.tsTyp[3]||globVars.globCurrUser.status==globVars.tsTyp[4]||globVars.globCurrUser.status==globVars.tsTyp[5]||globVars.globCurrUser.status==globVars.tsTyp[6]">{{globVars.globCurrUser.status}} </span>
+    <span style="color:#3dcc82" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[1]||globVars.globCurrUser.status==globVars.tsTyp[2]||globVars.globCurrUser.status==globVars.tsTyp[3]||globVars.globCurrUser.status==globVars.tsTyp[4]||globVars.globCurrUser.status==globVars.tsTyp[5]||globVars.globCurrUser.status==globVars.tsTyp[6]">{{globVars.globCurrUser.status}} </span>
     <span style="color:#488aff" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[7]||globVars.globCurrUser.status==globVars.tsTyp[8]">{{globVars.globCurrUser.status}} </span>
     <span style="color:#f53d3d" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[9]||globVars.globCurrUser.status==globVars.tsTyp[0]">{{globVars.globCurrUser.status}} </span>
 

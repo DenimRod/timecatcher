@@ -60,8 +60,8 @@ ionViewDidEnter() {
     this.myInput.setFocus();
   },150);
 
-
-/*  if (this.plt.is('core')) {
+/*
+  if (this.plt.is('core')) {
       // This will only print when on Desktop
       alert("Zeiterfassung läuft auf Desktop-PC!")
   }

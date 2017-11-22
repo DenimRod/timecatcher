@@ -29,7 +29,9 @@
       </ion-col> -->
     </ion-row>
     <ion-row *ngFor="let buchung of buchungen">
+
       <ion-col>
+  <!--      <span *ngIf="buchung.date[0]=='M'"> -> </span> -->
         {{buchung.date}}
       </ion-col>
       <ion-col>

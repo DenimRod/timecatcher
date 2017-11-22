@@ -34,7 +34,7 @@ public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projek
 //     worktimeToday = muss time kleingeschrieben werden, weil in DB so definiert!
 public workTimeRuns:boolean // Arbeitszeit läuft/gestoppt
 public workTimeTodayShow = new Date(); //dient zur Anzeige der aktuellen Arbeitszeit
-public workTimeTodayHour = 0; // dient zur Anzeige der Stunden
+public workTimeTodayHour = 1; // dient zur Anzeige der Stunden
 public workTimeTodayMin  = 0; // dient zur Anzeige der Minuten
 public workTimeTimeout:any;   // zum Löschen des laufenden Timeouts für workTime-
 public currDevice:any;
@@ -149,7 +149,7 @@ constructor(public backand: BackandService, public app:App, private device:Devic
   //------------Erkennung, ob bereits registriert
     // Test, ob Browser "Storage" unterstützt
   if (typeof(Storage) !== "undefined") {
-    this.currDevice = JSON.parse( window.localStorage.getItem( "ZEN-Device1" ));
+    this.currDevice = JSON.parse( window.localStorage.getItem( "ZEN-Device" ));
     //alert("currDevice:" + this.currDevice.MA + this.currDevice.devTyp)
     if (this.currDevice !== null) {  // Erkennung, ob bereits registriert
       alert("Bereits registriert! - Da ist ein Device-Objekt")
