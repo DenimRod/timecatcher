@@ -18,13 +18,16 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.5B"
+public appVers:string="v0.51"
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
-public currentDate:string = "";
+public loginDate:string=""; // UTC-Zeit des Logins (Zeit kommt vom Backand-Server!)
+public currentDate:string = ""; // Zeit des Clients
 public currentDateUTC:string = "";
 public localDate:Date = null; // lokale Zeit, weil auf PCs in KD falsche Zeit, wegen Windows-Domain-Controller-Fehler +10min
 public currPlatform = "Desktop";
+public browserPlatform = navigator.platform;
+
 // public farbe="text-align:center,color:secondary";
 public KW_akt:number = 0;
 // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
@@ -146,6 +149,38 @@ public ZEN_Devices = [              // alle Devices werden hier eingetragen
 constructor(public backand: BackandService, public app:App, private device:Device, public platform:Platform) {
   this.globCurrUser = null;
   this.KW_akt = this.KW();
+  //alert("browserPlatform" + this.browserPlatform);
+  /*
+    HP-UX
+    Linux i686
+    Linux armv7l
+    Mac68K
+    MacPPC
+    MacIntel
+    SunOS
+    Win16
+    Win32
+    WinCE
+    iPhone
+    iPod
+    iPad
+    Android
+    BlackBerry
+    Opera
+  */
+  this.currPlatform="Desktop";
+  switch (this.browserPlatform) {
+    case "Win64": this.currPlatform ="Desktop";
+      break;
+    case "Win32": this.currPlatform ="Desktop";
+      break;
+    case "iPhone": this.currPlatform = "Handy";
+      break;
+    case "Android": this.currPlatform = "Handy";
+      break;
+    case "WinCE": this.currPlatform = "Handy";
+      break;
+  }
   //------------Erkennung, ob bereits registriert
     // Test, ob Browser "Storage" unterstützt
   if (typeof(Storage) !== "undefined") {
@@ -210,7 +245,7 @@ this.timer = this.timer - 1;
     this.app.getRootNav().setRoot(LoginPage);
   }
     //alert(this.timer);
-  }
+}
 
 public makeStamp(stampType:string){
   var makeStamp = true;
@@ -314,7 +349,16 @@ public makeStamp(stampType:string){
     //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
     this.globCurrUser.lastcomment = this.comment;
     this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-    this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" + this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" + this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +  "'}")
+    this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" +
+      this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" +
+      this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +
+      "','browserPlatform':'" + navigator.platform + "'}")
+    .then((res: any) => {
+      //alert("nach Create");
+    },
+    (err: any) => {
+      alert(err.data);
+    });
     this.comment = "";
   }
 
@@ -363,4 +407,63 @@ public KW(){
     return this.globCurrUserId;
   }
 */
-}
+
+public timeInit(){  // wird innerhalb von TimeStamp aufgerufen, wenn User bekannt ist!
+  // gleichzeitig wird ein Eintrag in die Login-DB-Objekt gemacht -> alle Logins werden dokumentiert
+  var loginRec: any;
+  var randNum: number; //zufällige Nummer zum Markieren des hinzugefügten Datensatzes
+  randNum = Math.round(Math.random()*100000000);
+   //  alert(randNum);
+
+  this.backand.object.create('Login', "{'name':'"+this.globCurrUser.name+"', 'userID':'"+
+    this.globCurrUser.userID+"', 'device':'"+this.currPlatform+"', 'randNum':'"+ randNum +"'}")
+  //this.backand.object.create('Login', "{'name':'Test13name', 'device':'Apple','rNum':'"+ randNum.toString() +"'}")
+  //  this.backand.object.create('Login', "{'name':'Test13name', 'device':'Apple', 'randNum':'456456'}");
+  .then((res1:any) => {
+    let params = {
+      filter:
+        this.backand.helpers.filter.create('randNum', this.backand.helpers.filter.operators.text.equals, randNum.toString())
+    //  sort:   this.backand.helpers.sort.create('name', this.backand.helpers.sort.orders.asc)
+    };
+    this.backand.object.getList('Login', params)
+    .then((res2: any) => {
+      loginRec = res2.data;
+    /* für Ausgabe des kompletten res-records:
+        let Aus1Str = JSON.stringify(loginRec).substr(1,160);
+        let Aus2Str = JSON.stringify(loginRec).substr(160,160);
+        let Aus3Str = JSON.stringify(loginRec).substr(320,160);
+        let Aus4Str = JSON.stringify(loginRec).substr(480,160);
+        let Aus5Str = JSON.stringify(loginRec).substr(640,160);
+        let Aus6Str = JSON.stringify(loginRec).substr(800,160);
+        let Aus7Str = JSON.stringify(loginRec).substr(960,160);
+        let Aus8Str = JSON.stringify(loginRec).substr(1120,160);
+        let Aus9Str = JSON.stringify(loginRec).substr(1280,160);
+        let AusaStr = JSON.stringify(loginRec).substr(1440,160);
+        let AusbStr = JSON.stringify(loginRec).substr(1600,160);
+        alert("LRec1:"+Aus1Str);
+        alert("LRec2:"+Aus2Str);
+        alert("LRec3:"+Aus3Str);
+        alert("LRec4:"+Aus4Str);
+        alert("LRec5:"+Aus5Str);
+        alert("LRec6:"+Aus6Str);
+        alert("LRec7:"+Aus7Str);
+        alert("LRec8:"+Aus8Str);
+        alert("LRec9:"+Aus9Str);
+        alert("LReca:"+Aus9Str);
+        alert("LRecb:"+Aus9Str);  */
+      if (loginRec.length > 0) {
+        //alert("params-fertig4:Länge:"+loginRec.length);
+        alert("LoginRec!"+loginRec[0].name+"crdate:"+loginRec[0].createdAt+"-"+loginRec[0].device);
+      }
+      else alert("kein Random-Eintrag in Login-DB-Objekt gefunden");
+    },
+    (err: any) => {
+      alert("Error: Login/Res2:"+err.data);
+    });
+  },  // then res1
+  (err: any) => {
+    alert("Error: Login/Res1:"+err.data);
+  });
+} //end TimeInit
+
+} //export Class: GlobalVars

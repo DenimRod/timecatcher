@@ -59,7 +59,7 @@ ionViewDidEnter() {
   setTimeout(() => {
     this.myInput.setFocus();
   },150);
-
+}
 /*
   if (this.plt.is('core')) {
       // This will only print when on Desktop
@@ -72,9 +72,6 @@ ABFRAGE FÜR HANDY/DESKTOP */
 //not so crazy workaround for no login
 //this.inputID = "22";
 //this.checkUser();
-
-}
-
 
   public handleText(){
     // wenn Eingabe mit "r" beginnt, dann RegistrierungsCode !!!
@@ -177,9 +174,10 @@ ABFRAGE FÜR HANDY/DESKTOP */
           alert(err.data);
         });
 */
-        // auf Handy?
-        if (this.onHandy) this.globVars.currPlatform="Handy"
-        else this.globVars.currPlatform="Desktop";
+        // auf Handy?  ---- wird jetzt über navigator.platform in globar.ts gelöst
+        //if (this.onHandy) this.globVars.currPlatform="Handy"
+        //else this.globVars.currPlatform="Desktop";
+
         // SHOW Timestamp dependig on user level
         if (this.globVars.globCurrUser.applevel == "pro"){
           this.navCtrl.push(TabsProPage);
@@ -273,4 +271,4 @@ ABFRAGE FÜR HANDY/DESKTOP */
       );
     }
 */
-  }
+}

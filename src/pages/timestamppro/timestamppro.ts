@@ -31,6 +31,7 @@ export class TimestampProPage {
         this.myInput.setFocus();
       },400);
     if (this.globVars.currPlatform=="Handy") this.keyboard.close();
+    this.globVars.timeInit();
   }
 
   public handleTEXT(){
