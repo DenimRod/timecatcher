@@ -12,7 +12,8 @@ import { BackandService } from '@backand/angular2-sdk'
 export class MyApp {
   rootPage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private backand:BackandService) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,
+  private backand:BackandService) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

@@ -18,13 +18,20 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.51"
+public appVers:string="v0.6B"
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
-public loginDate:string=""; // UTC-Zeit des Logins (Zeit kommt vom Backand-Server!)
-public currentDate:string = ""; // Zeit des Clients
-public currentDateUTC:string = "";
-public localDate:Date = null; // lokale Zeit, weil auf PCs in KD falsche Zeit, wegen Windows-Domain-Controller-Fehler +10min
+public serverDateStr:string=""; // UTC-Zeit des Logins = univ.ServerZeit (Zeit kommt vom Backand-Server!)
+public serverDate: any;
+public clientDateStr:string = ""; // Zeit des Clients
+public clientDate: any; // Zeit des Clients
+public clientDateStrUTC:string = "";
+//public localDate:Date = null; // lokale Zeit, weil auf PCs in KD falsche Zeit, wegen Windows-Domain-Controller-Fehler +10min
+public clientDateDiff: number = 0; //=localDate-createdat-date(=ServerZeit) =Zeitdiff in ms zwischen localDate und date(universelle Server-Zeit)
+// bei jedem Login wird ein Eintrag in die Login-DB gemacht -> im createdAt-Feld steht die aktuelle universelle Zeit
+// jetzt wird die Zeitdifferenz der aktuellen Instanz berechnet und als globale Var geführt
+// daraus lässt sich über date(Now)(=lokale Zeit)+localDateDiff die "reale"Zeit zu jedem Zeitpunkt berechnen, ohne erneut
+// beim Server nachfragen zu müssen.
 public currPlatform = "Desktop";
 public browserPlatform = navigator.platform;
 
@@ -149,7 +156,7 @@ public ZEN_Devices = [              // alle Devices werden hier eingetragen
 constructor(public backand: BackandService, public app:App, private device:Device, public platform:Platform) {
   this.globCurrUser = null;
   this.KW_akt = this.KW();
-  //alert("browserPlatform" + this.browserPlatform);
+//  alert("browserPlatform" + this.browserPlatform);
   /*
     HP-UX
     Linux i686
@@ -177,7 +184,10 @@ constructor(public backand: BackandService, public app:App, private device:Devic
     case "iPhone": this.currPlatform = "Handy";
       break;
     case "Android": this.currPlatform = "Handy";
-      break;
+        break;
+    // kommt seltsamerweise bei Android-Handy live-reload-Compilierung
+    case "Linux armv7l": this.currPlatform = "Handy";
+        break;
     case "WinCE": this.currPlatform = "Handy";
       break;
   }
@@ -251,6 +261,8 @@ public makeStamp(stampType:string){
   var makeStamp = true;
   var neuStampTypeNr: number;
   var altStampTypeNr: number;
+  var currComm : string;
+  var splitCommArr: any;
 // im Folgenden: Def: Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
 //               Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
 //               Def: AS = alter status, NS = neuer Status
@@ -321,40 +333,80 @@ public makeStamp(stampType:string){
   // else-> wenn "alter Status"=Arbeits-Typ (1..6) && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
   // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ(1..60))-> Zeit weiterlaufen lassen
   // else if (this.clobCurrUser.status=.....)
-
+  var korrektur = false;
   if (makeStamp) {
     this.globCurrUser.status=stampType;
-    let currMillisec= Date.now();
-    //this.currentDate = new Date();
-    // Server-Zeitproblem auf KD -> geht 10 min vor - Workaround
-    if (this.currPlatform == "Desktop") currMillisec-=(600*1000);
+    //ServerZeit wird hochgerechnet aus client + Diff;
+    let currComment = this.comment;
+    if (currComment.charAt(0) == "#") {  // Korrektur-Zeit wird eingearbeitet
+      if (currComment.charAt(1) == "k" || currComment.charAt(1) =="K") {  // Korrektur-Zeit wird eingearbeitet
+        korrektur = true;
+        currComment = currComment.substr(2).trim();
+        var n = this.comment.search(':');
+        if (n !== -1) {  // es gibt einen  Doppelpunkt im Kommentar
+          if (currComment.length < 6) {  // nur EINE Uhrzeit steht im Kommentar
+           //zerlegen in HH:MM
+            splitCommArr = currComment.split(':');
+            if (splitCommArr.length = 2) {
+          //    alert("Stunden:"+ splitCommArr[0]+"Minuten:"+ splitCommArr[1]); //Minuten
+            }
+          }
+        }
+        else { // keine Uhrzeit im Kommentar -> canceln
+          korrektur = false;
+          this.comment = 'Fehleingabe: '+this.comment;
+        }
+      }
+      //alert("comment:"+this.comment);
+    }
+    else { // ist kein # Code-Kommentar
+
+    };
+    let clientMillisec = Date.now();
+    this.clientDate = new Date(clientMillisec);
+    this.serverDate = new Date(clientMillisec - this.clientDateDiff);
+    if (korrektur) {  // es wird eine Korrekturbuchung gemacht
+      this.serverDate.setHours(splitCommArr[0]);
+      this.serverDate.setMinutes(splitCommArr[1]);
+    //  alert("serverDate(korrigiert):"+this.serverDate.toISOString());
+    };
+    let lastTimeStamp = new Date (this.globCurrUser.lasttimestampISO);
+  //  alert("sD:"+this.serverDate.toISOString()+"ltsISO:"+lastTimeStamp.toISOString());
+    if (this.serverDate > lastTimeStamp) {  //die Buchung sollte auch auf TOP angezeigt werden
+  //    alert("das zu buchende Datum ist neuer als der letzte Timestamp");
+    // normale Buchung vorbereiten
+    // Server-Zeitproblem auf KD-Desktops -> geht 10 min vor - Workaround
+    //if (this.currPlatform == "Desktop") currMillisec-=(600*1000);
     // Workaround-Ende
-    this.currentDate = (new Date(currMillisec).toISOString()); // ISO-damit alphabet.Sortierung möglich
+    //this.clientDate = (new Date(currMillisec)); // ISO-damit alphabet.Sortierung möglich
     // Test im GMT-Format:
     //this.currentDate = new Date(currMillisec); //kommt im GMT-Format
     //this.currentDateUTC =new Date();
     //date_string= this.currentDate.toString();; //kommt im GMT-Format
+
     //Umwandlung von String-> Date-Objekt OK:
-    this.localDate = new Date(this.currentDate);
     // Stunden,Minuten mit führender 0
-    let Hours="";
-    let Minutes="";
-    if (this.localDate.getHours()<10) Hours="0"+this.localDate.getHours()
-    else Hours=this.localDate.getHours().toString();
-    if (this.localDate.getMinutes()<10) Minutes="0"+this.localDate.getMinutes()
-    else Minutes=this.localDate.getMinutes().toString();
-    this.globCurrUser.lasttimestamp =  this.localDate.getDate() + "." + (this.localDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
-    this.globCurrUser.lasttimestampUTC = this.localDate.toString(); //schreibt in Orts-Zeit
+      let Hours="";
+      let Minutes="";
+      if (this.serverDate.getHours()<10) Hours="0"+this.serverDate.getHours()
+      else Hours=this.serverDate.getHours().toString();
+      if (this.serverDate.getMinutes()<10) Minutes="0"+this.serverDate.getMinutes()
+      else Minutes=this.serverDate.getMinutes().toString();
+      this.globCurrUser.lasttimestamp =  this.serverDate.getDate() + "." + (this.serverDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
+      this.globCurrUser.lasttimestampISO = this.serverDate.toISOString(); //schreibt in Orts-Zeit
     //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
     //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
-    this.globCurrUser.lastcomment = this.comment;
-    this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-    this.backand.object.create('Timestamps', "{'date':'" + this.currentDate + "', 'status':'" +
-      this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" +
-      this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +
-      "','browserPlatform':'" + navigator.platform + "'}")
+      this.globCurrUser.lastcomment = this.comment;
+      this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
+    }; // if-Ende: "normale Buchung" vorbereiten
+    this.backand.object.create('Timestamps2', "{'date':'" + this.serverDate.toISOString() + "', 'status':'" +
+    this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" +
+    this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +
+    "','browserPlatform':'" + navigator.platform + "'}")
     .then((res: any) => {
-      //alert("nach Create");
+//      alert("nach Create: ms->Date:"+this.serverDate.getTime()+ "cms:" + clientMillisec +"clientdiff-ms"+this.clientDateDiff+
+//      "serverDate:" + this.serverDate.toLocaleString()+
+//      "--clientDate:" + this.clientDate.toLocaleString()+"!");
     },
     (err: any) => {
       alert(err.data);
@@ -407,63 +459,5 @@ public KW(){
     return this.globCurrUserId;
   }
 */
-
-public timeInit(){  // wird innerhalb von TimeStamp aufgerufen, wenn User bekannt ist!
-  // gleichzeitig wird ein Eintrag in die Login-DB-Objekt gemacht -> alle Logins werden dokumentiert
-  var loginRec: any;
-  var randNum: number; //zufällige Nummer zum Markieren des hinzugefügten Datensatzes
-  randNum = Math.round(Math.random()*100000000);
-   //  alert(randNum);
-
-  this.backand.object.create('Login', "{'name':'"+this.globCurrUser.name+"', 'userID':'"+
-    this.globCurrUser.userID+"', 'device':'"+this.currPlatform+"', 'randNum':'"+ randNum +"'}")
-  //this.backand.object.create('Login', "{'name':'Test13name', 'device':'Apple','rNum':'"+ randNum.toString() +"'}")
-  //  this.backand.object.create('Login', "{'name':'Test13name', 'device':'Apple', 'randNum':'456456'}");
-  .then((res1:any) => {
-    let params = {
-      filter:
-        this.backand.helpers.filter.create('randNum', this.backand.helpers.filter.operators.text.equals, randNum.toString())
-    //  sort:   this.backand.helpers.sort.create('name', this.backand.helpers.sort.orders.asc)
-    };
-    this.backand.object.getList('Login', params)
-    .then((res2: any) => {
-      loginRec = res2.data;
-    /* für Ausgabe des kompletten res-records:
-        let Aus1Str = JSON.stringify(loginRec).substr(1,160);
-        let Aus2Str = JSON.stringify(loginRec).substr(160,160);
-        let Aus3Str = JSON.stringify(loginRec).substr(320,160);
-        let Aus4Str = JSON.stringify(loginRec).substr(480,160);
-        let Aus5Str = JSON.stringify(loginRec).substr(640,160);
-        let Aus6Str = JSON.stringify(loginRec).substr(800,160);
-        let Aus7Str = JSON.stringify(loginRec).substr(960,160);
-        let Aus8Str = JSON.stringify(loginRec).substr(1120,160);
-        let Aus9Str = JSON.stringify(loginRec).substr(1280,160);
-        let AusaStr = JSON.stringify(loginRec).substr(1440,160);
-        let AusbStr = JSON.stringify(loginRec).substr(1600,160);
-        alert("LRec1:"+Aus1Str);
-        alert("LRec2:"+Aus2Str);
-        alert("LRec3:"+Aus3Str);
-        alert("LRec4:"+Aus4Str);
-        alert("LRec5:"+Aus5Str);
-        alert("LRec6:"+Aus6Str);
-        alert("LRec7:"+Aus7Str);
-        alert("LRec8:"+Aus8Str);
-        alert("LRec9:"+Aus9Str);
-        alert("LReca:"+Aus9Str);
-        alert("LRecb:"+Aus9Str);  */
-      if (loginRec.length > 0) {
-        //alert("params-fertig4:Länge:"+loginRec.length);
-        alert("LoginRec!"+loginRec[0].name+"crdate:"+loginRec[0].createdAt+"-"+loginRec[0].device);
-      }
-      else alert("kein Random-Eintrag in Login-DB-Objekt gefunden");
-    },
-    (err: any) => {
-      alert("Error: Login/Res2:"+err.data);
-    });
-  },  // then res1
-  (err: any) => {
-    alert("Error: Login/Res1:"+err.data);
-  });
-} //end TimeInit
 
 } //export Class: GlobalVars

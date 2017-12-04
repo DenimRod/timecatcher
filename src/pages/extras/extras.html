@@ -5,57 +5,53 @@
   </ion-title>
 </ion-navbar>
 <!-- <p align="right"> {{globVars.timer}} </p> -->
-
 </ion-header>
-
 <ion-content padding class="page5">
-
-  <ion-grid>
-    <ion-row class="titles">
-      <ion-col>
-        Name
-      </ion-col>
-      <ion-col>
-        Status
-      </ion-col>
-      <ion-col>
-        Letzte Buchung
-      </ion-col>
-      <ion-col>
-        Kommentar
-      </ion-col>
-<!--      <ion-col>
-        Arbeitszeit
-      </ion-col> -->
-    </ion-row>
-    <ion-row *ngFor="let user of users">
-      <ion-col>
-        {{user.name}}
-      </ion-col>
-      <ion-col>
-        {{user.status}}
-        <span style="color:#f53d3d" *ngIf="user.status=='Krank'"><ion-icon name="remove-circle"></ion-icon>  </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='Arbeit EIN'"><ion-icon name="radio-button-on"></ion-icon> </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='AD-Fahrt'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='AD-Kunde'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='Tele-Arbeit'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='Projekt 1'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='Projekt 2'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#488aff" *ngIf="user.status=='Pause EIN'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#488aff" *ngIf="user.status=='Urlaub'"><ion-icon name="remove-circle"></ion-icon> </span>
-        <span style="color:#f53d3d" *ngIf="user.status=='Arbeit AUS'"><ion-icon name="remove-circle"></ion-icon> </span>
-      </ion-col>
-      <ion-col>
-        {{user.lasttimestamp}}
-      </ion-col>
-      <ion-col>
-        {{user.lastcomment}}
-      </ion-col>
-<!-- <ion-col>
-
-      </ion-col>  -->
-    </ion-row>
-  </ion-grid>
+<h6 ion-text color="dark">Browser-Typ: {{globVars.browserPlatform}} -> {{globVars.currPlatform}}</h6>
+<button ion-button medium align="center" (click)="playTon()">sound-Test</button>
 
 
+<h4 ion-text color="primary"><u>Kommentar-Feld-Codes:</u></h4>
+
+<h5 ion-text color="primary">Wie kann ich Zeit-Stempel rückdatieren?</h5>
+    <i ion-text color="danger">#k 09:15 </i><a ion-text color="dark"> + (beliebiger Stempeltyp)</a><br>
+    <a ion-text color="dark">-> erzeugt einen Stempel mit der angegebenen Zeit</a> <br>
+<!--
+<h5 ion-text color="primary">Wie kann ich Pausen nachtragen?</h5>
+    <i ion-text color="danger">#k&nbsp; 9:15 &nbsp; 9:45</i> oder: <i ion-text color="danger">#k 9:15&nbsp; 30m</i>
+    <a ion-text color="dark">+</a><i ion-text color="primary">(PAUSE EIN)</i><br>
+    <a ion-text color="dark">-> erzeugt 2 Zeit-Stempel: <br>
+    (Pause EIN) mit 09:15 + (Arbeit EIN) 09:45</a><br>
+-->
+<h5 ion-text color="primary">Wie kann ich eine Bemerkung für die Lohn-Verrechnung eingeben?</h5>
+    <i ion-text color="danger">#v Bemerkung</i><a ion-text color="dark"> + (beliebiger Stempeltyp)</a><br>
+    <a ion-text color="dark">-> #v wird bei der Verrechnung(Lohn) !händisch! bearbeitet</a> <br>
+<!--
+<h1 ion-text color="secondary">H1: The quick brown fox jumps over the lazy dog</h1>
+
+<h2 ion-text color="primary">H2: The quick brown fox jumps over the lazy dog</h2>
+
+<h3 ion-text color="light">H3: The quick brown fox jumps over the lazy dog</h3>
+
+<h4 ion-text color="danger">H4: The quick brown fox jumps over the lazy dog</h4>
+
+<h5 ion-text color="dark">H5: The quick brown fox jumps over the lazy dog</h5>
+
+<h6 ion-text [color]="dynamicColor">H6: The quick brown fox jumps over the lazy dog</h6>
+
+<p>
+  I saw a werewolf with a Chinese menu in his hand.
+  Walking through the <sub ion-text color="danger">streets</sub> of Soho in the rain.
+  He <i ion-text color="primary">was</i> looking for a place called Lee Ho Fook's.
+  Gonna get a <a ion-text color="secondary">big dish of beef chow mein.</a>
+</p>
+
+<p>
+  He's the hairy-handed gent who ran amuck in Kent.
+  Lately he's <sup ion-text color="primary">been</sup> overheard in Mayfair.
+  Better stay away from him.
+  He'll rip your lungs out, Jim.
+  I'd like to meet his tailor.
+</p>
+-->
 </ion-content>

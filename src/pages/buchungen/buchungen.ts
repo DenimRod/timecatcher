@@ -20,11 +20,11 @@ export class BuchungenPage {
     let params = {
       filter: this.backand.helpers.filter.create('username', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.name),
       sort:   this.backand.helpers.sort.create('date', this.backand.helpers.sort.orders.desc),
-//      pagesize: 10,
-//      page: 1
+      pageSize: 20,
+      pageNumber: 1,
     }
 
-    this.backand.object.getList('Timestamps', params)
+    this.backand.object.getList('Timestamps2', params)
      .then((res: any) => {
        let i=0;
        let weekDay="";

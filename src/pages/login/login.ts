@@ -6,16 +6,19 @@ import { TabsPage } from '../tabs/tabs';
 import { TabsProPage } from '../tabspro/tabspro';
 import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
+import { Dialogs } from '@ionic-native/dialogs';
 
-
-
+//angeblich notwendig, damit die Dialoge "aktiviert" werden.
+/*function onDeviceReady() {
+    alert('onDevReady'+'navigator.notification');
+}
+*/
 @Component({
     templateUrl: 'login.html',
     selector: 'page-login',
 })
 export class LoginPage {
   @ViewChild('focusInput') myInput;
-
 
 /*  username:string = 'ionic2@backand.io';
   password:string = '123456';
@@ -35,7 +38,11 @@ export class LoginPage {
   public items:any[] = [];
   public allusers:any[] = [];
   public onHandy:boolean=false;
-  constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars, public plt: Platform) {
+
+  constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars,
+     public plt: Platform, private dialogs: Dialogs ) {
+
+
   /* ??? noch benutzt ???
     this.backand.user.getUserDetails().then(
       (res: any) => {
@@ -54,12 +61,14 @@ export class LoginPage {
 */
   }
 
-ionViewDidEnter() {
-  this.textInput = '';
-  setTimeout(() => {
-    this.myInput.setFocus();
-  },150);
-}
+  ionViewDidEnter() {
+
+    this.textInput = '';
+    setTimeout(() => {
+      this.myInput.setFocus();
+    },150);
+  
+    }
 /*
   if (this.plt.is('core')) {
       // This will only print when on Desktop
@@ -174,11 +183,79 @@ ABFRAGE FÜR HANDY/DESKTOP */
           alert(err.data);
         });
 */
-        // auf Handy?  ---- wird jetzt über navigator.platform in globar.ts gelöst
-        //if (this.onHandy) this.globVars.currPlatform="Handy"
-        //else this.globVars.currPlatform="Desktop";
+        // auf Handy?  ---- wird jetzt über navigator.platform in globvar.ts gelöst
+          //if (this.onHandy) this.globVars.currPlatform="Handy"
+          //else this.globVars.currPlatform="Desktop";
 
-        // SHOW Timestamp dependig on user level
+     // Time-INIT
+     // gleichzeitig wird ein Eintrag in die Login-DB-Objekt gemacht -> alle Logins werden dokumentiert
+     //randNum = Math.round(Math.random()*100000000);
+          var loginRec: any;
+          this.backand.object.create('Login', "{'name':'"+this.globVars.globCurrUser.name+"', 'userID':'"+
+            this.globVars.globCurrUser.userID+"', 'device':'"+this.globVars.currPlatform +"'}")
+          .then((res1:any) => {
+            //alte Lösung: let params = {
+            //filter:
+            //  this.backand.helpers.filter.create('randNum', this.backand.helpers.filter.operators.text.equals, randNum.toString())
+            //  sort:   this.backand.helpers.sort.create('name', this.backand.helpers.sort.orders.asc)
+            let params = "";
+            this.backand.object.getOne('Login',res1.data.__metadata.id, params)
+            .then((res2: any) => {
+              // hole Client-Zeit
+              let clientMilliSec = Date.now();
+              this.globVars.clientDate = new Date(Date.now());
+              // hole Server-Zeit aus geschriebenen Login-rec
+              loginRec = res2.data;
+              this.globVars.serverDate = new Date(loginRec.createdAt+"Z");
+              let servMilliSec = this.globVars.serverDate.getTime();
+              this.globVars.clientDateDiff = clientMilliSec - servMilliSec;
+              // Beispiele: auf Ri-Erazer: +1500ms
+          //    alert("sms:" + servMilliSec + "cms:" + clientMilliSec +"clientdiff-ms"+this.globVars.clientDateDiff+
+          //    "CreatedAT=serverDate:" + this.globVars.serverDate.toLocaleString()+
+          //    "--clientDate:" + this.globVars.clientDate.toLocaleString()+"!");
+
+          /*  für Ausgabe des kompletten res-records:
+                let Aus1Str = JSON.stringify(loginRec).substr(1,160);
+                let Aus2Str = JSON.stringify(loginRec).substr(160,160);
+                let Aus3Str = JSON.stringify(loginRec).substr(320,160);
+                let Aus4Str = JSON.stringify(loginRec).substr(480,160);
+                let Aus5Str = JSON.stringify(loginRec).substr(640,160);
+                let Aus6Str = JSON.stringify(loginRec).substr(800,160);
+                let Aus7Str = JSON.stringify(loginRec).substr(960,160);
+                let Aus8Str = JSON.stringify(loginRec).substr(1120,160);
+                let Aus9Str = JSON.stringify(loginRec).substr(1280,160);
+                let AusaStr = JSON.stringify(loginRec).substr(1440,160);
+                let AusbStr = JSON.stringify(loginRec).substr(1600,160);
+                alert("LRec1:"+Aus1Str);
+                alert("LRec2:"+Aus2Str);
+                alert("LRec3:"+Aus3Str);
+                alert("LRec4:"+Aus4Str);
+                alert("LRec5:"+Aus5Str);
+                alert("LRec6:"+Aus6Str);
+                alert("LRec7:"+Aus7Str);
+                alert("LRec8:"+Aus8Str);
+                alert("LRec9:"+Aus9Str);
+                alert("LReca:"+Aus9Str);
+                alert("LRecb:"+Aus9Str);
+        /*  -alte Idee zur Suche nach dem letzten erstellen Eintrag:
+              let params = {
+                filter:
+                  this.backand.helpers.filter.create('randNum', this.backand.helpers.filter.operators.text.equals, randNum.toString())
+              //  sort:   this.backand.helpers.sort.create('name', this.backand.helpers.sort.orders.asc)
+              };
+          */
+            //    alert("LoginRec!"+loginRec.name+"crdate:"+loginRec.createdAt+"-"+loginRec.device);
+            },
+            (err:any) => {
+              alert("Error: Login/Res2:"+err.data);
+            });
+          },  // then res1
+          (err: any) => {
+            alert("Error: Login/Res1:"+err.data);
+          });
+         //end TimeInit
+
+  // SHOW Timestamp dependig on user level
         if (this.globVars.globCurrUser.applevel == "pro"){
           this.navCtrl.push(TabsProPage);
         }
