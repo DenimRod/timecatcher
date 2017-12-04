@@ -335,7 +335,6 @@ public makeStamp(stampType:string){
   // else if (this.clobCurrUser.status=.....)
   var korrektur = false;
   if (makeStamp) {
-    this.globCurrUser.status=stampType;
     //ServerZeit wird hochgerechnet aus client + Diff;
     let currComment = this.comment;
     if (currComment.charAt(0) == "#") {  // Korrektur-Zeit wird eingearbeitet
@@ -397,6 +396,7 @@ public makeStamp(stampType:string){
     //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
     //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
       this.globCurrUser.lastcomment = this.comment;
+      this.globCurrUser.status=stampType;
       this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
     }; // if-Ende: "normale Buchung" vorbereiten
     this.backand.object.create('Timestamps2', "{'date':'" + this.serverDate.toISOString() + "', 'status':'" +
