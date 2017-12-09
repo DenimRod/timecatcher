@@ -3,7 +3,7 @@
     <name>timeCatcher</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="liobas@gmx.net" href="http://kutschera.co.at/">KD Development Team</author>
-    <content original-src="index.html" src="http://192.168.1.104:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -77,12 +77,10 @@
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
     </platform>
     <allow-navigation href="http://192.168.1.107:8100" />
-    <allow-navigation href="http://192.168.1.104:8100" />
     <engine name="android" spec="^6.2.3" />
     <engine name="ios" spec="^4.5.1" />
     <engine name="windows" spec="^5.0.0" />
     <plugin name="cordova-plugin-device" spec="^1.1.4" />
-    <plugin name="cordova-plugin-dialogs" spec="^1.3.4" />
     <plugin name="cordova-plugin-googleplus" spec="^5.1.1">
         <variable name="REVERSED_CLIENT_ID" value="myreversedclientid" />
     </plugin>
@@ -92,4 +90,6 @@
     <plugin name="cordova-plugin-statusbar" spec="git+https://github.com/apache/cordova-plugin-statusbar.git" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.1" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <plugin name="cordova-plugin-dialogs" spec="^1.3.4" />
+    <allow-navigation href="http://192.168.1.104:8100" />
 </widget>

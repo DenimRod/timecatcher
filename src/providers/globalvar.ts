@@ -18,7 +18,7 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.6B"
+public appVers:string="v0.6B2"
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
 public serverDateStr:string=""; // UTC-Zeit des Logins = univ.ServerZeit (Zeit kommt vom Backand-Server!)
@@ -174,21 +174,17 @@ constructor(public backand: BackandService, public app:App, private device:Devic
     Android
     BlackBerry
     Opera
+--eigene Handys:
+  ARM          - Thomas
+  Linux armv7l - Richie
+  Linux armv8l - Sigi
+  iPhone       - Horst
   */
-  this.currPlatform="Desktop";
+  this.currPlatform="Handy"; // die meisten unbekannten Codes kommen von einem unbek. Handy
   switch (this.browserPlatform) {
     case "Win64": this.currPlatform ="Desktop";
       break;
     case "Win32": this.currPlatform ="Desktop";
-      break;
-    case "iPhone": this.currPlatform = "Handy";
-      break;
-    case "Android": this.currPlatform = "Handy";
-        break;
-    // kommt seltsamerweise bei Android-Handy live-reload-Compilierung
-    case "Linux armv7l": this.currPlatform = "Handy";
-        break;
-    case "WinCE": this.currPlatform = "Handy";
       break;
   }
   //------------Erkennung, ob bereits registriert
