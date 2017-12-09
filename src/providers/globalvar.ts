@@ -18,7 +18,7 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.6B2"
+public appVers:string="v0.6.2"
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
 public serverDateStr:string=""; // UTC-Zeit des Logins = univ.ServerZeit (Zeit kommt vom Backand-Server!)
