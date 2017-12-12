@@ -4,6 +4,7 @@ import { App } from 'ionic-angular';
 import { LoginPage } from '../pages/login/login';
 import { Device } from '@ionic-native/device';
 import { Platform } from 'ionic-angular';
+import { ToastController } from 'ionic-angular';
 
 
 @Injectable()
@@ -18,7 +19,7 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.6.2"
+public appVers:string="v0.7B"
 
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
@@ -154,7 +155,8 @@ public ZEN_Devices = [              // alle Devices werden hier eingetragen
   }
 ];
 
-constructor(public backand: BackandService, public app:App, private device:Device, public platform:Platform) {
+constructor(public backand: BackandService, public app:App, private device:Device, public platform:Platform,
+private toastCtrl: ToastController) {
   this.globCurrUser = null;
   this.KW_akt = this.KW();
 //  alert("browserPlatform" + this.browserPlatform);
@@ -176,16 +178,22 @@ constructor(public backand: BackandService, public app:App, private device:Devic
     BlackBerry
     Opera
 --eigene Handys:
-  ARM          - Thomas
+  ARM          - Thomas, Julian(Nokia)
   Linux armv7l - Richie
   Linux armv8l - Sigi
-  iPhone       - Horst
+  iPhone       - Horst, David
+  MacIntel     - Didi (Desktop)
+--eigene Desktops:
+  Win32        - Su,To
+  Win64        - Ju,Ri,Al
   */
   this.currPlatform="Handy"; // die meisten unbekannten Codes kommen von einem unbek. Handy
   switch (this.browserPlatform) {
     case "Win64": this.currPlatform ="Desktop";
       break;
     case "Win32": this.currPlatform ="Desktop";
+      break;
+    case "MacIntel": this.currPlatform ="Desktop";
       break;
   }
   //------------Erkennung, ob bereits registriert
@@ -258,7 +266,7 @@ public makeStamp(stampType:string){
   var makeStamp = true;
   var neuStampTypeNr: number;
   var altStampTypeNr: number;
-  var currComm : string;
+//  var currComm : string;
   var splitCommArr: any;
 // im Folgenden: Def: Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
 //               Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
@@ -330,86 +338,149 @@ public makeStamp(stampType:string){
   // else-> wenn "alter Status"=Arbeits-Typ (1..6) && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
   // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ(1..60))-> Zeit weiterlaufen lassen
   // else if (this.clobCurrUser.status=.....)
-  var korrektur = false;
+  var korrektur = 0; // 0..kein Korrektur-Tag, 1..Korrektur OK, 2.. Korrektur Fehler (z.B. Zeit falsch angegeben,etc.)
   if (makeStamp) {
     //ServerZeit wird hochgerechnet aus client + Diff;
+    let ziffern = ['0','1','2','3','4','5','6','7','8','9'];
+    let uhrZiffern = ['0','1','2','3','4','5','6'];
     let currComment = this.comment;
+//alert ("makestamp1:"+ currComment+"!");
     if (currComment.charAt(0) == "#") {  // Korrektur-Zeit wird eingearbeitet
+//alert ("makestamp2= #:"+ currComment+"!");
       if (currComment.charAt(1) == "k" || currComment.charAt(1) =="K") {  // Korrektur-Zeit wird eingearbeitet
-        korrektur = true;
-        currComment = currComment.substr(2).trim();
+//alert ("makestamp3= #k:"+ currComment+"!");
+        korrektur = 2;  // wenn spätere keine korrekte Uhrzeit festgestellt wird, dann Fehler
+        currComment = currComment.substr(2).trim(); // #k wird weggeschnitten
         var n = this.comment.search(':');
         if (n !== -1) {  // es gibt einen  Doppelpunkt im Kommentar
-          if (currComment.length < 6) {  // nur EINE Uhrzeit steht im Kommentar
+          if (n < 6) {  // Uhrzeit steht am Anfang des Kommentar
            //zerlegen in HH:MM
-            splitCommArr = currComment.split(':');
+            var uhr = currComment.substr(0,5);
+//alert ("Uhr:"+ uhr+"!");
+            splitCommArr = uhr.split(':');
             if (splitCommArr.length = 2) {
-          //    alert("Stunden:"+ splitCommArr[0]+"Minuten:"+ splitCommArr[1]); //Minuten
-            }
-          }
+//alert("Stunden:"+ splitCommArr[0]+"Minuten:"+ splitCommArr[1]); //Minuten
+              if ((splitCommArr[0].length==2) && (splitCommArr[1].length==2)) { // könnte Uhrzeit + Zusatz-Kommentar sein
+//alert ("wahrscheinlich Uhrzeit:"+ uhr+"!");
+                if ((uhrZiffern.indexOf(uhr[0]) !=-1) && (uhrZiffern.indexOf(uhr[1]) !=-10) && (uhr[2] ==':')
+                && (uhrZiffern.indexOf(uhr[3]) !=-1) && (ziffern.indexOf(uhr[4]) !=-1)) {  // sind nur Uhrzeit-Ziffern
+                  if ((Number((uhr[0]+uhr[1])) >= 0) && (Number((uhr[0]+uhr[1])) <= 23) && (Number((uhr[3]+uhr[4])) <= 59) ) { // ist wirklich Uhrzeit
+//alert("=Uhrzeit!");
+                    korrektur = 1;
+                  };
+                };
+              };
+            };
+          };
+          if (korrektur != 1) {
+            this.comment = 'Falsches Zeit-Format: '+this.comment;
+          };
         }
         else { // keine Uhrzeit im Kommentar -> canceln
-          korrektur = false;
-          this.comment = 'Fehleingabe: '+this.comment;
+          korrektur = 2;
+          this.comment = 'Keine Uhrzeit angegeben: '+this.comment;
         }
       }
-      //alert("comment:"+this.comment);
+      else { // # wurde erkannt, aber keine Korrektur !!!
+      };
+//alert("comment:"+this.comment+"currComment:"+currComment);
     }
     else { // ist kein # Code-Kommentar
-
     };
     let clientMillisec = Date.now();
     this.clientDate = new Date(clientMillisec);
     this.serverDate = new Date(clientMillisec - this.clientDateDiff);
-    if (korrektur) {  // es wird eine Korrekturbuchung gemacht
+    if (korrektur==1) {  // wenn Korrekturbuchung, dann serverDate auf die Zeit der Korrektur-Texts
       this.serverDate.setHours(splitCommArr[0]);
       this.serverDate.setMinutes(splitCommArr[1]);
     //  alert("serverDate(korrigiert):"+this.serverDate.toISOString());
     };
-    let lastTimeStamp = new Date (this.globCurrUser.lasttimestampISO);
-  //  alert("sD:"+this.serverDate.toISOString()+"ltsISO:"+lastTimeStamp.toISOString());
-    if (this.serverDate > lastTimeStamp) {  //die Buchung sollte auch auf TOP angezeigt werden
-  //    alert("das zu buchende Datum ist neuer als der letzte Timestamp");
-    // normale Buchung vorbereiten
-    // Server-Zeitproblem auf KD-Desktops -> geht 10 min vor - Workaround
-    //if (this.currPlatform == "Desktop") currMillisec-=(600*1000);
-    // Workaround-Ende
-    //this.clientDate = (new Date(currMillisec)); // ISO-damit alphabet.Sortierung möglich
-    // Test im GMT-Format:
-    //this.currentDate = new Date(currMillisec); //kommt im GMT-Format
-    //this.currentDateUTC =new Date();
-    //date_string= this.currentDate.toString();; //kommt im GMT-Format
+    if (korrektur !==2) { // Buchung soll durchgeführt werden
+      let lastTimeStamp = new Date (this.globCurrUser.lasttimestampISO);
+    //  alert("sD:"+this.serverDate.toISOString()+"ltsISO:"+lastTimeStamp.toISOString());
+      if (this.serverDate <= new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist NICHT in der Zukunft
+        if (this.serverDate > lastTimeStamp) {  //die Buchung sollte auch auf TOP angezeigt werden
+      // alert("das zu buchende Datum ist neuer als der letzte Timestamp");
+      // normale Buchung vorbereiten
 
-    //Umwandlung von String-> Date-Objekt OK:
-    // Stunden,Minuten mit führender 0
-      let Hours="";
-      let Minutes="";
-      if (this.serverDate.getHours()<10) Hours="0"+this.serverDate.getHours()
-      else Hours=this.serverDate.getHours().toString();
-      if (this.serverDate.getMinutes()<10) Minutes="0"+this.serverDate.getMinutes()
-      else Minutes=this.serverDate.getMinutes().toString();
-      this.globCurrUser.lasttimestamp =  this.serverDate.getDate() + "." + (this.serverDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
-      this.globCurrUser.lasttimestampISO = this.serverDate.toISOString(); //schreibt in Orts-Zeit
-    //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
-    //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
-      this.globCurrUser.lastcomment = this.comment;
-      this.globCurrUser.status=stampType;
-      this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-    }; // if-Ende: "normale Buchung" vorbereiten
-    this.backand.object.create('Timestamps2', "{'date':'" + this.serverDate.toISOString() + "', 'status':'" +
-    this.globCurrUser.status + "','userid':'" + this.globCurrUser.id + "','username':'" +
-    this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +
-    "','browserPlatform':'" + navigator.platform + "'}")
-    .then((res: any) => {
-//      alert("nach Create: ms->Date:"+this.serverDate.getTime()+ "cms:" + clientMillisec +"clientdiff-ms"+this.clientDateDiff+
-//      "serverDate:" + this.serverDate.toLocaleString()+
-//      "--clientDate:" + this.clientDate.toLocaleString()+"!");
-    },
-    (err: any) => {
-      alert(err.data);
-    });
-    this.comment = "";
-  }
+      // Server-Zeitproblem auf KD-Desktops -> geht 10 min vor - Workaround
+      //if (this.currPlatform == "Desktop") currMillisec-=(600*1000);
+      // Workaround-Ende
+
+      //this.clientDate = (new Date(currMillisec)); // ISO-damit alphabet.Sortierung möglich
+      //Umwandlung von String-> Date-Objekt OK:
+      // Stunden,Minuten mit führender 0
+          let Hours="";
+          let Minutes="";
+          if (this.serverDate.getHours()<10) Hours="0"+this.serverDate.getHours()
+          else Hours=this.serverDate.getHours().toString();
+          if (this.serverDate.getMinutes()<10) Minutes="0"+this.serverDate.getMinutes()
+          else Minutes=this.serverDate.getMinutes().toString();
+          this.globCurrUser.lasttimestamp =  this.serverDate.getDate() + "." + (this.serverDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
+          this.globCurrUser.lasttimestampISO = this.serverDate.toISOString(); //schreibt in Orts-Zeit
+        //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
+        //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
+          this.globCurrUser.lastcomment = this.comment;
+          this.globCurrUser.status=stampType;
+          this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
+        };
+         // if-Ende: "normale Buchung" vorbereiten
+        this.backand.object.create('Timestamps2', "{'date':'" + this.serverDate.toISOString() + "', 'status':'" +
+        stampType + "','userid':'" + this.globCurrUser.id + "','username':'" +
+        this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +
+        "','browserPlatform':'" + navigator.platform + "'}")
+        .then((res: any) => {
+    //      alert("nach Create: ms->Date:"+this.serverDate.getTime()+ "cms:" + clientMillisec +"clientdiff-ms"+this.clientDateDiff+
+    //      "serverDate:" + this.serverDate.toLocaleString()+
+    //      "--clientDate:" + this.clientDate.toLocaleString()+"!");
+          if (korrektur ==0) {
+            let toast = this.toastCtrl.create({
+              message: 'Zeitstempel wurde eingetragen',
+              duration: 3000,
+              position: 'top'
+            });
+            toast.onDidDismiss(() => {});
+            toast.present();
+            this.comment = "";
+          }
+          else {  // korrektur ==1
+            let toast = this.toastCtrl.create({
+              message: 'Korrektur-Zeitstempel wurde eingetragen',
+              duration: 4000,
+              position: 'top'
+            });
+            toast.onDidDismiss(() => {});
+            toast.present();
+            this.comment = "";
+          };
+        },
+        (err: any) => {
+          alert(err.data);
+        });
+        this.comment = "";
+      }
+      else { // Fehler
+        let toast = this.toastCtrl.create({
+          message: '!!!KEIN!!! Zeitstempel eingetragen - Korrektur-Zeit in Zukunft',
+          duration: 4000,
+          showCloseButton: false,
+          position: 'middle'
+        });
+        toast.onDidDismiss(() => {});
+        toast.present();
+      };
+    }
+    else {   // korrektur=2 Fehler in Korrektur-Kommentar ->Abbruch
+      let toast = this.toastCtrl.create({
+        message: '!!!KEIN!!! Zeitstempel eingetragen - Fehler bei Korrektur-Text',
+        duration: 4000,
+        showCloseButton: false,
+        position: 'middle'
+      });
+      toast.onDidDismiss(() => {});
+      toast.present();
+    };
+  } // end-if makestamp
 
 /*    READ ID OF CREATED TIMESTAMP
   .then((res: any) => {
