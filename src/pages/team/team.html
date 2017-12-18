@@ -1,8 +1,28 @@
 <ion-header>
 <ion-navbar hideBackButton>
-  <ion-title>
-    {{globVars.appNameVers}} - Team: {{globVars.globCurrUser.name}}
-  </ion-title>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-title>{{globVars.appNameVers}} - Team: {{globVars.globCurrUser.name}}</ion-title>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label> = Sortierung Alphabet/Buchungszeit</ion-label>
+            <ion-checkbox [(ngModel)]="globVars.teamSortAlpha" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+        <ion-col align="right">
+          <button ion-button small block icon-left color='primary' (click)="reloadTeam()">
+          <ion-icon name="refresh"></ion-icon>Neu Laden</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  <!--
+    <button ion-button large align="center" (click)="handlePIN(1)">1</button>
+    <button ion-button large align="center" (click)="handlePIN(2)">2</button>
+-->
+<!--  </ion-title> -->
 </ion-navbar>
 <!-- <p align="right"> {{globVars.timer}} </p> -->
 
@@ -15,6 +35,10 @@
       <ion-col>
         Name
       </ion-col>
+<!--      <ion-col>
+        MA_Farbe
+      </ion-col>
+-->
       <ion-col>
         Status
       </ion-col>
@@ -30,20 +54,34 @@
     </ion-row>
     <ion-row *ngFor="let user of users">
       <ion-col>
+        <span style="color:Grey" *ngIf="user.name=='Tom'"><ion-icon name="square"></ion-icon>  </span>
+        <span style="color:Blue" *ngIf="user.name=='David'"><ion-icon name="square"></ion-icon> </span>
+        <span style="color:Orange"  *ngIf="user.name=='Horst'"><ion-icon name="square"></ion-icon> </span>
+        <span style="color:Fuchsia"  *ngIf="user.name=='Thomas'"><ion-icon name="square"></ion-icon> </span>
+        <span style="color:Red" *ngIf="user.name=='Emir'"><ion-icon name="square"></ion-icon> </span>
+        <span style="color:Yellow"  *ngIf="user.name=='Sigi'"><ion-icon name="square"></ion-icon> </span>
         {{user.name}}
       </ion-col>
+<!--  <ion-col>
+        <span style="color:#f53d3d" *ngIf="user.name=='Alex'"><ion-icon name="remove-circle"></ion-icon>  </span>
+        <span style="color:#3dcc82" *ngIf="user.name=='Richie'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      </ion-col>
+-->
       <ion-col>
-        {{user.status}}
-        <span style="color:#f53d3d" *ngIf="user.status=='Krank'"><ion-icon name="remove-circle"></ion-icon>  </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='Arbeit EIN'"><ion-icon name="radio-button-on"></ion-icon> </span>
-        <span style="color:#ffcc00" *ngIf="user.status=='AD-Fahrt'"><ion-icon name="car"></ion-icon> </span>
-        <span style="color:#ffcc00" *ngIf="user.status=='AD-Kunde'"><ion-icon name="contact"></ion-icon> </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='Tele-Arbeit'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='Projekt 1'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#3dcc82" *ngIf="user.status=='Projekt 2'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#488aff" *ngIf="user.status=='Pause EIN'"><ion-icon name="ionic"></ion-icon> </span>
-        <span style="color:#488aff" *ngIf="user.status=='Urlaub'"><ion-icon name="remove-circle"></ion-icon> </span>
-        <span style="color:#f53d3d" *ngIf="user.status=='Arbeit AUS'"><ion-icon name="remove-circle"></ion-icon> </span>
+        <span style="background-color:#488aff" *ngIf="user.status=='Pause EIN'">!!! {{user.status}} !!! </span>
+        <div *ngIf="!(user.status=='Pause EIN')">
+          {{user.status}}
+          <span style="color:#f53d3d" *ngIf="user.status=='Krank'">------- <ion-icon name="remove-circle"></ion-icon>  </span>
+          <span style="color:#3dcc82" *ngIf="user.status=='Arbeit EIN'"> <ion-icon name="radio-button-on"></ion-icon> </span>
+          <span style="color:#ffcc00" *ngIf="user.status=='AD-Fahrt'">-- <ion-icon name="car"></ion-icon> </span>
+          <span style="color:#ffcc00" *ngIf="user.status=='AD-Kunde'">- <ion-icon name="contact"></ion-icon> </span>
+          <span style="color:#3dcc82" *ngIf="user.status=='Tele-Arbeit'"><ion-icon name="ionic"></ion-icon> </span>
+          <span style="color:#3dcc82" *ngIf="user.status=='Projekt 1'"><ion-icon name="ionic"></ion-icon> </span>
+          <span style="color:#3dcc82" *ngIf="user.status=='Projekt 2'"><ion-icon name="ionic"></ion-icon> </span>
+          <span style="color:#488aff" *ngIf="user.status=='Pause EIN'"><ion-icon name="ionic"></ion-icon> </span>
+          <span style="color:#488aff" *ngIf="user.status=='Urlaub'">------ <ion-icon name="remove-circle"></ion-icon>  </span>
+          <span style="color:#f53d3d" *ngIf="user.status=='Arbeit AUS'"><ion-icon name="remove-circle"></ion-icon> </span>
+        </div>
       </ion-col>
       <ion-col>
         {{user.lasttimestamp}}

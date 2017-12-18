@@ -1,3 +1,7 @@
+// Ideen für Parameter/USER
+//   teamSortAlpha (Alex)
+
+
 import { Injectable } from '@angular/core';
 import { BackandService } from '@backand/angular2-sdk';
 import { App } from 'ionic-angular';
@@ -19,7 +23,7 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.7B"
+public appVers:string="v0.7.2"
 
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
@@ -50,6 +54,7 @@ public workTimeTodayHour = 1; // dient zur Anzeige der Stunden
 public workTimeTodayMin  = 0; // dient zur Anzeige der Minuten
 public workTimeTimeout:any;   // zum Löschen des laufenden Timeouts für workTime-
 public currDevice:any;
+public teamSortAlpha = true;
 public companies =[
   {
     ID: 1,
@@ -350,10 +355,23 @@ public makeStamp(stampType:string){
       if (currComment.charAt(1) == "k" || currComment.charAt(1) =="K") {  // Korrektur-Zeit wird eingearbeitet
 //alert ("makestamp3= #k:"+ currComment+"!");
         korrektur = 2;  // wenn spätere keine korrekte Uhrzeit festgestellt wird, dann Fehler
-        currComment = currComment.substr(2).trim(); // #k wird weggeschnitten
-        var n = this.comment.search(':');
+        currComment = currComment.substr(2).trim(); // #k wird weggeschnitten und getrimmt
+        var n = currComment.indexOf(".");
+    //alert(currComment+"--n:"+n);
+        if (n == 2)  {// ersetze . durch : , wenn gleich hinter #k-> wahrscheinlich Uhrzeit gemeint!
+          currComment = currComment.replace(".",":");
+    //alert("Uhrzeit mit . -> Uhrzeit mit : -"+currComment);
+        };
+        // if erste vier Buchstaben sind Zahlen -> einfügen von ":" in currComment
+        if ((uhrZiffern.indexOf(currComment.charAt(0)) !=-1) && (ziffern.indexOf(currComment.charAt(1)) !=-1) &&
+          (uhrZiffern.indexOf(currComment.charAt(2)) !=-1) && (ziffern.indexOf(currComment.charAt(3)) !=-1)) {  // Bsp: "1400" sind nur Uhrzeit-Ziffern ohne ":"
+          let part1=currComment.slice(0,2);
+          let part2=currComment.slice(2);
+          currComment = part1 + ":" + part2;
+        };
+        n = currComment.indexOf(':');
         if (n !== -1) {  // es gibt einen  Doppelpunkt im Kommentar
-          if (n < 6) {  // Uhrzeit steht am Anfang des Kommentar
+          if (n == 2) {  // Uhrzeit steht am Anfang des Kommentar
            //zerlegen in HH:MM
             var uhr = currComment.substr(0,5);
 //alert ("Uhr:"+ uhr+"!");
@@ -362,9 +380,10 @@ public makeStamp(stampType:string){
 //alert("Stunden:"+ splitCommArr[0]+"Minuten:"+ splitCommArr[1]); //Minuten
               if ((splitCommArr[0].length==2) && (splitCommArr[1].length==2)) { // könnte Uhrzeit + Zusatz-Kommentar sein
 //alert ("wahrscheinlich Uhrzeit:"+ uhr+"!");
-                if ((uhrZiffern.indexOf(uhr[0]) !=-1) && (uhrZiffern.indexOf(uhr[1]) !=-10) && (uhr[2] ==':')
-                && (uhrZiffern.indexOf(uhr[3]) !=-1) && (ziffern.indexOf(uhr[4]) !=-1)) {  // sind nur Uhrzeit-Ziffern
-                  if ((Number((uhr[0]+uhr[1])) >= 0) && (Number((uhr[0]+uhr[1])) <= 23) && (Number((uhr[3]+uhr[4])) <= 59) ) { // ist wirklich Uhrzeit
+                if ((uhrZiffern.indexOf(uhr.charAt(0)) !=-1) && (ziffern.indexOf(uhr.charAt(1)) !=-1) && (uhr.charAt(2) ==':')
+                && (uhrZiffern.indexOf(uhr.charAt(3)) !=-1) && (ziffern.indexOf(uhr.charAt(4)) !=-1)) {  // sind nur Uhrzeit-Ziffern
+                  if ((Number((uhr.charAt(0)+uhr.charAt(1))) >= 0) && (Number((uhr.charAt(0)+uhr.charAt(1))) <= 23) &&
+                    (Number((uhr.charAt(3)+uhr.charAt(4))) <= 59) ) { // ist wirklich Uhrzeit
 //alert("=Uhrzeit!");
                     korrektur = 1;
                   };

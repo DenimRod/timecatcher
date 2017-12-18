@@ -17,21 +17,35 @@ export class TeamPage {
   }
 
   ionViewWillEnter() {
-    let params = {
+    this.reloadTeam();
+  };
+
+  reloadTeam(){
+//    alert("teamSortAlpha"+this.globVars.teamSortAlpha);
+    let params: any;
+    if (this.globVars.teamSortAlpha) {
+      params = {
+        filter:
+          this.backand.helpers.filter.create('companyid', this.backand.helpers.filter.operators.text.equals, 1),
+        sort:   this.backand.helpers.sort.create('name', this.backand.helpers.sort.orders.asc)
+      }
+    }
+    else {
+      params = {
       filter:
         this.backand.helpers.filter.create('companyid', this.backand.helpers.filter.operators.text.equals, 1),
-      sort:   this.backand.helpers.sort.create('name', this.backand.helpers.sort.orders.asc)
-    }
-
+      sort:   this.backand.helpers.sort.create('lasttimestampISO', this.backand.helpers.sort.orders.desc)
+      }
+    };
     this.backand.object.getList('Users', params)
      .then((res: any) => {
        this.users = res.data;
        //alert("!");
 
-  },
-  (err: any) => {
-    alert(err.data);
-  });
-  }
+    },
+    (err: any) => {
+      alert(err.data);
+    });
+  };
 
 }

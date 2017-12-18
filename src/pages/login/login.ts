@@ -67,7 +67,7 @@ export class LoginPage {
     setTimeout(() => {
       this.myInput.setFocus();
     },150);
-  
+
     }
 /*
   if (this.plt.is('core')) {
@@ -105,11 +105,13 @@ ABFRAGE FÜR HANDY/DESKTOP */
     };
     //else {     // es ist eine normale PIN-Eingabe -> Suche nach User
     //alert("normale PIN oder hinter Reg-Code");
-    let tempId = "";
+  /*  let tempId = "";
     for(var i=0;i<this.globVars.pinLength;i++){
       tempId += this.textInput.charAt(i);
     }
-    this.inputID = tempId;
+    this.inputID = tempId; */
+
+    this.inputID = this.textInput;
     this.checkUser();
     }
 
