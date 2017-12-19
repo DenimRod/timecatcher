@@ -5,16 +5,12 @@
         <ion-col>
           <ion-title>{{globVars.appNameVers}} - Team: {{globVars.globCurrUser.name}}</ion-title>
         </ion-col>
-        <ion-col>
-          <ion-item>
-            <ion-label> = Sortierung Alphabet/Buchungszeit</ion-label>
-            <ion-checkbox [(ngModel)]="globVars.teamSortAlpha" color="dark" checked="true"></ion-checkbox>
-          </ion-item>
-        </ion-col>
+<!--
+
         <ion-col align="right">
           <button ion-button small block icon-left color='primary' (click)="reloadTeam()">
           <ion-icon name="refresh"></ion-icon>Neu Laden</button>
-        </ion-col>
+        </ion-col>-->
       </ion-row>
     </ion-grid>
 
@@ -30,10 +26,18 @@
 
 <ion-content padding class="page5">
 
+  <ion-refresher (ionRefresh)="reloadTeamPull($event)">
+    <ion-refresher-content>
+
+      </ion-refresher-content>
+      </ion-refresher>
+
+
   <ion-grid>
     <ion-row class="titles">
       <ion-col>
-        Name
+        <div (click)='changeSort(true)'>Name
+        <ion-icon name="arrow-dropdown"></ion-icon></div>
       </ion-col>
 <!--      <ion-col>
         MA_Farbe
@@ -43,7 +47,8 @@
         Status
       </ion-col>
       <ion-col>
-        Letzte Buchung
+        <div (click)='changeSort(false)'>Letzte Buchung
+        <ion-icon name="arrow-dropdown"></ion-icon></div>
       </ion-col>
       <ion-col>
         Kommentar
@@ -94,6 +99,7 @@
       </ion-col>  -->
     </ion-row>
   </ion-grid>
+
 
 
 </ion-content>

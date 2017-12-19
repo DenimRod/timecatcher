@@ -23,7 +23,7 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.7.2"
+public appVers:string="v0.7.3"
 
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
@@ -54,7 +54,7 @@ public workTimeTodayHour = 1; // dient zur Anzeige der Stunden
 public workTimeTodayMin  = 0; // dient zur Anzeige der Minuten
 public workTimeTimeout:any;   // zum Löschen des laufenden Timeouts für workTime-
 public currDevice:any;
-public teamSortAlpha = true;
+public teamSortAlpha = false;
 public companies =[
   {
     ID: 1,
