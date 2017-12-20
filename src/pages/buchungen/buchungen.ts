@@ -10,7 +10,10 @@ import { GlobalVars } from '../../providers/globalvar';
 })
 export class BuchungenPage {
 
-  public buchungen:any[]=[]; // die einzelnen Buchungszeilen
+  public buchungen:any[]=[]; // die einzelnen Buchungszeilen (ex. heute)
+  public buchungentoday:any[]=[];
+  public workTimeHours = 0;
+  public workTimeMinutes = 0;
 
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
     //this.globVars.timer=30;
@@ -23,13 +26,32 @@ export class BuchungenPage {
       pageSize: 20,
       pageNumber: 1,
     }
-
+                                            //Hol die letzten TS dieses Users
     this.backand.object.getList('Timestamps2', params)
      .then((res: any) => {
        let i=0;
        let weekDay="";
        let datumHelper=null;
-       while (i<res.data.length) {
+       let todayIndexBorder=-1;
+       let todayDate = new Date();
+
+       while (i<res.data.length) {            //Such den ersten TS != heute
+         if(res.data[i].date.substr(0,10) !=     todayDate.toISOString().substr(0,10))
+         {
+           todayIndexBorder = i;
+           break;
+         }
+         i++;
+       }
+       i=0;         //falls alle TS von heute -> Ende = Ende d. Liste
+       if (todayIndexBorder==-1) todayIndexBorder = res.data.length + 1;
+
+            //Hol dir die Arbeitszeit der heutigen TS und rechne sie in h/m um
+       let workTimeSum = new Date(this.globVars.calcWorkTime(res.data.slice(0,todayIndexBorder)));
+       this.workTimeHours = workTimeSum.getUTCHours();
+       this.workTimeMinutes = workTimeSum.getUTCMinutes();
+
+       while (i<res.data.length) {          //UTC Strings -> Lokale Zeit
          datumHelper = new Date(res.data[i].date);
          res.data[i].date = datumHelper.toString().substr(0,21);
          weekDay=res.data[i].date.substr(0,3)
@@ -53,7 +75,9 @@ export class BuchungenPage {
          //  alert(i+"-Datum:"+res.data[i].datum+"----"+res.data[i].date);
          ++i;
        };
-       this.buchungen = res.data;
+       this.buchungentoday = res.data.slice(0,todayIndexBorder);
+       this.buchungen = res.data.slice(todayIndexBorder,);
+
   },
   (err: any) => {
     alert(err.data);

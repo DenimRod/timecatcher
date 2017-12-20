@@ -10,6 +10,14 @@
 
 <ion-content padding class="page5">
 
+<ion-card>
+  <ion-item>
+    <ion-icon name="time" item-start></ion-icon>
+    Arbeitszeit heute:
+    <ion-badge item-end><span *ngIf="workTimeHours">{{workTimeHours}}h</span> {{workTimeMinutes}}m</ion-badge>
+  </ion-item>
+</ion-card>
+
   <ion-grid>
     <ion-row class="titles">
       <ion-col>
@@ -28,7 +36,7 @@
         Arbeitszeit
       </ion-col> -->
     </ion-row>
-    <ion-row *ngFor="let buchung of buchungen">
+    <ion-row *ngFor="let buchung of buchungentoday">
 
       <ion-col>
   <!--      <span *ngIf="buchung.date[0]=='M'"> -> </span> -->
@@ -58,6 +66,39 @@
       </ion-col>  -->
     </ion-row>
   </ion-grid>
+
+<!-- Alle Buchungen != heute -->
+<ion-grid>
+  <ion-row *ngFor="let buchung of buchungen">
+
+    <ion-col>
+<!--      <span *ngIf="buchung.date[0]=='M'"> -> </span> -->
+      {{buchung.date}}
+    </ion-col>
+    <ion-col>
+      {{buchung.status}}
+      <span style="color:#f53d3d" *ngIf="buchung.status=='Krank'"><ion-icon name="remove-circle"></ion-icon>  </span>
+      <span style="color:#3dcc82" *ngIf="buchung.status=='Arbeit EIN'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      <span style="color:#ffcc00" *ngIf="buchung.status=='AD-Fahrt'"><ion-icon name="car"></ion-icon> </span>
+      <span style="color:#ffcc00" *ngIf="buchung.status=='AD-Kunde'"><ion-icon name="contact"></ion-icon> </span>
+      <span style="color:#3dcc82" *ngIf="buchung.status=='Tele-Arbeit'"><ion-icon name="ionic"></ion-icon> </span>
+      <span style="color:#3dcc82" *ngIf="buchung.status=='Projekt 1'"><ion-icon name="ionic"></ion-icon> </span>
+      <span style="color:#3dcc82" *ngIf="buchung.status=='Projekt 2'"><ion-icon name="ionic"></ion-icon> </span>
+      <span style="color:#488aff" *ngIf="buchung.status=='Pause EIN'"><ion-icon name="ionic"></ion-icon> </span>
+      <span style="color:#488aff" *ngIf="buchung.status=='Urlaub'"><ion-icon name="remove-circle"></ion-icon> </span>
+      <span style="color:#f53d3d" *ngIf="buchung.status=='Arbeit AUS'"><ion-icon name="remove-circle"></ion-icon> </span>
+      </ion-col>
+    <ion-col>
+      {{buchung.device}}
+    </ion-col>
+    <ion-col>
+      {{buchung.comment}}
+    </ion-col>
+<!-- <ion-col>
+
+    </ion-col>  -->
+  </ion-row>
+</ion-grid>
 
 
 </ion-content>

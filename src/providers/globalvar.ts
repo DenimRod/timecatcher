@@ -23,7 +23,7 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.7.3"
+public appVers:string="v0.7.4"
 
 public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
@@ -265,6 +265,54 @@ this.timer = this.timer - 1;
     this.app.getRootNav().setRoot(LoginPage);
   }
     //alert(this.timer);
+}
+
+public getTSNumber(stampString:string){
+  let TSNumber = 1;
+  switch(stampString){
+    case this.tsTyp[2]: TSNumber=2; break;
+    case this.tsTyp[3]: TSNumber=3; break;
+    case this.tsTyp[4]: TSNumber=4; break;
+    case this.tsTyp[5]: TSNumber=5; break;
+    case this.tsTyp[6]: TSNumber=6; break;
+    case this.tsTyp[7]: TSNumber=7; break;
+    case this.tsTyp[8]: TSNumber=8; break;
+    case this.tsTyp[9]: TSNumber=9; break;
+    case this.tsTyp[0]: TSNumber=0; break;
+  }
+  return(TSNumber);
+}
+
+public calcWorkTime(tsList:any[]){
+  let workON=false;
+  let begin=null;
+  let end = null;
+  let sum = 0;
+
+  for(let i=tsList.length-1; i>-1; i--){  //Suche nach Arbeitsbeginn
+    let tsNumber = this.getTSNumber(tsList[i].status);
+    if(tsNumber >0 && tsNumber <7){
+      begin = new Date(tsList[i].date);
+      workON = true;
+
+      for(; i>-1; --i){                   //Suche nach Arbeitsende
+        tsNumber = this.getTSNumber(tsList[i].status);
+        if(tsNumber==0 || tsNumber >6){
+          end = new Date(tsList[i].date);
+          workON = false;
+          sum += end - begin;
+          break;
+        }
+      }
+    }                                     //Wiederhole bis zum Ende der Liste
+  }
+  if(workON){                             //Falls kein Arbeitsende gefunden,
+    let now = 0;                          //nimm Differenz zu jetziger Zeit
+    now = Date.now();                     //(mit Client-Zeit-Offset)
+    end = (now - this.clientDateDiff);
+    sum += end - begin;
+  }
+  return(sum);
 }
 
 public makeStamp(stampType:string){
