@@ -12,7 +12,7 @@ export class TimestampPage {
 
   constructor(public globVars: GlobalVars, public navCtrl: NavController ) {
 
-    this.globVars.timer=this.globVars.logouttime;
+    this.globVars.timer=this.globVars.logoutTime;
     this.globVars.countDown();
 
   }

@@ -1,7 +1,6 @@
 // Ideen für Parameter/USER
 //   teamSortAlpha (Alex)
 
-
 import { Injectable } from '@angular/core';
 import { BackandService } from '@backand/angular2-sdk';
 import { App } from 'ionic-angular';
@@ -23,9 +22,13 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.7.4"
-
-public logouttime:number = 72000; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
+public appVers:string="v0.7.5"
+/* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
+public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
+timestamppro: Countdown, Zeile 20 Kommentar entfernt
+*/
+public autoLogout = false; // steuert den Logout-Timer
+public logoutTime:number = 7;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 2;  // Länge des Login-Pins
 public serverDateStr:string=""; // UTC-Zeit des Logins = univ.ServerZeit (Zeit kommt vom Backand-Server!)
 public serverDate: any;

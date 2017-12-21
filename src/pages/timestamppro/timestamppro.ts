@@ -16,8 +16,8 @@ export class TimestampProPage {
     private toastCtrl: ToastController)
   {
     var currStatusNr = 0;
-    this.globVars.timer=this.globVars.logouttime;
-    //  this.globVars.countDown();
+    this.globVars.timer=this.globVars.logoutTime;
+    if (this.globVars.autoLogout) this.globVars.countDown();
     while (this.globVars.globCurrUser.status != this.globVars.tsTyp[currStatusNr]) {
       ++currStatusNr;
     }
