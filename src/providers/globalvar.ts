@@ -401,7 +401,7 @@ public makeStamp(stampType:string){
     let uhrZiffern = ['0','1','2','3','4','5','6'];
     let currComment = this.comment;
 //alert ("makestamp1:"+ currComment+"!");
-    if (currComment.charAt(0) == "#") {  // Korrektur-Zeit wird eingearbeitet
+    if (currComment.charAt(0) == "#" || currComment.charAt(0) == ".") {  // Korrektur-Zeit wird eingearbeitet
 //alert ("makestamp2= #:"+ currComment+"!");
       if (currComment.charAt(1) == "k" || currComment.charAt(1) =="K") {  // Korrektur-Zeit wird eingearbeitet
 //alert ("makestamp3= #k:"+ currComment+"!");
