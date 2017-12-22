@@ -22,7 +22,7 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.7.7"
+public appVers:string="v0.7.8"
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 timestamppro: Countdown, Zeile 20 Kommentar entfernt
@@ -451,7 +451,10 @@ public makeStamp(stampType:string){
           this.comment = 'Keine Uhrzeit angegeben: '+this.comment;
         }
       }
-      else { // # wurde erkannt, aber keine Korrektur !!!
+      else { // # oder . wurde erkannt, aber keine Korrektur !!!
+        if (currComment.charAt(1) == "a" || currComment.charAt(1) =="A") {  // Korrektur-Zeit wird eingearbeitet
+          alert("Hier kommt später der Alarm");  // .a30 -> 30 Min Alarm
+        }
       };
 //alert("comment:"+this.comment+"currComment:"+currComment);
     }
@@ -467,7 +470,15 @@ public makeStamp(stampType:string){
     };
     if (korrektur !==2) { // Buchung soll durchgeführt werden
       let lastTimeStamp = new Date (this.globCurrUser.lasttimestampISO);
-    //  alert("sD:"+this.serverDate.toISOString()+"ltsISO:"+lastTimeStamp.toISOString());
+      //  alert("sD:"+this.serverDate.toISOString()+"ltsISO:"+lastTimeStamp.toISOString());
+      if (this.serverDate > new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist in der Zukunft
+        var inp = prompt("!!! ACHTUNG !!!", "Korrektur-Zeit wird GESTERN eingetragen - OK?");
+        if (inp !== null) {  // kein Abbruch der Buchung
+          this.serverDate = new Date((this.serverDate.setDate(this.serverDate.getDate()-1)))
+          //alert("gestern:" + this.serverDate.toString());
+        }
+        else korrektur = 2; // nicht eintragen !!!
+      }
       if (this.serverDate <= new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist NICHT in der Zukunft
         if (this.serverDate > lastTimeStamp) {  //die Buchung sollte auch auf TOP angezeigt werden
       // alert("das zu buchende Datum ist neuer als der letzte Timestamp");

@@ -29,8 +29,8 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  <span style="background-color:Red" *ngIf="(this.globVars.autoLogout==true)"><p align="right">Logout in: {{globVars.timer}} sec</p></span>
 
-  <p align="right"> {{globVars.timer}} </p>
   <h4 style="text-align:center"> Status:
 
     <span style="color:#3dcc82" *ngIf="globVars.globCurrUser.status==globVars.tsTyp[1]||globVars.globCurrUser.status==globVars.tsTyp[2]||globVars.globCurrUser.status==globVars.tsTyp[3]||globVars.globCurrUser.status==globVars.tsTyp[4]||globVars.globCurrUser.status==globVars.tsTyp[5]||globVars.globCurrUser.status==globVars.tsTyp[6]">{{globVars.globCurrUser.status}} </span>
