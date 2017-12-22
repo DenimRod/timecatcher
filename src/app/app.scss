@@ -1,5 +1,20 @@
 // http://ionicframework.com/docs/v2/theming/
+.page5 {
 
+  .titles{
+    background-color:#ffffff;
+    font-weight: bold;
+  }
+
+   .even { background-color: #eff4ff; }
+   .odd { background-color: white; }
+
+
+   ion-col {
+   border:thin gray solid;
+   }
+
+}
 
 // App Global Sass
 // --------------------------------------------------
