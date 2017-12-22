@@ -59,22 +59,60 @@
     </ion-row>
     <ion-row *ngFor="let user of users">
       <ion-col>
-        <span style="color:Grey" *ngIf="user.name=='Tom'"><ion-icon name="square"></ion-icon>  </span>
-        <span style="color:Blue" *ngIf="user.name=='David'"><ion-icon name="square"></ion-icon> </span>
-        <span style="color:Orange"  *ngIf="user.name=='Horst'"><ion-icon name="square"></ion-icon> </span>
-        <span style="color:Fuchsia"  *ngIf="user.name=='Thomas'"><ion-icon name="square"></ion-icon> </span>
-        <span style="color:Red" *ngIf="user.name=='Emir'"><ion-icon name="square"></ion-icon> </span>
-        <span style="color:Yellow"  *ngIf="user.name=='Sigi'"><ion-icon name="square"></ion-icon> </span>
-        {{user.name}}
+
+        <span style="background-color:Grey" *ngIf="(user.name=='Tom')">__{{user.name}}__</span>
+        <span style="background-color:#488aff" *ngIf="(user.name=='David')">_ {{user.name}} _</span>
+        <span style="background-color:Orange" *ngIf="(user.name=='Horst')">_ {{user.name}} _</span>
+        <span style="background-color:Red" *ngIf="(user.name=='Emir')">__{{user.name}}__</span>
+        <span style="background-color:Fuchsia" *ngIf="(user.name=='Thomas')">{{user.name}}</span>
+        <span style="background-color:Yellow" *ngIf="(user.name=='Sigi')">__{{user.name}}__</span>
+
+  <!--
+        <span style="color:Grey" *ngIf="((user.name=='Tom') && (this.globVars.currPlatform =='Handy'))"><ion-icon name="square"></ion-icon></span>
+        <span style="color:Grey" *ngIf="((user.name=='Tom') && (this.globVars.currPlatform =='Desktop'))">
+        <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+
+        <span style="color:Blue" *ngIf="((user.name=='David') && (this.globVars.currPlatform =='Handy'))"><ion-icon name="square"></ion-icon></span>
+        <span style="color:Blue" *ngIf="((user.name=='David') && (this.globVars.currPlatform =='Desktop'))">
+        <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+
+        <span style="color:Orange" *ngIf="((user.name=='Horst') && (this.globVars.currPlatform =='Handy'))"><ion-icon name="square"></ion-icon></span>
+        <span style="color:Orange" *ngIf="((user.name=='Horst') && (this.globVars.currPlatform =='Desktop'))">
+        <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+
+        <span style="color:Fuchsia" *ngIf="((user.name=='Thomas') && (this.globVars.currPlatform =='Handy'))"><ion-icon name="square"></ion-icon></span>
+        <span style="color:Fuchsia" *ngIf="((user.name=='Thomas') && (this.globVars.currPlatform =='Desktop'))">
+        <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+
+        <span style="color:Red" *ngIf="((user.name=='Emir') && (this.globVars.currPlatform =='Handy'))"><ion-icon name="square"></ion-icon></span>
+        <span style="color:Red" *ngIf="((user.name=='Emir') && (this.globVars.currPlatform =='Desktop'))">
+        <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+
+        <span style="color:Yellow" *ngIf="((user.name=='Sigi') && (this.globVars.currPlatform =='Handy'))"><ion-icon name="square"></ion-icon></span>
+        <span style="color:Yellow" *ngIf="((user.name=='Sigi') && (this.globVars.currPlatform =='Desktop'))">
+        <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+
+        <span style="color:Grey"  *ngIf="((user.name=='Tom') && (this.globVars.currPlatform =='Desktop'))">
+          <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+        <span style="color:Blue"  *ngIf="((user.name=='David') && (this.globVars.currPlatform =='Desktop'))">
+          <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+        <span style="color:Orange"  *ngIf="((user.name=='Horst') && (this.globVars.currPlatform =='Desktop'))">
+          <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+        <span style="color:Fuchsia"  *ngIf="((user.name=='Thomas') && (this.globVars.currPlatform =='Desktop'))">
+          <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+        <span style="color:Red"  *ngIf="((user.name=='Emir') && (this.globVars.currPlatform =='Desktop'))">
+          <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+        <span style="color:Yellow"  *ngIf="((user.name=='Sigi') && (this.globVars.currPlatform =='Desktop'))">
+          <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
+        -->
+        <span *ngIf="!((user.name=='Tom') || (user.name=='David')|| (user.name=='Horst')|| (user.name=='Emir')|| (user.name=='Thomas')|| (user.name=='Sigi'))"> {{user.name}} </span>
       </ion-col>
-<!--  <ion-col>
-        <span style="color:#f53d3d" *ngIf="user.name=='Alex'"><ion-icon name="remove-circle"></ion-icon>  </span>
-        <span style="color:#3dcc82" *ngIf="user.name=='Richie'"><ion-icon name="radio-button-on"></ion-icon> </span>
-      </ion-col>
--->
+
       <ion-col>
-        <span style="background-color:#488aff" *ngIf="user.status=='Pause EIN'">!!! {{user.status}} !!! </span>
-        <div *ngIf="!(user.status=='Pause EIN')">
+        <span style="background-color:#488aff" *ngIf="((user.status=='Pause EIN'))">!!! {{user.status}} !!! </span>
+        <span style="background-color:LightPink" *ngIf="((user.lastcomment =='bns'))">!! {{user.status}} !! </span>
+        <span style="background-color:cyan" *ngIf="((user.lastcomment =='#')||(user.lastcomment =='.'))">!! {{user.status}} !! </span>
+        <div *ngIf="!((user.status=='Pause EIN') || (user.lastcomment =='#') || (user.lastcomment =='.') || (user.lastcomment =='bns'))">
           {{user.status}}
           <span style="color:#f53d3d" *ngIf="user.status=='Krank'">------- <ion-icon name="remove-circle"></ion-icon>  </span>
           <span style="color:#3dcc82" *ngIf="user.status=='Arbeit EIN'"> <ion-icon name="radio-button-on"></ion-icon> </span>
@@ -88,6 +126,7 @@
           <span style="color:#f53d3d" *ngIf="user.status=='Arbeit AUS'"><ion-icon name="remove-circle"></ion-icon> </span>
         </div>
       </ion-col>
+
       <ion-col>
         {{user.lasttimestamp}}
       </ion-col>
