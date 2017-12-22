@@ -1,18 +1,15 @@
 <ion-header>
 <ion-navbar hideBackButton>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
+
           <ion-title>{{globVars.appNameVers}} - Team: {{globVars.globCurrUser.name}}</ion-title>
-        </ion-col>
+
 <!--
 
         <ion-col align="right">
           <button ion-button small block icon-left color='primary' (click)="reloadTeam()">
           <ion-icon name="refresh"></ion-icon>Neu Laden</button>
         </ion-col>-->
-      </ion-row>
-    </ion-grid>
+
 
   <!--
     <button ion-button large align="center" (click)="handlePIN(1)">1</button>
@@ -57,7 +54,10 @@
         Arbeitszeit
       </ion-col> -->
     </ion-row>
-    <ion-row *ngFor="let user of users">
+
+
+    <ion-row *ngFor="let user of users; let odd=odd; let even=even;" [ngClass]="{ odd: odd, even: even }">
+
       <ion-col>
         <span style="color:Grey" *ngIf="user.name=='Tom'"><ion-icon name="square"></ion-icon>  </span>
         <span style="color:Blue" *ngIf="user.name=='David'"><ion-icon name="square"></ion-icon> </span>
