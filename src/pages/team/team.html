@@ -110,9 +110,9 @@
 
       <ion-col>
         <span style="background-color:#488aff" *ngIf="((user.status=='Pause EIN'))">!!! {{user.status}} !!! </span>
-        <span style="background-color:LightPink" *ngIf="((user.lastcomment =='bns'))">!! {{user.status}} !! </span>
+        <span style="background-color:LightPink" *ngIf="((user.lastcomment =='bns') || (user.lastcomment=='Bns') )">!! {{user.status}} !! </span>
         <span style="background-color:cyan" *ngIf="((user.lastcomment =='#')||(user.lastcomment =='.'))">!! {{user.status}} !! </span>
-        <div *ngIf="!((user.status=='Pause EIN') || (user.lastcomment =='#') || (user.lastcomment =='.') || (user.lastcomment =='bns'))">
+        <div *ngIf="!((user.status=='Pause EIN') || (user.lastcomment =='#') || (user.lastcomment =='.') || (user.lastcomment =='bns') || (user.lastcomment =='Bns'))">
           {{user.status}}
           <span style="color:#f53d3d" *ngIf="user.status=='Krank'">------- <ion-icon name="remove-circle"></ion-icon>  </span>
           <span style="color:#3dcc82" *ngIf="user.status=='Arbeit EIN'"> <ion-icon name="radio-button-on"></ion-icon> </span>
