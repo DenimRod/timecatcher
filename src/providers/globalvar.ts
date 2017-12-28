@@ -471,6 +471,7 @@ public makeStamp(stampType:string){
     };
     if (korrektur !==2) { // Buchung soll durchgeführt werden
       let lastTimeStamp = new Date (this.globCurrUser.lasttimestampISO);
+
       //  alert("sD:"+this.serverDate.toISOString()+"ltsISO:"+lastTimeStamp.toISOString());
       if (this.serverDate > new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist in der Zukunft
         var inp = prompt("!!! ACHTUNG !!!", "Korrektur-Zeit wird GESTERN eingetragen - OK?");

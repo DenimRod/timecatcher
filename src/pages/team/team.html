@@ -26,15 +26,16 @@
   <ion-refresher (ionRefresh)="reloadTeamPull($event)">
     <ion-refresher-content>
 
-      </ion-refresher-content>
-      </ion-refresher>
+    </ion-refresher-content>
+  </ion-refresher>
 
 
   <ion-grid>
     <ion-row class="titles">
       <ion-col>
-        <div (click)='changeSort(true)'>Name
-        <ion-icon name="arrow-dropdown"></ion-icon></div>
+        <div (click)='changeSort(true)'>Name </div>
+          <div *ngIf="globVars.teamSortAlpha"><ion-icon name="arrow-dropdown-circle"></ion-icon></div>
+          <div *ngIf="!globVars.teamSortAlpha"><ion-icon name="arrow-dropdown"></ion-icon></div>
       </ion-col>
 <!--      <ion-col>
         MA_Farbe
@@ -44,8 +45,10 @@
         Status
       </ion-col>
       <ion-col>
-        <div (click)='changeSort(false)'>Letzte Buchung
-        <ion-icon name="arrow-dropdown"></ion-icon></div>
+        <div (click)='changeSort(false)'>Letzte Buchung </div>
+          <div *ngIf="!globVars.teamSortAlpha"><ion-icon name="arrow-dropdown-circle"></ion-icon></div>
+          <div *ngIf="globVars.teamSortAlpha"><ion-icon name="arrow-dropdown"></ion-icon></div>
+
       </ion-col>
       <ion-col>
         Kommentar
