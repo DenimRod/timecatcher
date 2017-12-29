@@ -33,9 +33,10 @@
   <ion-grid>
     <ion-row class="titles">
       <ion-col>
-        <div (click)='changeSort(true)'>Name </div>
-          <div *ngIf="globVars.teamSortAlpha"><ion-icon name="arrow-dropdown-circle"></ion-icon></div>
-          <div *ngIf="!globVars.teamSortAlpha"><ion-icon name="arrow-dropdown"></ion-icon></div>
+        <div (click)='changeSort(true)'>Name
+          <span *ngIf="globVars.teamSortAlpha"><ion-icon name="arrow-dropdown-circle"></ion-icon></span>
+          <span *ngIf="!globVars.teamSortAlpha"><ion-icon name="arrow-dropdown"></ion-icon></span>
+         </div>
       </ion-col>
 <!--      <ion-col>
         MA_Farbe
@@ -45,10 +46,10 @@
         Status
       </ion-col>
       <ion-col>
-        <div (click)='changeSort(false)'>Letzte Buchung </div>
-          <div *ngIf="!globVars.teamSortAlpha"><ion-icon name="arrow-dropdown-circle"></ion-icon></div>
-          <div *ngIf="globVars.teamSortAlpha"><ion-icon name="arrow-dropdown"></ion-icon></div>
-
+        <div (click)='changeSort(false)'>Letzte Buchung
+          <span *ngIf="!globVars.teamSortAlpha"><ion-icon name="arrow-dropdown-circle"></ion-icon></span>
+          <span *ngIf="globVars.teamSortAlpha"><ion-icon name="arrow-dropdown"></ion-icon></span>
+        </div>
       </ion-col>
       <ion-col>
         Kommentar
@@ -116,17 +117,17 @@
         <span style="background-color:LightPink" *ngIf="((user.lastcomment =='bns') || (user.lastcomment=='Bns') )">!! {{user.status}} !! </span>
         <span style="background-color:cyan" *ngIf="((user.lastcomment =='#')||(user.lastcomment =='.'))">!! {{user.status}} !! </span>
         <div *ngIf="!((user.status=='Pause EIN') || (user.lastcomment =='#') || (user.lastcomment =='.') || (user.lastcomment =='bns') || (user.lastcomment =='Bns'))">
-          {{user.status}}
-          <span style="color:#f53d3d" *ngIf="user.status=='Krank'">------- <ion-icon name="remove-circle"></ion-icon>  </span>
+          <span style="color:#f53d3d" *ngIf="user.status=='Krank'"> <ion-icon name="radio-button-on"></ion-icon>  </span>
           <span style="color:#3dcc82" *ngIf="user.status=='Arbeit EIN'"> <ion-icon name="radio-button-on"></ion-icon> </span>
-          <span style="color:#ffcc00" *ngIf="user.status=='AD-Fahrt'">-- <ion-icon name="car"></ion-icon> </span>
-          <span style="color:#ffcc00" *ngIf="user.status=='AD-Kunde'">- <ion-icon name="contact"></ion-icon> </span>
-          <span style="color:#3dcc82" *ngIf="user.status=='Tele-Arbeit'"><ion-icon name="ionic"></ion-icon> </span>
-          <span style="color:#3dcc82" *ngIf="user.status=='Projekt 1'"><ion-icon name="ionic"></ion-icon> </span>
-          <span style="color:#3dcc82" *ngIf="user.status=='Projekt 2'"><ion-icon name="ionic"></ion-icon> </span>
-          <span style="color:#488aff" *ngIf="user.status=='Pause EIN'"><ion-icon name="ionic"></ion-icon> </span>
-          <span style="color:#488aff" *ngIf="user.status=='Urlaub'">------ <ion-icon name="remove-circle"></ion-icon>  </span>
-          <span style="color:#f53d3d" *ngIf="user.status=='Arbeit AUS'"><ion-icon name="remove-circle"></ion-icon> </span>
+          <span style="color:#ffcc00" *ngIf="user.status=='AD-Fahrt'"> <ion-icon name="radio-button-on"></ion-icon> </span>
+          <span style="color:#ffcc00" *ngIf="user.status=='AD-Kunde'"> <ion-icon name="radio-button-on"></ion-icon> </span>
+          <span style="color:#3dcc82" *ngIf="user.status=='Tele-Arbeit'"><ion-icon name="radio-button-on"></ion-icon> </span>
+          <span style="color:#3dcc82" *ngIf="user.status=='Projekt 1'"><ion-icon name="radio-button-on"></ion-icon> </span>
+          <span style="color:#3dcc82" *ngIf="user.status=='Projekt 2'"><ion-icon name="radio-button-on"></ion-icon> </span>
+          <span style="color:#488aff" *ngIf="user.status=='Pause EIN'"><ion-icon name="radio-button-on"></ion-icon> </span>
+          <span style="color:#488aff" *ngIf="user.status=='Urlaub'"> <ion-icon name="radio-button-on"></ion-icon>  </span>
+          <span style="color:#f53d3d" *ngIf="user.status=='Arbeit AUS'"><ion-icon name="radio-button-on"></ion-icon> </span>
+          {{user.status}}
         </div>
       </ion-col>
 
