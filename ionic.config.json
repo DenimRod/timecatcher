@@ -2,6 +2,12 @@
   "name": "mytestapp",
   "app_id": "",
   "type": "ionic-angular",
+  "proxies": [
+    {
+      "path": "/server",
+      "proxyUrl": "http://graz-hautarzt.at/files"
+    }
+  ],
   "integrations": {
     "cordova": {}
   }

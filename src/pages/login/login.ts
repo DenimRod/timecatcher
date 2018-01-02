@@ -7,6 +7,8 @@ import { TabsProPage } from '../tabspro/tabspro';
 import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
 import { Dialogs } from '@ionic-native/dialogs';
+import { NFC, Ndef } from '@ionic-native/nfc';
+
 
 //angeblich notwendig, damit die Dialoge "aktiviert" werden.
 /*function onDeviceReady() {
@@ -40,7 +42,7 @@ export class LoginPage {
   public onHandy:boolean=false;
 
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars,
-     public plt: Platform, private dialogs: Dialogs ) {
+     public plt: Platform, private dialogs: Dialogs,private nfc: NFC, private ndef: Ndef ) {
 
 
   /* ??? noch benutzt ???
@@ -61,14 +63,86 @@ export class LoginPage {
 */
   }
 
+
+NFC_onSuccess()
+{ alert ("onSuccess")};
+
+NFC_onError()
+{ alert ("onError")};
+
   ionViewDidEnter() {
 
+    this.nfc.addNdefListener(
+      () => {alert('successfully attached ndef listener')},
+      (err) => { alert('error attaching ndef listener' + err);}
+    )
+    .subscribe((event) => {
+      alert('received ndef message. the tag contains: ' + event.tag);
+      alert('decoded tag id' + this.nfc.bytesToHexString(event.tag.id));
+      let message = this.ndef.textRecord("Hello world","UTF-8","8");
+      this.nfc.share([message])
+      .then (this.NFC_onSuccess)
+    //  {        alert ("onSuccess")}
+      .catch (this.NFC_onError)
+       //{alert ("onError")};
+     });
+
+// DIV JS - Tests+Vorlagen ---- hier beste Stelle, um etwas auszuprobieren !!!!!!
+/*
+//  --- XML --- einzelne Phasen + xhr-status --------------
+    var xhr = new XMLHttpRequest();
+    alert('UNSENT'+ xhr.status);
+    xhr.open('GET', 'https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/status', true);
+    alert('OPENED'+ xhr.status);
+
+    xhr.onprogress = function () {
+      alert('LOADING'+ xhr.status);
+    };
+
+    xhr.onload = function () {
+      alert('DONE'+ xhr.status);
+    };
+  //  xhr.open("GET", "http://graz-hautarzt.at/files/ri_test.php", true);
+
+    xhr.send(null);
+
+    /**
+     * Outputs the following:
+     *
+     * UNSENT 0
+     * OPENED 0
+     * LOADING 200
+     * DONE 200
+
+     */
+// -------------------------------------------------------------
+/*
+var xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    //alert("work... State:"+xhr.readyState+"Status:"+xhr.status);
+    if ((xhr.readyState == 4) && (xhr.status == 200 )) { // || true )) {
+      //alert("header:" + this.getAllResponseHeaders() + 'Status:'+ xhr.status);
+      //if (xhr.responseText == "") alert("no response!")
+      //else
+      alert("resp:" + xhr.responseText);
+      var myObj = JSON.parse(xhr.responseText);
+      alert("OBJ:"+JSON.stringify(myObj))
+      //}
+    }
+    //else alert("FEHLER!-state:"+xmlhttp.readyState+"status:"+xmlhttp.status);
+}
+xhr.open("GET", "/server/ri_test.php", true);
+xhr.send();
+//alert("warten...");
+*/
+
+if (!this.globVars.autoLogout){
     this.textInput = '';
     setTimeout(() => {
       this.myInput.setFocus();
     },150);
-
-    }
+}
+}
 /*
   if (this.plt.is('core')) {
       // This will only print when on Desktop
@@ -193,6 +267,7 @@ ABFRAGE FÜR HANDY/DESKTOP */
      // gleichzeitig wird ein Eintrag in die Login-DB-Objekt gemacht -> alle Logins werden dokumentiert
      //randNum = Math.round(Math.random()*100000000);
           var loginRec: any;
+
           this.backand.object.create('Login', "{'name':'"+this.globVars.globCurrUser.name+"', 'userID':'"+
             this.globVars.globCurrUser.userID+"', 'device':'"+this.globVars.currPlatform +"'}")
           .then((res1:any) => {

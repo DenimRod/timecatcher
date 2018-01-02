@@ -22,6 +22,7 @@ import { BackandService } from '@backand/angular2-sdk';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Dialogs } from '@ionic-native/dialogs';
+import { NFC, Ndef } from '@ionic-native/nfc';
 
 import { GlobalVars } from '../providers/globalvar';
 
@@ -63,7 +64,9 @@ import { GlobalVars } from '../providers/globalvar';
     GlobalVars,
     Device,
     Keyboard,
-    Dialogs
+    Dialogs,
+    NFC,
+    Ndef,
   ]
 })
 export class AppModule {}
