@@ -22,18 +22,6 @@ import { NFC, Ndef } from '@ionic-native/nfc';
 export class LoginPage {
   @ViewChild('focusInput') myInput;
 
-/*  username:string = 'ionic2@backand.io';
-  password:string = '123456';
-  auth_type:string = "N/A";
-  is_auth_error:boolean = false;
-  auth_status:string = null;
-  loggedInUser: string = '';
-
-  oldPassword: string = '';
-  newPassword: string = '';
-  confirmNewPassword: string = '';
-*/
-// Heres tha real code
   public textInput:string = ''; // = eingegebene Textzeile für Commandos und User-PIN
   inputID:string = ''; // = User-ID aus Text-Input-String
 
@@ -42,26 +30,7 @@ export class LoginPage {
   public onHandy:boolean=false;
 
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars,
-     public plt: Platform, private dialogs: Dialogs,private nfc: NFC, private ndef: Ndef ) {
-
-
-  /* ??? noch benutzt ???
-    this.backand.user.getUserDetails().then(
-      (res: any) => {
-        if(res.data) {
-          this.loggedInUser = res.data.username;
-          this.auth_status = 'OK';
-          this.auth_type = res.data.token_type == 'Anonymous' ? 'Anonymous' : 'Token';
-        }
-      },
-      (err: any) => {
-        this.loggedInUser = null;
-        this.auth_status = null;
-        this.auth_type = null;
-      }
-    );
-*/
-  }
+     public plt: Platform, private dialogs: Dialogs,private nfc: NFC, private ndef: Ndef ) {  }
 
 
 NFC_onSuccess()
@@ -72,21 +41,22 @@ NFC_onError()
 
   ionViewDidEnter() {
 
-    this.nfc.addNdefListener(
-      () => {alert('successfully attached ndef listener')},
-      (err) => { alert('error attaching ndef listener' + err);}
-    )
-    .subscribe((event) => {
-      alert('received ndef message. the tag contains: ' + event.tag);
-      alert('decoded tag id' + this.nfc.bytesToHexString(event.tag.id));
-      let message = this.ndef.textRecord("Hello world","UTF-8","8");
-      this.nfc.share([message])
-      .then (this.NFC_onSuccess)
-    //  {        alert ("onSuccess")}
-      .catch (this.NFC_onError)
-       //{alert ("onError")};
-     });
-
+    if (this.plt.is('cordova')) {
+      this.nfc.addNdefListener(
+        () => {alert('successfully attached ndef listener')},
+        (err) => { alert('error attaching ndef listener' + err);}
+      )
+      .subscribe((event) => {
+        alert('received ndef message. the tag contains: ' + event.tag);
+        alert('decoded tag id' + this.nfc.bytesToHexString(event.tag.id));
+        let message = this.ndef.textRecord("Hello world","UTF-8","8");
+        this.nfc.share([message])
+        .then (this.NFC_onSuccess)
+          //  {        alert ("onSuccess")}
+        .catch (this.NFC_onError)
+         //{alert ("onError")};
+       });
+    }
 // DIV JS - Tests+Vorlagen ---- hier beste Stelle, um etwas auszuprobieren !!!!!!
 /*
 //  --- XML --- einzelne Phasen + xhr-status --------------
@@ -142,6 +112,11 @@ if (!this.globVars.autoLogout){
       this.myInput.setFocus();
     },150);
 }
+
+//not so crazy workaround for no login
+this.inputID = "33";
+this.checkUser();
+
 }
 /*
   if (this.plt.is('core')) {
@@ -152,9 +127,7 @@ if (!this.globVars.autoLogout){
 
 ABFRAGE FÜR HANDY/DESKTOP */
 
-//not so crazy workaround for no login
-//this.inputID = "22";
-//this.checkUser();
+
 
   public handleText(){
     // wenn Eingabe mit "r" beginnt, dann RegistrierungsCode !!!

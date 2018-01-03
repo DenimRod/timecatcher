@@ -3,19 +3,6 @@
 
           <ion-title>{{globVars.appNameVers}} - Team: {{globVars.globCurrUser.name}}</ion-title>
 
-<!--
-
-        <ion-col align="right">
-          <button ion-button small block icon-left color='primary' (click)="reloadTeam()">
-          <ion-icon name="refresh"></ion-icon>Neu Laden</button>
-        </ion-col>-->
-
-
-  <!--
-    <button ion-button large align="center" (click)="handlePIN(1)">1</button>
-    <button ion-button large align="center" (click)="handlePIN(2)">2</button>
--->
-<!--  </ion-title> -->
 </ion-navbar>
 <!-- <p align="right"> {{globVars.timer}} </p> -->
 
@@ -23,7 +10,7 @@
 
 <ion-content padding class="page5">
 
-  <ion-refresher (ionRefresh)="reloadTeamPull($event)">
+  <ion-refresher (ionRefresh)="reloadTeam($event)">
     <ion-refresher-content>
 
     </ion-refresher-content>

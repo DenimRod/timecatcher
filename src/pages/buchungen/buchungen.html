@@ -10,6 +10,12 @@
 
 <ion-content padding class="page5">
 
+  <ion-refresher (ionRefresh)="reloadBuchungen($event)">
+    <ion-refresher-content>
+
+    </ion-refresher-content>
+  </ion-refresher>
+
 <ion-card>
   <ion-item>
     <ion-icon name="time" item-start></ion-icon>
@@ -39,7 +45,6 @@
     <ion-row *ngFor="let buchung of buchungentoday">
 
       <ion-col>
-  <!--      <span *ngIf="buchung.date[0]=='M'"> -> </span> -->
         {{buchung.date}}
       </ion-col>
       <ion-col>
@@ -72,7 +77,6 @@
   <ion-row *ngFor="let buchung of buchungen">
 
     <ion-col>
-<!--      <span *ngIf="buchung.date[0]=='M'"> -> </span> -->
       {{buchung.date}}
     </ion-col>
     <ion-col>
@@ -98,6 +102,9 @@
 
     </ion-col>  -->
   </ion-row>
+
+  <button ion-button align="center" (click)="moreBuchungen()" *ngIf="!endOfBuchungen"> Weitere Buchungen laden... </button>
+
 </ion-grid>
 
 

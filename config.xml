@@ -3,7 +3,7 @@
     <name>timeCatcher</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="liobas@gmx.net" href="http://kutschera.co.at/">KD Development Team</author>
-    <content original-src="index.html" src="http://192.168.1.103:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
