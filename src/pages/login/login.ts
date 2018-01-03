@@ -114,8 +114,8 @@ if (!this.globVars.autoLogout){
 }
 
 //not so crazy workaround for no login
-this.inputID = "33";
-this.checkUser();
+//this.inputID = "33";
+//this.checkUser();
 
 }
 /*

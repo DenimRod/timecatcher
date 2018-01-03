@@ -15,7 +15,8 @@ export class BuchungenPage {
   public workTimeHours = 0;
   public workTimeMinutes = 0;
   public nextBuchungenPage = 2;
-  public endOfBuchungen = false;
+  public endOfBuchungen = true;
+  public buchungenAmount = 20;
 
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
     //this.globVars.timer=30;
@@ -23,17 +24,16 @@ export class BuchungenPage {
 
   ionViewWillEnter() {
     this.reloadBuchungen(null);
-
+    this.buchungenAmount = 20;
   }
 
 public reloadBuchungen(refresher){
   this.nextBuchungenPage = 2;         //sobald refesht wird --> Reset aller TS
-  this.endOfBuchungen = false;  // Evtl: gleich schauen ob überhaupt >20
 
   let params = {
     filter: this.backand.helpers.filter.create('username', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.name),
     sort:   this.backand.helpers.sort.create('date', this.backand.helpers.sort.orders.desc),
-    pageSize: 20,
+    pageSize: this.buchungenAmount,
     pageNumber: 1,
   }
                                           //Hol die letzten TS dieses Users
@@ -87,6 +87,10 @@ public reloadBuchungen(refresher){
      };
      this.buchungentoday = res.data.slice(0,todayIndexBorder);
      this.buchungen = res.data.slice(todayIndexBorder,);
+          //ist das erhaltene Array voll, blende Button ein
+     if(res.data.length == this.buchungenAmount) this.endOfBuchungen = false;
+     else this.endOfBuchungen = true;
+
     if(refresher){
       refresher.complete();
     }
@@ -99,6 +103,11 @@ public reloadBuchungen(refresher){
 });
 }
 
+public moreBuchungen500(){
+  this.buchungenAmount += 500;
+  this.reloadBuchungen(null);
+}
+
 public moreBuchungen(){
 
   let params = {
@@ -108,7 +117,6 @@ public moreBuchungen(){
 
     pageNumber: this.nextBuchungenPage,      //Hol die nächste Seite
   }
-      alert(this.nextBuchungenPage);
   this.backand.object.getList('Timestamps2', params)
    .then((res: any) => {
      let i=0;
