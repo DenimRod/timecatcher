@@ -9,7 +9,6 @@ import { Platform } from 'ionic-angular';
 import { Dialogs } from '@ionic-native/dialogs';
 import { NFC, Ndef } from '@ionic-native/nfc';
 
-
 //angeblich notwendig, damit die Dialoge "aktiviert" werden.
 /*function onDeviceReady() {
     alert('onDevReady'+'navigator.notification');
@@ -41,9 +40,9 @@ NFC_onError()
 
   ionViewDidEnter() {
 
-    if (this.plt.is('cordova')) {
+    if (this.plt.is('cordova')) {   // soll nur dann aktiviert werden, wenn auf MOBILE (mit NFC)
       this.nfc.addNdefListener(
-        () => {alert('successfully attached ndef listener')},
+        () => {alert('successfully anttached ndef listener')},
         (err) => { alert('error attaching ndef listener' + err);}
       )
       .subscribe((event) => {
@@ -106,16 +105,20 @@ xhr.send();
 //alert("warten...");
 */
 
-if (!this.globVars.autoLogout){
-    this.textInput = '';
-    setTimeout(() => {
-      this.myInput.setFocus();
-    },150);
-}
+  if (!this.globVars.autoLogout){
+      this.textInput = '';
+      setTimeout(() => {
+        this.myInput.setFocus();
+      },150);
+  }
 
 //not so crazy workaround for no login
   if(this.globVars.testFlag==1){
     this.inputID = "33";
+    this.checkUser();
+  }
+  if(this.globVars.testFlag==2){
+    this.inputID = "21";
     this.checkUser();
   }
 }
@@ -239,16 +242,11 @@ ABFRAGE FÜR HANDY/DESKTOP */
 
      // Time-INIT
      // gleichzeitig wird ein Eintrag in die Login-DB-Objekt gemacht -> alle Logins werden dokumentiert
-     //randNum = Math.round(Math.random()*100000000);
           var loginRec: any;
-
           this.backand.object.create('Login', "{'name':'"+this.globVars.globCurrUser.name+"', 'userID':'"+
-            this.globVars.globCurrUser.userID+"', 'device':'"+this.globVars.currPlatform +"'}")
+            this.globVars.globCurrUser.userID+"', 'device':'"+this.globVars.currPlatform +":"+this.plt.platforms()+"'}")
+
           .then((res1:any) => {
-            //alte Lösung: let params = {
-            //filter:
-            //  this.backand.helpers.filter.create('randNum', this.backand.helpers.filter.operators.text.equals, randNum.toString())
-            //  sort:   this.backand.helpers.sort.create('name', this.backand.helpers.sort.orders.asc)
             let params = "";
             this.backand.object.getOne('Login',res1.data.__metadata.id, params)
             .then((res2: any) => {
@@ -288,14 +286,17 @@ ABFRAGE FÜR HANDY/DESKTOP */
                 alert("LRec9:"+Aus9Str);
                 alert("LReca:"+Aus9Str);
                 alert("LRecb:"+Aus9Str);
-        /*  -alte Idee zur Suche nach dem letzten erstellen Eintrag:
-              let params = {
-                filter:
-                  this.backand.helpers.filter.create('randNum', this.backand.helpers.filter.operators.text.equals, randNum.toString())
-              //  sort:   this.backand.helpers.sort.create('name', this.backand.helpers.sort.orders.asc)
-              };
           */
-            //    alert("LoginRec!"+loginRec.name+"crdate:"+loginRec.createdAt+"-"+loginRec.device);
+              // ?? ServerDatum <> letztes Timestamp-Datum? -> vorletzter Arbeitstag setzen
+              var d = new Date(this.globVars.globCurrUser.lasttimestampISO);
+              if (d.getDate() !== this.globVars.serverDate.getDate()){
+                // Datum d. Logins hat sich geändert -> letzter Arbeitstag speichern in vorletzter = b(efore)last...
+                // klappt nicht mit "blasttimestamp", weil Backand-DB Fehler hat : deswegen ...UTC_d (war schon für Test definiert)
+                // alert("Datum NEU: oldDate:"+d.getDate()+"newDate:"+this.globVars.serverDate.getDate());
+                this.globVars.globCurrUser.lasttimestampUTC_d = this.globVars.globCurrUser.lasttimestampISO;
+              };
+              //var g = new Date(this.globVars.globCurrUser.lasttimestampUTC_d)
+              //alert ("d-string:"+d.toString()+"g-string:"+ g.toString() + "g:"+g.getDate());
             },
             (err:any) => {
               alert("Error: Login/Res2:"+err.data);
@@ -305,6 +306,8 @@ ABFRAGE FÜR HANDY/DESKTOP */
             alert("Error: Login/Res1:"+err.data);
           });
          //end TimeInit
+
+
 
   // SHOW Timestamp dependig on user level
         if (this.globVars.globCurrUser.applevel == "pro"){
