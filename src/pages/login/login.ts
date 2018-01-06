@@ -114,9 +114,10 @@ if (!this.globVars.autoLogout){
 }
 
 //not so crazy workaround for no login
-//this.inputID = "33";
-//this.checkUser();
-
+  if(this.globVars.testFlag==1){
+    this.inputID = "33";
+    this.checkUser();
+  }
 }
 /*
   if (this.plt.is('core')) {

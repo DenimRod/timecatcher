@@ -1,12 +1,9 @@
-
-<title> KD-ZEN </title>
 <ion-header>
-
 <ion-navbar> <!-- hideBackButton wird vermutlich nicht notwendig sein -->
   <ion-title>
     {{globVars.appNameVers}} - <span *ngIf="globVars.workTimeTodayHour">{{globVars.workTimeTodayHour}}h </span> {{globVars.workTimeTodayMin}}m -
-    <span *ngIf="globVars.workTimeRuns"><ion-icon name="clock"></ion-icon>  </span>
-    <span *ngIf="globVars.workTimeRuns==false"><ion-icon name="remove-circle"></ion-icon> </span>
+    <span *ngIf="globVars.workTimeRuns"><ion-icon name="time"></ion-icon>  </span>
+    <span *ngIf="globVars.workTimeRuns==false"><ion-icon name="close-circle"></ion-icon> </span>
   </ion-title>
 </ion-navbar>
 </ion-header>
@@ -54,16 +51,17 @@
         <ion-icon name="briefcase"></ion-icon>{{globVars.tsTyp[1]}}&nbsp; (1)</button></ion-col>
       <ion-col>
         <button ion-button small block icon-left color='secondary' (click)="timestampClick(2)">
-        <ion-icon name="car"></ion-icon>{{globVars.tsTyp[2]}} &nbsp; (2)</button></ion-col>
+        <ion-icon name="car"></ion-icon>{{globVars.tsTyp[2]}}&nbsp; (2)</button></ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col align="right">
         <button ion-button small icon-left block color='secondary' (click)="timestampClick(3)">
-        <ion-icon name="wifi"></ion-icon>{{globVars.tsTyp[3]}} &nbsp; (3)</button></ion-col>
+        <ion-icon name="wifi"></ion-icon>{{globVars.tsTyp[3]}}&nbsp;(3)
+      </button></ion-col>
       <ion-col>
         <button ion-button small icon-left block color='secondary' (click)="timestampClick(4)">
-        <ion-icon name="contact"></ion-icon>{{globVars.tsTyp[4]}} &nbsp;(4)  </button></ion-col>
+        <ion-icon name="contact"></ion-icon>{{globVars.tsTyp[4]}}&nbsp;(4)  </button></ion-col>
     </ion-row>
 
     <ion-row>

@@ -57,9 +57,14 @@ public reloadBuchungen(refresher){
      if (todayIndexBorder==-1) todayIndexBorder = res.data.length + 1;
 
           //Hol dir die Arbeitszeit der heutigen TS und rechne sie in h/m um
-     let workTimeSum = new Date(this.globVars.calcWorkTime(res.data.slice(0,todayIndexBorder)));
-     this.workTimeHours = workTimeSum.getUTCHours();
-     this.workTimeMinutes = workTimeSum.getUTCMinutes();
+     let workTimeSum = this.globVars.calcWorkTime(res.data.slice(0,todayIndexBorder))
+     let workTimeSumDate = new Date(workTimeSum);
+     this.workTimeHours = workTimeSumDate.getUTCHours();
+     this.workTimeMinutes = workTimeSumDate.getUTCMinutes();
+
+     this.globVars.globCurrUser.worktimeToday = workTimeSum;  //Setze globalen
+     clearTimeout(this.globVars.workTimeTimeout);             //Timer
+     this.globVars.workTimeCounter();
 
      while (i<res.data.length) {          //UTC Strings -> Lokale Zeit
        datumHelper = new Date(res.data[i].date);

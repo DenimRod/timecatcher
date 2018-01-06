@@ -23,7 +23,8 @@ public globCurrUser:any;
 
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.7.9.2"
+public appVers:string="v0.7.9.5"
+public testFlag:number = 1;  //AutoLogin mit Julian -> 1, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 timestamppro: Countdown, Zeile 20 Kommentar entfernt
@@ -288,32 +289,34 @@ public getTSNumber(stampString:string){
 }
 
 public calcWorkTime(tsList:any[]){
+//Berechnet Arbeitszeit für eine Liste von TS
   let workON=false;
   let begin=null;
-  let end = null;
-  let sum = 0;
+  let end=null;
+  let sum=0;
 
   for(let i=tsList.length-1; i>-1; i--){  //Suche nach Arbeitsbeginn
     let tsNumber = this.getTSNumber(tsList[i].status);
-    if(tsNumber >0 && tsNumber <7){
+    if(tsNumber>0 && tsNumber<7){
       begin = new Date(tsList[i].date);
+      begin -= begin % 60000;             //Runden auf volle Minuten
       workON = true;
 
       for(; i>-1; --i){                   //Suche nach Arbeitsende
         tsNumber = this.getTSNumber(tsList[i].status);
-        if(tsNumber==0 || tsNumber >6){
+        if(tsNumber==0 || tsNumber>6){
           end = new Date(tsList[i].date);
-          workON = false;
+          end -= end % 60000;
           sum += end - begin;
+          workON = false;
           break;
         }
       }
     }                                     //Wiederhole bis zum Ende der Liste
   }
-  if(workON){                             //Falls kein Arbeitsende gefunden,
-    let now = 0;                          //nimm Differenz zu jetziger Zeit
-    now = Date.now();                     //(mit Client-Zeit-Offset)
-    end = (now - this.clientDateDiff);
+  if(workON){ //Falls kein Arbeitsende gefunden, nimm Differenz zu jetziger Zeit
+    end = (Date.now() - this.clientDateDiff);
+    end -= end % 60000;
     sum += end - begin;
   }
   return(sum);
