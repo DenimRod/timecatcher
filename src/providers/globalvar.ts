@@ -23,8 +23,8 @@ public globCurrUser:any;
 
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.7.9.5"
-public testFlag:number = 1;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
+public appVers:string="v0.8A"
+public testFlag:number = 0;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 timestamppro: Countdown, Zeile 20 Kommentar entfernt
@@ -69,7 +69,15 @@ public companies =[
     name: "TestCompany"
   }
 ];
-public devAnzahl = 6;
+/*  wenn neues Terminal:
+          1. Terminal-angaben kopieren
+          2. neue devID, usrPIN (Hauptterminal="", MA="Team")
+          3. devAnzahl erhöhen
+          4. autoLogout setzen
+          5. registrierung durchführen
+
+ */
+public devAnzahl = 7;
 public ZEN_Devices = [              // alle Devices werden hier eingetragen
   {
     devID: 1,
@@ -148,6 +156,19 @@ public ZEN_Devices = [              // alle Devices werden hier eingetragen
     devBrowser:"Firefox",
     devOs: "Windows7",
     devName: "Emir-PC",
+    devCode: "r331241"
+  },
+  { // Haupt-Terminal
+    devID: 7,
+    usrPin:"",
+    regDate: "15112017",
+    companyID: 1,
+    MA: "Team",
+    devMAno: 1,
+    devTyp:"Win-Tablet",
+    devBrowser:"Chrome",
+    devOs: "Windows10",
+    devName: "Haupt-Terminal",
     devCode: "r331241"
   },
   {  // nur als Abschluss-Element, damit kein Überlauf bei Abfrage - muss immer letztes bleiben
@@ -405,65 +426,70 @@ public makeStamp(stampType:string){
     let uhrZiffern = ['0','1','2','3','4','5','6'];
     let currComment = this.comment;
 //alert ("makestamp1:"+ currComment+"!");
-    if (currComment.charAt(0) == "#" || currComment.charAt(0) == ".") {  // Korrektur-Zeit wird eingearbeitet
-//alert ("makestamp2= #:"+ currComment+"!");
-      if (currComment.charAt(1) == "k" || currComment.charAt(1) =="K") {  // Korrektur-Zeit wird eingearbeitet
+    if (currComment.charAt(0) == "#" || currComment.charAt(0) == ".") currComment = currComment.substr(1).trim(); // "#" od. "." wird wegggeschnitten
+    //alert ("makestamp2= #:"+ currComment+"!");
+/*      if (currComment.charAt(0) == "k" || currComment.charAt(0) == "K") { // möglicherweise Korrekturbuchung
+        if (currComment.charAt(1) == " " || uhrErsteZiffer.indexOf(currComment.charAt(1)) !=-1) {  // Korrektur-Zeit wird eingearbeitet
+          currComment = currComment.substr(1).trim();
+          korrektur=2;
+        }
+      }
+*/
+    if (currComment.charAt(0) == "k" || currComment.charAt(1) =="K") {  // Korrektur-Zeit wird eingearbeitet
 //alert ("makestamp3= #k:"+ currComment+"!");
-        korrektur = 2;  // wenn spätere keine korrekte Uhrzeit festgestellt wird, dann Fehler
-        currComment = currComment.substr(2).trim(); // #k wird weggeschnitten und getrimmt
-        var n = currComment.indexOf(".");
-    //alert(currComment+"--n:"+n);
-        if (n == 2)  {// ersetze . durch : , wenn gleich hinter #k-> wahrscheinlich Uhrzeit gemeint!
-          currComment = currComment.replace(".",":");
-    //alert("Uhrzeit mit . -> Uhrzeit mit : -"+currComment);
-        };
-        // if erste vier Buchstaben sind Zahlen -> einfügen von ":" in currComment
-        if ((uhrZiffern.indexOf(currComment.charAt(0)) !=-1) && (ziffern.indexOf(currComment.charAt(1)) !=-1) &&
-          (uhrZiffern.indexOf(currComment.charAt(2)) !=-1) && (ziffern.indexOf(currComment.charAt(3)) !=-1)) {  // Bsp: "1400" sind nur Uhrzeit-Ziffern ohne ":"
-          let part1=currComment.slice(0,2);
-          let part2=currComment.slice(2);
-          currComment = part1 + ":" + part2;
-        };
-        n = currComment.indexOf(':');
-        if (n !== -1) {  // es gibt einen  Doppelpunkt im Kommentar
-          if (n == 2) {  // Uhrzeit steht am Anfang des Kommentar
-           //zerlegen in HH:MM
-            var uhr = currComment.substr(0,5);
+      korrektur = 2;  // wenn später keine korrekte Uhrzeit festgestellt wird, dann Fehler
+      // if erste vier Buchstaben sind Zahlen -> einfügen von ":" in currComment
+      currComment = currComment.substr(1).trim(); // "k" wird weggeschnitten und getrimmt
+      var n = currComment.indexOf(".");
+  //alert(currComment+"--n:"+n);
+      if (n == 2)  {// ersetze . durch : , wenn gleich hinter #k-> wahrscheinlich Uhrzeit gemeint!
+        currComment = currComment.replace(".",":");
+  //alert("Uhrzeit mit . -> Uhrzeit mit : -"+currComment);
+      };
+      // if erste vier Buchstaben sind Zahlen -> einfügen von ":" in currComment
+      if ((uhrZiffern.indexOf(currComment.charAt(0)) !=-1) && (ziffern.indexOf(currComment.charAt(1)) !=-1) &&
+        (uhrZiffern.indexOf(currComment.charAt(2)) !=-1) && (ziffern.indexOf(currComment.charAt(3)) !=-1)) {  // Bsp: "1400" sind nur Uhrzeit-Ziffern ohne ":"
+        let part1=currComment.slice(0,2);
+        let part2=currComment.slice(2);
+        currComment = part1 + ":" + part2;
+      };
+      n = currComment.indexOf(':');
+      if (n !== -1) {  // es gibt einen  Doppelpunkt im Kommentar
+        if (n == 2) {  // Uhrzeit steht am Anfang des Kommentar
+         //zerlegen in HH:MM
+          var uhr = currComment.substr(0,5);
 //alert ("Uhr:"+ uhr+"!");
-            splitCommArr = uhr.split(':');
-            if (splitCommArr.length = 2) {
+          splitCommArr = uhr.split(':');
+          if (splitCommArr.length = 2) {
 //alert("Stunden:"+ splitCommArr[0]+"Minuten:"+ splitCommArr[1]); //Minuten
-              if ((splitCommArr[0].length==2) && (splitCommArr[1].length==2)) { // könnte Uhrzeit + Zusatz-Kommentar sein
+            if ((splitCommArr[0].length==2) && (splitCommArr[1].length==2)) { // könnte Uhrzeit + Zusatz-Kommentar sein
 //alert ("wahrscheinlich Uhrzeit:"+ uhr+"!");
-                if ((uhrZiffern.indexOf(uhr.charAt(0)) !=-1) && (ziffern.indexOf(uhr.charAt(1)) !=-1) && (uhr.charAt(2) ==':')
-                && (uhrZiffern.indexOf(uhr.charAt(3)) !=-1) && (ziffern.indexOf(uhr.charAt(4)) !=-1)) {  // sind nur Uhrzeit-Ziffern
-                  if ((Number((uhr.charAt(0)+uhr.charAt(1))) >= 0) && (Number((uhr.charAt(0)+uhr.charAt(1))) <= 23) &&
-                    (Number((uhr.charAt(3)+uhr.charAt(4))) <= 59) ) { // ist wirklich Uhrzeit
+              if ((uhrZiffern.indexOf(uhr.charAt(0)) !=-1) && (ziffern.indexOf(uhr.charAt(1)) !=-1) && (uhr.charAt(2) ==':')
+              && (uhrZiffern.indexOf(uhr.charAt(3)) !=-1) && (ziffern.indexOf(uhr.charAt(4)) !=-1)) {  // sind nur Uhrzeit-Ziffern
+                if ((Number((uhr.charAt(0)+uhr.charAt(1))) >= 0) && (Number((uhr.charAt(0)+uhr.charAt(1))) <= 23) &&
+                  (Number((uhr.charAt(3)+uhr.charAt(4))) <= 59) ) { // ist wirklich Uhrzeit
 //alert("=Uhrzeit!");
-                    korrektur = 1;
-                  };
+                  korrektur = 1;
                 };
               };
             };
           };
-          if (korrektur != 1) {
-            this.comment = 'Falsches Zeit-Format: '+this.comment;
-          };
-        }
-        else { // keine Uhrzeit im Kommentar -> canceln
-          korrektur = 2;
-          this.comment = 'Keine Uhrzeit angegeben: '+this.comment;
-        }
+        };
+        if (korrektur != 1) {
+          this.comment = 'Falsches Zeit-Format: '+this.comment;
+        };
       }
-      else { // # oder . wurde erkannt, aber keine Korrektur !!!
-        if (currComment.charAt(1) == "a" || currComment.charAt(1) =="A") {  // Korrektur-Zeit wird eingearbeitet
-          alert("Hier kommt später der Alarm");  // .a30 -> 30 Min Alarm
-        }
-      };
-//alert("comment:"+this.comment+"currComment:"+currComment);
+      else { // keine Uhrzeit im Kommentar -> canceln
+        korrektur = 2;
+        this.comment = 'Keine Uhrzeit angegeben: '+this.comment;
+      }
     }
-    else { // ist kein # Code-Kommentar
-    };
+    //    if (currComment.charAt(0) == "a" || currComment.charAt(0) =="A") {  // Korrektur-Zeit wird eingearbeitet
+    //      alert("Hier kommt später der Alarm");  // .a30 -> 30 Min Alarm
+    //    }
+    //  };
+//alert("comment:"+this.comment+"currComment:"+currComment);
+
     let clientMillisec = Date.now();
     this.clientDate = new Date(clientMillisec);
     this.serverDate = new Date(clientMillisec - this.clientDateDiff);
@@ -496,6 +522,12 @@ public makeStamp(stampType:string){
       //this.clientDate = (new Date(currMillisec)); // ISO-damit alphabet.Sortierung möglich
       //Umwandlung von String-> Date-Objekt OK:
       // Stunden,Minuten mit führender 0
+          if (korrektur == 1 && this.comment[0] != "#"){  // alle korrekturen werden auf "#..." gesetzt
+      //    alert("drin1:"+this.comment);
+            if (this.comment[0]== ".") this.comment = this.comment.substr(1);
+      //      alert("drin2:"+this.comment);
+            this.comment = "#" + this.comment;
+          }
           let Hours="";
           let Minutes="";
           if (this.serverDate.getHours()<10) Hours="0"+this.serverDate.getHours()
@@ -511,9 +543,12 @@ public makeStamp(stampType:string){
           this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
         };
          // if-Ende: "normale Buchung" vorbereiten
+         // if "autoLogout" = Kennung vorläufig für HAUPT-Terminal
+         let hauptTerminal = "";
+         if (this.autoLogout) hauptTerminal ="-!!!KD!!!"
         this.backand.object.create('Timestamps2', "{'date':'" + this.serverDate.toISOString() + "', 'status':'" +
         stampType + "','userid':'" + this.globCurrUser.id + "','username':'" +
-        this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform +
+        this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform + hauptTerminal +
         "','browserPlatform':'" + navigator.platform + "'}")
         .then((res: any) => {
     //      alert("nach Create: ms->Date:"+this.serverDate.getTime()+ "cms:" + clientMillisec +"clientdiff-ms"+this.clientDateDiff+
