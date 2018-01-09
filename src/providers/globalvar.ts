@@ -23,7 +23,7 @@ public globCurrUser:any;
 
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.8A"
+public appVers:string="v0.8.1"
 public testFlag:number = 0;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
@@ -435,7 +435,7 @@ public makeStamp(stampType:string){
         }
       }
 */
-    if (currComment.charAt(0) == "k" || currComment.charAt(1) =="K") {  // Korrektur-Zeit wird eingearbeitet
+    if (currComment.charAt(0) == "k" || currComment.charAt(0) == "K") {  // Korrektur-Zeit wird eingearbeitet
 //alert ("makestamp3= #k:"+ currComment+"!");
       korrektur = 2;  // wenn später keine korrekte Uhrzeit festgestellt wird, dann Fehler
       // if erste vier Buchstaben sind Zahlen -> einfügen von ":" in currComment

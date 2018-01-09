@@ -13,6 +13,12 @@ import { Platform } from 'ionic-angular';
 export class ExtrasPage {
 
   public users:any[]=[];
+  public buchungenMonth:any[][]=[];
+  public workTimeHours:any[] = [];
+  public workTimeMinutes:any[] = [];
+  public wtMonthSum = 0;
+  public wtMonthHours = 0;
+  public wtMonthMinutes = 0;
 
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
     //this.globVars.timer=30;
@@ -41,5 +47,144 @@ export class ExtrasPage {
   'RI-title',["OK","Cancel","3.", "4.","5.", "6."], 'defaultText');
 */
 //  alert('nach dialogs');
+
+public calcMonth(){
+
+let firstOfMonth = new Date("2018-01-04");
+let foMString = firstOfMonth.toISOString().substr(0,10);
+
+    let params = {
+      filter: [this.backand.helpers.filter.create('username', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.name), this.backand.helpers.filter.create('date', 'startsWith', foMString)],
+      sort:   this.backand.helpers.sort.create('date', this.backand.helpers.sort.orders.desc),
+    //  pageSize: 20,
+
+    //  pageNumber: this.nextBuchungenPage,      //Hol die nächste Seite
+    }
+    this.backand.object.getList('Timestamps2', params)
+     .then((res: any) => {
+       let i=0;
+       let weekDay="";
+       let datumHelper=null;
+       let todayIndexBorder=-1;
+       let todayDate = new Date();
+
+  /*     while (i<res.data.length) {            //Such den ersten TS != heute
+         if(res.data[i].date.substr(0,10) !=     todayDate.toISOString().substr(0,10))
+         {
+           todayIndexBorder = i;
+           break;
+         }
+         i++;
+       }
+       i=0;         //falls alle TS von heute -> Ende = Ende d. Liste
+       if (todayIndexBorder==-1) todayIndexBorder = res.data.length + 1;
+*/
+      let workTimeSum = this.globVars.calcWorkTime(res.data);
+      this.wtMonthSum += workTimeSum;
+      let workTimeSumDate = new Date(workTimeSum);
+      this.workTimeHours[0] = workTimeSumDate.getUTCHours();
+      this.workTimeMinutes[0] = workTimeSumDate.getUTCMinutes();
+          //Gibt es eine Bessere Möglichkeit, die Zeiten zu addieren?
+      let wtMonthDate = new Date(this.wtMonthSum);
+      this.wtMonthHours = wtMonthDate.getUTCHours();
+      this.wtMonthMinutes = wtMonthDate.getUTCMinutes();
+
+       while (i<res.data.length) {          //UTC Strings -> Lokale Zeit
+         datumHelper = new Date(res.data[i].date);
+         res.data[i].date = datumHelper.toString().substr(0,21);
+         weekDay=res.data[i].date.substr(0,3);
+         switch (weekDay) {
+           case "Mon": weekDay ="Mo";
+             break;
+           case "Tue": weekDay ="Di";
+             break;
+           case "Wed": weekDay ="Mi";
+             break;
+           case "Thu": weekDay ="Do";
+               break;
+           case "Fri": weekDay ="Fr";
+               break;
+           case "Sat": weekDay ="Sa";
+               break;
+           case "Sun": weekDay ="So";
+               break;
+         }
+         res.data[i].date = weekDay+res.data[i].date.substr(3,21);
+         ++i;
+       };
+       this.buchungenMonth[0] = res.data;
+  },
+  (err: any) => {
+    alert(err.data);
+  });
+
+ firstOfMonth = new Date("2018-01-05");
+ foMString = firstOfMonth.toISOString().substr(0,10);
+
+      params.filter = [this.backand.helpers.filter.create('username', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.name), this.backand.helpers.filter.create('date', 'startsWith', foMString)];
+
+      this.backand.object.getList('Timestamps2', params)
+       .then((res: any) => {
+         let i=0;
+         let weekDay="";
+         let datumHelper=null;
+         let todayIndexBorder=-1;
+         let todayDate = new Date();
+
+         let workTimeSum = this.globVars.calcWorkTime(res.data);
+         this.wtMonthSum += workTimeSum;
+         let workTimeSumDate = new Date(workTimeSum);
+         this.workTimeHours[1] = workTimeSumDate.getUTCHours();
+         this.workTimeMinutes[1] = workTimeSumDate.getUTCMinutes();
+              //Berechne die Monatssumme in der letzten Iteration!
+
+         let wtMonthDate = new Date(this.wtMonthSum);
+         this.wtMonthHours = wtMonthDate.getUTCHours();
+         this.wtMonthMinutes = wtMonthDate.getUTCMinutes();
+
+    /*     while (i<res.data.length) {            //Such den ersten TS != heute
+           if(res.data[i].date.substr(0,10) !=     todayDate.toISOString().substr(0,10))
+           {
+             todayIndexBorder = i;
+             break;
+           }
+           i++;
+         }
+         i=0;         //falls alle TS von heute -> Ende = Ende d. Liste
+         if (todayIndexBorder==-1) todayIndexBorder = res.data.length + 1;
+  */
+         while (i<res.data.length) {          //UTC Strings -> Lokale Zeit
+           datumHelper = new Date(res.data[i].date);
+           res.data[i].date = datumHelper.toString().substr(0,21);
+           weekDay=res.data[i].date.substr(0,3);
+           switch (weekDay) {
+             case "Mon": weekDay ="Mo";
+               break;
+             case "Tue": weekDay ="Di";
+               break;
+             case "Wed": weekDay ="Mi";
+               break;
+             case "Thu": weekDay ="Do";
+                 break;
+             case "Fri": weekDay ="Fr";
+                 break;
+             case "Sat": weekDay ="Sa";
+                 break;
+             case "Sun": weekDay ="So";
+                 break;
+           }
+           res.data[i].date = weekDay+res.data[i].date.substr(3,21);
+           ++i;
+         };
+         this.buchungenMonth[1] = res.data;
+    },
+    (err: any) => {
+      alert(err.data);
+    });
+
+
+  }
+
+
 
 }

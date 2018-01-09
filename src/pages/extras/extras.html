@@ -1,5 +1,5 @@
 <ion-header>
-<ion-navbar hideBackButton>
+<ion-navbar>
   <ion-title>
     {{globVars.appNameVers}} - Extras: {{globVars.globCurrUser.name}}
   </ion-title>
@@ -7,6 +7,8 @@
 <!-- <p align="right"> {{globVars.timer}} </p> -->
 </ion-header>
 <ion-content padding class="page5">
+{{globVars.appVers}} <br>
+
 <h6 ion-text color="dark">Browser-Typ: {{globVars.browserPlatform}} -> {{globVars.currPlatform}}</h6>
 <button ion-button medium align="center" (click)="playTon()">sound-Test</button>
 
@@ -24,33 +26,61 @@
 -->
 <h5 ion-text color="primary">Wie kann ich eine Bemerkung für die Lohn-Verrechnung eingeben?</h5>
     <i ion-text color="danger">#v Bemerkung</i><a ion-text color="dark"> + (beliebiger Stempeltyp)</a><br>
-    <a ion-text color="dark">-> #v wird bei der Verrechnung(Lohn) !händisch! bearbeitet</a> <br>
-<!--
-<h1 ion-text color="secondary">H1: The quick brown fox jumps over the lazy dog</h1>
+    <a ion-text color="dark">-> #v wird bei der Verrechnung(Lohn) !händisch! bearbeitet</a> <br> <br>
 
-<h2 ion-text color="primary">H2: The quick brown fox jumps over the lazy dog</h2>
+<!-- Anzeige der TS eines Monats und Berechnung der Arbeitszeit pro Tag -->
 
-<h3 ion-text color="light">H3: The quick brown fox jumps over the lazy dog</h3>
+<button ion-button full align="center" (click)="calcMonth()" color="light">Monats-Arbeitszeit berechnen</button>
 
-<h4 ion-text color="danger">H4: The quick brown fox jumps over the lazy dog</h4>
+<ion-card class='blue'>
 
-<h5 ion-text color="dark">H5: The quick brown fox jumps over the lazy dog</h5>
+  <ion-card *ngIf="wtMonthMinutes">
+    <ion-item>
+      <ion-icon name="time" item-start></ion-icon>
+      Gesamt-Arbeitszeit: &nbsp;
+      <ion-badge><span *ngIf="wtMonthHours">{{wtMonthHours}}h</span> {{wtMonthMinutes}}m</ion-badge>
+    </ion-item>
+  </ion-card>
 
-<h6 ion-text [color]="dynamicColor">H6: The quick brown fox jumps over the lazy dog</h6>
 
-<p>
-  I saw a werewolf with a Chinese menu in his hand.
-  Walking through the <sub ion-text color="danger">streets</sub> of Soho in the rain.
-  He <i ion-text color="primary">was</i> looking for a place called Lee Ho Fook's.
-  Gonna get a <a ion-text color="secondary">big dish of beef chow mein.</a>
-</p>
 
-<p>
-  He's the hairy-handed gent who ran amuck in Kent.
-  Lately he's <sup ion-text color="primary">been</sup> overheard in Mayfair.
-  Better stay away from him.
-  He'll rip your lungs out, Jim.
-  I'd like to meet his tailor.
-</p>
--->
+<ion-grid *ngFor="let buchungenDay of buchungenMonth; let i=index">
+
+  <ion-card>
+    <ion-row><ion-col>
+    <ion-item>
+      Arbeitszeit: &nbsp;
+      <ion-badge><span *ngIf="workTimeHours[i]">{{workTimeHours[i]}}h</span> {{workTimeMinutes[i]}}m</ion-badge>
+    </ion-item>
+  </ion-col></ion-row>
+
+<ion-row *ngFor="let buchung of buchungenDay; let odd=odd; let even=even;" [ngClass]="{ odd: odd, even: even }">
+
+  <ion-col>
+    {{buchung.date}}
+  </ion-col>
+  <ion-col>
+    <span style="color:#f53d3d" *ngIf="buchung.status=='Krank'"><ion-icon name="radio-button-on"></ion-icon>  </span>
+    <span style="color:#3dcc82" *ngIf="buchung.status=='Arbeit EIN'"><ion-icon name="radio-button-on"></ion-icon> </span>
+    <span style="color:#ffcc00" *ngIf="buchung.status=='AD-Fahrt'"><ion-icon name="radio-button-on"></ion-icon> </span>
+    <span style="color:#ffcc00" *ngIf="buchung.status=='AD-Kunde'"><ion-icon name="radio-button-on"></ion-icon> </span>
+    <span style="color:#3dcc82" *ngIf="buchung.status=='Tele-Arbeit'"><ion-icon name="radio-button-on"></ion-icon> </span>
+    <span style="color:#3dcc82" *ngIf="buchung.status=='Projekt 1'"><ion-icon name="radio-button-on"></ion-icon> </span>
+    <span style="color:#3dcc82" *ngIf="buchung.status=='Projekt 2'"><ion-icon name="radio-button-on"></ion-icon> </span>
+    <span style="color:#488aff" *ngIf="buchung.status=='Pause EIN'"><ion-icon name="radio-button-on"></ion-icon> </span>
+    <span style="color:#488aff" *ngIf="buchung.status=='Urlaub'"><ion-icon name="radio-button-on"></ion-icon> </span>
+    <span style="color:#f53d3d" *ngIf="buchung.status=='Arbeit AUS'"><ion-icon name="radio-button-on"></ion-icon> </span>
+    {{buchung.status}}
+    </ion-col>
+  <ion-col>
+    {{buchung.device}}
+  </ion-col>
+  <ion-col>
+    {{buchung.comment}}
+  </ion-col>
+</ion-row>
+</ion-card>
+</ion-grid>
+
+</ion-card>
 </ion-content>

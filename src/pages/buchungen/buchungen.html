@@ -42,7 +42,7 @@
         Arbeitszeit
       </ion-col> -->
     </ion-row>
-    <ion-row *ngFor="let buchung of buchungentoday">
+    <ion-row *ngFor="let buchung of buchungentoday; let odd=odd; let even=even;" [ngClass]="{ odd: odd, even: even }">
 
       <ion-col>
         {{buchung.date}}
@@ -74,7 +74,7 @@
 
 <!-- Alle Buchungen != heute -->
 <ion-grid>
-  <ion-row *ngFor="let buchung of buchungen">
+  <ion-row *ngFor="let buchung of buchungen; let odd=odd; let even=even;" [ngClass]="{ odd: odd, even: even }">
 
     <ion-col>
       {{buchung.date}}

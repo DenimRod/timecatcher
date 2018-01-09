@@ -69,7 +69,7 @@ public reloadBuchungen(refresher){
      while (i<res.data.length) {          //UTC Strings -> Lokale Zeit
        datumHelper = new Date(res.data[i].date);
        res.data[i].date = datumHelper.toString().substr(0,21);
-       weekDay=res.data[i].date.substr(0,3)
+       weekDay=res.data[i].date.substr(0,3);
        switch (weekDay) {
          case "Mon": weekDay ="Mo";
            break;
