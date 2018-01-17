@@ -20,10 +20,9 @@ public globCurrUser:any;
 //         worktimeToday
 //
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
-
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.8.1"
+public appVers:string="v0.8.2"
 public testFlag:number = 0;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
@@ -510,6 +509,11 @@ public makeStamp(stampType:string){
         }
         else korrektur = 2; // nicht eintragen !!!
       }
+  //alert("test:"+this.comment + "korr:"+korrektur);
+      if (korrektur == 1 && this.comment[0] != "#"){  // alle korrekturen werden auf "#..." gesetzt
+        if (this.comment[0]== ".") this.comment = this.comment.substr(1);
+        this.comment = "#" + this.comment;
+      }
       if (this.serverDate <= new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist NICHT in der Zukunft
         if (this.serverDate > lastTimeStamp) {  //die Buchung sollte auch auf TOP angezeigt werden
       // alert("das zu buchende Datum ist neuer als der letzte Timestamp");
@@ -522,12 +526,7 @@ public makeStamp(stampType:string){
       //this.clientDate = (new Date(currMillisec)); // ISO-damit alphabet.Sortierung möglich
       //Umwandlung von String-> Date-Objekt OK:
       // Stunden,Minuten mit führender 0
-          if (korrektur == 1 && this.comment[0] != "#"){  // alle korrekturen werden auf "#..." gesetzt
-      //    alert("drin1:"+this.comment);
-            if (this.comment[0]== ".") this.comment = this.comment.substr(1);
-      //      alert("drin2:"+this.comment);
-            this.comment = "#" + this.comment;
-          }
+
           let Hours="";
           let Minutes="";
           if (this.serverDate.getHours()<10) Hours="0"+this.serverDate.getHours()
