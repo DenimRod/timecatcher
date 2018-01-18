@@ -452,6 +452,7 @@ public makeStamp(stampType:string){
         let part2=currComment.slice(2);
         currComment = part1 + ":" + part2;
       };
+      // entweder: keine vier Ziffern || vier Ziffern mit ":" in der Mitte
       n = currComment.indexOf(':');
       if (n !== -1) {  // es gibt einen  Doppelpunkt im Kommentar
         if (n == 2) {  // Uhrzeit steht am Anfang des Kommentar
@@ -478,9 +479,9 @@ public makeStamp(stampType:string){
           this.comment = 'Falsches Zeit-Format: '+this.comment;
         };
       }
-      else { // keine Uhrzeit im Kommentar -> canceln
-        korrektur = 2;
-        this.comment = 'Keine Uhrzeit angegeben: '+this.comment;
+      else { // es gibt KEINEN ":" im Kommentar ->keine Uhrzeit im Kommentar -> normal eintragen
+        korrektur = 0;
+        //this.comment = 'Keine Uhrzeit angegeben: '+this.comment;
       }
     }
     //    if (currComment.charAt(0) == "a" || currComment.charAt(0) =="A") {  // Korrektur-Zeit wird eingearbeitet
