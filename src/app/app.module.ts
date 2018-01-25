@@ -23,6 +23,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Dialogs } from '@ionic-native/dialogs';
 import { NFC, Ndef } from '@ionic-native/nfc';
+//import { LocalNotifications } from 'ionic-native';
 
 import { GlobalVars } from '../providers/globalvar';
 
@@ -67,6 +68,7 @@ import { GlobalVars } from '../providers/globalvar';
     Dialogs,
     NFC,
     Ndef,
+//    LocalNotifications,
   ]
 })
 export class AppModule {}

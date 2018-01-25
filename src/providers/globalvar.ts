@@ -29,8 +29,8 @@ public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal
 timestamppro: Countdown, Zeile 20 Kommentar entfernt
 */
 public autoLogout = false; // steuert den Logout-Timer
-public logoutTime:number = 7;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
-public pinLength:number = 2;  // Länge des Login-Pins
+public logoutTime:number = 15;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
+public pinLength:number = 3;  // Länge des Login-Pins
 public serverDateStr:string=""; // UTC-Zeit des Logins = univ.ServerZeit (Zeit kommt vom Backand-Server!)
 public serverDate: any;
 public clientDateStr:string = ""; // Zeit des Clients
