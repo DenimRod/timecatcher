@@ -32,14 +32,14 @@ export class LoginPage {
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars,
      public plt: Platform, private dialogs: Dialogs,private nfc: NFC, private ndef: Ndef,
      // private localNotifications: LocalNotifications
-   ) {  }
+  ) {  }
 
 
-NFC_onSuccess()
-{ alert ("onSuccess")};
+  NFC_onSuccess()
+  { alert ("onSuccess")};
 
-NFC_onError()
-{ alert ("onError")};
+  NFC_onError()
+  { alert ("onError")};
 
   ionViewDidEnter() {
 /*    var myWindow = window.open("", "MsgWindow", "width=200,height=100");
@@ -47,9 +47,9 @@ NFC_onError()
 alert("Test"+this.globVars.pinLength);
 */
 
-
 // Schedule delayed notification
-/*
+
+/* plugin local-notification v0.9. macht PRobleme beim Compilieren für Android
 LocalNotifications.schedule({
    text: 'Alarm has expired!',
    at: new Date(new Date().getTime() + 3600),
@@ -57,6 +57,13 @@ LocalNotifications.schedule({
    data: { message : 'json containing app-specific information to be posted when alarm triggers' }
 });
 */
+/* var browserRef = this.inAppBrowser.create(
+        'https://twitter.com',
+        "_system",
+        "location=no,hidden=no,zoom=no"
+      );
+*/
+
     if (this.plt.is('cordova')) {   // soll nur dann aktiviert werden, wenn auf MOBILE (mit NFC)
       this.nfc.addNdefListener(
         () => {alert('successfully anttached ndef listener')},
@@ -148,7 +155,10 @@ xhr.send();
 
 ABFRAGE FÜR HANDY/DESKTOP */
 
-
+  public loginClear() {
+    this.textInput = "";
+    this.inputID ="";
+  };
 
   public handleText(){
     // wenn Eingabe mit "r" beginnt, dann RegistrierungsCode !!!
