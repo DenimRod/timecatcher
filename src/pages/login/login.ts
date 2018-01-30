@@ -8,6 +8,7 @@ import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
 import { Dialogs } from '@ionic-native/dialogs';
 import { NFC, Ndef } from '@ionic-native/nfc';
+//import { LocalNotifications } from 'ionic-native';
 
 //angeblich notwendig, damit die Dialoge "aktiviert" werden.
 /*function onDeviceReady() {
@@ -29,16 +30,39 @@ export class LoginPage {
   public onHandy:boolean=false;
 
   constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars,
-     public plt: Platform, private dialogs: Dialogs,private nfc: NFC, private ndef: Ndef ) {  }
+     public plt: Platform, private dialogs: Dialogs,private nfc: NFC, private ndef: Ndef,
+     // private localNotifications: LocalNotifications
+  ) {  }
 
 
-NFC_onSuccess()
-{ alert ("onSuccess")};
+  NFC_onSuccess()
+  { alert ("onSuccess")};
 
-NFC_onError()
-{ alert ("onError")};
+  NFC_onError()
+  { alert ("onError")};
 
   ionViewDidEnter() {
+/*    var myWindow = window.open("", "MsgWindow", "width=200,height=100");
+    myWindow.document.write("<p>This is 'MsgWindow'. I am 200px wide and 100px tall!</p>");
+alert("Test"+this.globVars.pinLength);
+*/
+
+// Schedule delayed notification
+
+/* plugin local-notification v0.9. macht PRobleme beim Compilieren für Android
+LocalNotifications.schedule({
+   text: 'Alarm has expired!',
+   at: new Date(new Date().getTime() + 3600),
+  // sound: isAndroid ? 'file://sound.mp3': 'file://beep.caf',
+   data: { message : 'json containing app-specific information to be posted when alarm triggers' }
+});
+*/
+/* var browserRef = this.inAppBrowser.create(
+        'https://twitter.com',
+        "_system",
+        "location=no,hidden=no,zoom=no"
+      );
+*/
 
     if (this.plt.is('cordova')) {   // soll nur dann aktiviert werden, wenn auf MOBILE (mit NFC)
       this.nfc.addNdefListener(
@@ -131,7 +155,10 @@ xhr.send();
 
 ABFRAGE FÜR HANDY/DESKTOP */
 
-
+  public loginClear() {
+    this.textInput = "";
+    this.inputID ="";
+  };
 
   public handleText(){
     // wenn Eingabe mit "r" beginnt, dann RegistrierungsCode !!!

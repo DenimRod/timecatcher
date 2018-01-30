@@ -23,7 +23,7 @@ public globCurrUser:any;
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
 public appVers:string="v0.8.4"
-public testFlag:number = 1;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
+public testFlag:number = 0;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 timestamppro: Countdown, Zeile 20 Kommentar entfernt
