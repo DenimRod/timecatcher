@@ -56,6 +56,12 @@
       <ion-icon name="time" item-start></ion-icon>
       Gesamt-Arbeitszeit: &nbsp;
       <ion-badge><span *ngIf="wtInterval.Hours">{{wtInterval.Hours}}h</span> {{wtInterval.Minutes}}m</ion-badge>
+      <ion-badge>
+        =
+      </ion-badge>
+      <ion-badge>
+        {{wtInterval.HoursDezim}}h
+      </ion-badge>
     </ion-item>
   </ion-card>
 

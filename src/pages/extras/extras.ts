@@ -25,6 +25,7 @@ export class ExtrasPage {
     sum:0,
     Days:0,
     Hours:0,
+    HoursDezim:"",
     Minutes:0
 };                           //Komplexe Berechnungen für Uhrzeitbereinigung
 
@@ -116,8 +117,9 @@ public calcInterval(){
        }
 
        let wtIntervalDate = new Date(this.wtInterval.sum);
-       this.wtInterval.Hours = Math.round(this.wtInterval.sum / 60);
+       this.wtInterval.Hours = Math.floor(this.wtInterval.sum / 60);
        this.wtInterval.Minutes = this.wtInterval.sum % 60;
+       this.wtInterval.HoursDezim = (this.wtInterval.sum / 60).toFixed(2);
 
 
 /*
