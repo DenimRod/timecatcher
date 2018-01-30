@@ -114,11 +114,11 @@ xhr.send();
 
 //not so crazy workaround for no login
   if(this.globVars.testFlag==1){
-    this.inputID = "33";
+    this.inputID = "333";
     this.checkUser();
   }
   if(this.globVars.testFlag==2){
-    this.inputID = "21";
+    this.inputID = "222";
     this.checkUser();
   }
 }

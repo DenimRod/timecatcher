@@ -29,16 +29,33 @@
     <a ion-text color="dark">-> #v wird bei der Verrechnung(Lohn) !händisch! bearbeitet</a> <br> <br>
 
 <!-- Anzeige der TS eines Monats und Berechnung der Arbeitszeit pro Tag -->
+<ion-list>
+  <ion-item>
+    <ion-label>Von:</ion-label>
+    <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="wtInterval.start"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Bis:</ion-label>
+    <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="wtInterval.end"></ion-datetime>
+  </ion-item>
+</ion-list>
 
-<button ion-button full align="center" (click)="calcMonth()" color="light">Monats-Arbeitszeit berechnen</button>
+
+<button ion-button full align="center" (click)="calcInterval()" color="light">Arbeitszeit berechnen</button>
 
 <ion-card class='blue'>
 
-  <ion-card *ngIf="wtMonthMinutes">
+  <ion-card *ngIf="noTSFound">
+    <ion-item>
+    Es wurden leider keine Einträge im angegebenen Zeitraum gefunden!
+    </ion-item>
+  </ion-card>
+
+  <ion-card *ngIf="wtInterval.Minutes">
     <ion-item>
       <ion-icon name="time" item-start></ion-icon>
       Gesamt-Arbeitszeit: &nbsp;
-      <ion-badge><span *ngIf="wtMonthHours">{{wtMonthHours}}h</span> {{wtMonthMinutes}}m</ion-badge>
+      <ion-badge><span *ngIf="wtInterval.Hours">{{wtInterval.Hours}}h</span> {{wtInterval.Minutes}}m</ion-badge>
     </ion-item>
   </ion-card>
 
@@ -57,7 +74,7 @@
 <ion-row *ngFor="let buchung of buchungenDay; let odd=odd; let even=even;" [ngClass]="{ odd: odd, even: even }">
 
   <ion-col>
-    {{buchung.date}}
+    {{buchung.date| date: 'EEE MMM dd yyyy H:mm'}}
   </ion-col>
   <ion-col>
     <span style="color:#f53d3d" *ngIf="buchung.status=='Krank'"><ion-icon name="radio-button-on"></ion-icon>  </span>
