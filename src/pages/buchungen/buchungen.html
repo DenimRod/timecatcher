@@ -19,8 +19,14 @@
 <ion-card>
   <ion-item>
     <ion-icon name="time" item-start></ion-icon>
-    Arbeitszeit heute:
-    <ion-badge item-end><span *ngIf="workTimeHours">{{workTimeHours}}h</span> {{workTimeMinutes}}m</ion-badge>
+    Arbeitszeit heute: &nbsp;
+    <ion-badge>
+      {{workTimeHoursDezim}}h
+    </ion-badge>
+    <ion-badge>
+      =
+    </ion-badge>
+    <ion-badge><span *ngIf="workTimeHours">{{workTimeHours}}h</span> {{workTimeMinutes}}m</ion-badge>
   </ion-item>
 </ion-card>
 

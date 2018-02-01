@@ -12,6 +12,7 @@ export class BuchungenPage {
 
   public buchungen:any[]=[]; // die einzelnen Buchungszeilen (ex. heute)
   public buchungentoday:any[]=[];
+  public workTimeHoursDezim = "";
   public workTimeHours = 0;
   public workTimeMinutes = 0;
   public nextBuchungenPage = 2;
@@ -61,6 +62,10 @@ public reloadBuchungen(refresher){
      let workTimeSumDate = new Date(workTimeSum);
      this.workTimeHours = workTimeSumDate.getUTCHours();
      this.workTimeMinutes = workTimeSumDate.getUTCMinutes();
+          //Anzeige in Dezimaldarstellung
+     let justMinutes = this.workTimeHours*60 + this.workTimeMinutes
+     this.workTimeHoursDezim = (justMinutes / 60).toFixed(2);
+
 
      this.globVars.globCurrUser.worktimeToday = workTimeSum;  //Setze globalen
      clearTimeout(this.globVars.workTimeTimeout);             //Timer

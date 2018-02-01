@@ -15,6 +15,7 @@ export class ExtrasPage {
   public users:any[]=[];
   public noTSFound = false;
   public buchungenMonth:any[][]=[];
+  public workTimeHoursDezim:any[] = [];
   public workTimeHours:any[] = [];
   public workTimeMinutes:any[] = [];
                             // Alle Vars für Arbeitszeit in Intervall
@@ -108,15 +109,17 @@ public calcInterval(){
          this.workTimeHours[dayCount] = workTimeSumDate.getUTCHours();
          this.workTimeMinutes[dayCount] = workTimeSumDate.getUTCMinutes();
                             //Addiere zur Gesamtsumme (in Minuten)
-         this.wtInterval.sum += (this.workTimeHours[dayCount]*60 + this.workTimeMinutes[dayCount]);
-
+         let justMinutes = this.workTimeHours[dayCount]*60 + this.workTimeMinutes[dayCount]
+         this.wtInterval.sum += (justMinutes);
+         //Anzeige in Dezimaldarstellung
+         this.workTimeHoursDezim[dayCount] = (justMinutes /60).toFixed(2);
+         
          dateHelperStr = dateHelper.toISOString();    //Update auf neuen Tag
          i_start = i;
          i++;
          dayCount++;
        }
 
-       let wtIntervalDate = new Date(this.wtInterval.sum);
        this.wtInterval.Hours = Math.floor(this.wtInterval.sum / 60);
        this.wtInterval.Minutes = this.wtInterval.sum % 60;
        this.wtInterval.HoursDezim = (this.wtInterval.sum / 60).toFixed(2);

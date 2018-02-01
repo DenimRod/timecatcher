@@ -42,8 +42,8 @@
 
 
 <button ion-button full align="center" (click)="calcInterval()" color="light">Arbeitszeit berechnen</button>
-
-<ion-card class='blue'>
+<br>
+<!-- <ion-card class='blue'> -->
 
   <ion-card *ngIf="noTSFound">
     <ion-item>
@@ -54,14 +54,14 @@
   <ion-card *ngIf="wtInterval.Minutes">
     <ion-item>
       <ion-icon name="time" item-start></ion-icon>
-      Gesamt-Arbeitszeit: &nbsp;
-      <ion-badge><span *ngIf="wtInterval.Hours">{{wtInterval.Hours}}h</span> {{wtInterval.Minutes}}m</ion-badge>
-      <ion-badge>
-        =
-      </ion-badge>
+      Gesamt: &nbsp;
       <ion-badge>
         {{wtInterval.HoursDezim}}h
       </ion-badge>
+      <ion-badge>
+        =
+      </ion-badge>
+      <ion-badge><span *ngIf="wtInterval.Hours">{{wtInterval.Hours}}h</span> {{wtInterval.Minutes}}m</ion-badge>
     </ion-item>
   </ion-card>
 
@@ -73,6 +73,12 @@
     <ion-row><ion-col>
     <ion-item>
       Arbeitszeit: &nbsp;
+      <ion-badge>
+        {{workTimeHoursDezim[i]}}h
+      </ion-badge>
+      <ion-badge>
+        =
+      </ion-badge>
       <ion-badge><span *ngIf="workTimeHours[i]">{{workTimeHours[i]}}h</span> {{workTimeMinutes[i]}}m</ion-badge>
     </ion-item>
   </ion-col></ion-row>
@@ -105,5 +111,5 @@
 </ion-card>
 </ion-grid>
 
-</ion-card>
+<!-- </ion-card>-->
 </ion-content>
