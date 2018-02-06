@@ -22,7 +22,7 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="v0.8.4"
+public appVers:string="v1.0A"
 public testFlag:number = 0;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
