@@ -24,7 +24,6 @@ export class ExtrasPage {
     start: new Date(Date.now() - (Date.now() % 86400000) - 86400000 ).toISOString(),
     end: new Date(Date.now() + (86400000 - Date.now() % 86400000) - 3600001).toISOString(),
     sum:0,
-    Days:0,
     Hours:0,
     HoursDezim:"",
     Minutes:0
@@ -60,6 +59,11 @@ export class ExtrasPage {
 //  alert('nach dialogs');
 
 public calcInterval(){
+ this.workTimeHoursDezim = [];
+ this.workTimeHours = [];
+ this.workTimeMinutes = [];
+ this.wtInterval.sum = 0;
+
     let params = {
       filter: this.backand.helpers.filter.create('username', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.name),
       sort:   this.backand.helpers.sort.create('date', this.backand.helpers.sort.orders.desc),
@@ -113,7 +117,7 @@ public calcInterval(){
          this.wtInterval.sum += (justMinutes);
          //Anzeige in Dezimaldarstellung
          this.workTimeHoursDezim[dayCount] = (justMinutes /60).toFixed(2);
-         
+
          dateHelperStr = dateHelper.toISOString();    //Update auf neuen Tag
          i_start = i;
          i++;
