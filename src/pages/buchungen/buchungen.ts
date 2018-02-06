@@ -66,7 +66,6 @@ public reloadBuchungen(refresher){
      let justMinutes = this.workTimeHours*60 + this.workTimeMinutes
      this.workTimeHoursDezim = (justMinutes / 60).toFixed(2);
 
-
      this.globVars.globCurrUser.worktimeToday = workTimeSum;  //Setze globalen
      clearTimeout(this.globVars.workTimeTimeout);             //Timer
      this.globVars.workTimeCounter();
