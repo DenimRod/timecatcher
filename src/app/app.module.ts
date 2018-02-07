@@ -24,8 +24,13 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Dialogs } from '@ionic-native/dialogs';
 import { NFC, Ndef } from '@ionic-native/nfc';
 //import { LocalNotifications } from 'ionic-native';
-
 import { GlobalVars } from '../providers/globalvar';
+
+//Imports for Firebase
+import { AngularFireModule} from 'angularfire2';
+import { FIREBASE_CONFIG} from './firebase.credentials';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { ShoppingListService } from '../providers/shopping-list.service';
 
 @NgModule({
   declarations: [
@@ -43,6 +48,8 @@ import { GlobalVars } from '../providers/globalvar';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(FIREBASE_CONFIG),
+    AngularFireDatabaseModule,
   ],
   bootstrap: [ IonicApp ],
   entryComponents: [
@@ -69,6 +76,7 @@ import { GlobalVars } from '../providers/globalvar';
     Dialogs,
     NFC,
     Ndef,
+    ShoppingListService
 //    LocalNotifications,
   ]
 })
