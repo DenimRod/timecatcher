@@ -1,9 +1,9 @@
 export const FIREBASE_CONFIG = {
-        apiKey: "AIzaSyDoDS4jAai3qBFIkbfDseayVtmKLIv_MYs",
-        authDomain: "shoppinglist-76de0.firebaseapp.com",
-        databaseURL: "https://shoppinglist-76de0.firebaseio.com",
-        projectId: "shoppinglist-76de0",
-        storageBucket: "",
-        messagingSenderId: "837314703668"
+  apiKey: "AIzaSyD9UlpZYamMAJ6F2qEX97XnSePIpJ2XojQ",
+   authDomain: "kd-zen.firebaseapp.com",
+   databaseURL: "https://kd-zen.firebaseio.com",
+   projectId: "kd-zen",
+   storageBucket: "",
+   messagingSenderId: "585582424590"
+
 };
-    
