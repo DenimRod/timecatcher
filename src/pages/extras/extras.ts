@@ -59,11 +59,6 @@ export class ExtrasPage {
 //  alert('nach dialogs');
 
 public calcInterval(){
- this.workTimeHoursDezim = [];
- this.workTimeHours = [];
- this.workTimeMinutes = [];
- this.wtInterval.sum = 0;
-
     let params = {
       filter: this.backand.helpers.filter.create('username', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.name),
       sort:   this.backand.helpers.sort.create('date', this.backand.helpers.sort.orders.desc),
@@ -82,6 +77,7 @@ public calcInterval(){
        let startReached=false;
        this.noTSFound = false;
        this.buchungenMonth = [];
+       this.wtInterval.sum = 0;
 
        while (i<res.data.length){        //Such den ersten TS <= "end"
          dateHelper = new Date(res.data[i].date)
