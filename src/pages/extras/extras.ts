@@ -5,12 +5,19 @@ import { NavController } from 'ionic-angular';
 import { TimestampPage } from '../timestamp/timestamp';
 import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
+import { Item } from '../../models/item/item.model';
+import { ShoppingListService } from "../../providers/shopping-list.service";
 
 @Component({
     templateUrl: 'extras.html',
     selector: 'page-extras',
 })
 export class ExtrasPage {
+  item: Item = {
+    name: 'TEST',
+    quantity: 1,
+    price: 123,
+  }
 
   public users:any[]=[];
   public noTSFound = false;
@@ -29,12 +36,16 @@ export class ExtrasPage {
     Minutes:0
 };                           //Komplexe Berechnungen für Uhrzeitbereinigung
 
-  constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
+  constructor(private shopping: ShoppingListService, private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
     //this.globVars.timer=30;
   }
 
   ionViewWillEnter() {
 
+
+    this.shopping.addItem(this.item).then(ref=> {
+          console.log(ref.key);
+        })
 
 //  alert("Browser-Platform:"+this.globVars.browserPlatform+" currPf: "+this.globVars.currPlatform);
   }

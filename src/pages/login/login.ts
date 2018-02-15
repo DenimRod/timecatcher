@@ -109,7 +109,7 @@ LocalNotifications.schedule({
 
      */
 // -------------------------------------------------------------
-/*
+
 var xhr = new XMLHttpRequest();
 xhr.onreadystatechange = function() {
     //alert("work... State:"+xhr.readyState+"Status:"+xhr.status);
@@ -124,10 +124,10 @@ xhr.onreadystatechange = function() {
     }
     //else alert("FEHLER!-state:"+xmlhttp.readyState+"status:"+xmlhttp.status);
 }
-xhr.open("GET", "/server/ri_test.php", true);
+xhr.open("GET", "/server/ri_test.php?param=1", true);
 xhr.send();
 //alert("warten...");
-*/
+
 
   if (!this.globVars.autoLogout){
       this.textInput = '';
