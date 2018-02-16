@@ -1,0 +1,3 @@
+php-files liegen hier nur, damit sie per GIT verwaltet werden können!
+
+-> Sollten immer den Files am Server entsprechen

@@ -109,7 +109,7 @@ LocalNotifications.schedule({
 
      */
 // -------------------------------------------------------------
-
+/* PHP TEST 2
 var xhr = new XMLHttpRequest();
 xhr.onreadystatechange = function() {
     //alert("work... State:"+xhr.readyState+"Status:"+xhr.status);
@@ -127,7 +127,7 @@ xhr.onreadystatechange = function() {
 xhr.open("GET", "/server/ri_test.php?param=1", true);
 xhr.send();
 //alert("warten...");
-
+*/
 
   if (!this.globVars.autoLogout){
       this.textInput = '';
@@ -139,7 +139,8 @@ xhr.send();
 //not so crazy workaround for no login
   if(this.globVars.testFlag==1){
     this.inputID = "333";
-    this.checkUser();
+    this.checkUserPHP();
+    //this.checkUser();
   }
   if(this.globVars.testFlag==2){
     this.inputID = "222";
@@ -206,6 +207,37 @@ ABFRAGE FÜR HANDY/DESKTOP */
       this.checkUser();
     }
   }
+
+public checkUserPHP(){
+  var itemsphp:any[]=[];
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = () => {
+    if ((xhr.readyState == 4) && (xhr.status == 200 )) {
+      this.items = JSON.parse(xhr.responseText);
+        //zumindest 1 User wurde gefunden-> nimm den 1. in der Liste
+      if (this.items.length > 0) {
+        this.globVars.globCurrUser = this.items[0];
+
+          //Check Userlevel pro/normal
+        if (this.globVars.globCurrUser.applevel == "pro"){
+          this.navCtrl.push(TabsProPage);
+        }
+        else {
+          this.navCtrl.push(TabsPage);
+        }
+        this.inputID = '';
+      }
+        //sonst -> falsches PW
+      else {
+        alert ("This user doesn't exist!");
+        this.inputID = '';
+        this.textInput = '';
+      }
+    }
+  }
+  xhr.open("GET", "/server/login.php?inputID=" + this.inputID, true);
+  xhr.send();
+}
 
   public checkUser(){
   //  alert("checkUser-InputID:"+this.inputID);

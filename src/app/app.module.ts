@@ -4,7 +4,6 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import io from 'socket.io-client';
 window["io"] = io;
 
-
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
 import { CrudPage } from '../pages/crud/crud';
@@ -27,10 +26,10 @@ import { NFC, Ndef } from '@ionic-native/nfc';
 import { GlobalVars } from '../providers/globalvar';
 
 //Imports for Firebase
-import { AngularFireModule} from 'angularfire2';
-import { FIREBASE_CONFIG} from './firebase.credentials';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { ShoppingListService } from '../providers/shopping-list.service';
+//import { AngularFireModule} from 'angularfire2';
+//import { FIREBASE_CONFIG} from './firebase.credentials';
+//import { AngularFireDatabaseModule } from 'angularfire2/database';
+//import { ShoppingListService } from '../providers/shopping-list.service';
 
 @NgModule({
   declarations: [
@@ -48,8 +47,8 @@ import { ShoppingListService } from '../providers/shopping-list.service';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(FIREBASE_CONFIG),
-    AngularFireDatabaseModule,
+    //AngularFireModule.initializeApp(FIREBASE_CONFIG),
+    //AngularFireDatabaseModule,
   ],
   bootstrap: [ IonicApp ],
   entryComponents: [
@@ -76,7 +75,7 @@ import { ShoppingListService } from '../providers/shopping-list.service';
     Dialogs,
     NFC,
     Ndef,
-    ShoppingListService
+//    ShoppingListService
 //    LocalNotifications,
   ]
 })

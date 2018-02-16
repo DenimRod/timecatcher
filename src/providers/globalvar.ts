@@ -9,7 +9,6 @@ import { Device } from '@ionic-native/device';
 import { Platform } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 
-
 @Injectable()
 export class GlobalVars {
 
@@ -22,9 +21,9 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="V1.0.3"
+public appVers:string="V1.1"
 
-public testFlag:number = 0;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
+public testFlag:number = 1;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 timestamppro: Countdown, Zeile 20 Kommentar entfernt

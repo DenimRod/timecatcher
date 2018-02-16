@@ -6,7 +6,7 @@ import { TimestampPage } from '../timestamp/timestamp';
 import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
 import { Item } from '../../models/item/item.model';
-import { ShoppingListService } from "../../providers/shopping-list.service";
+//import { ShoppingListService } from "../../providers/shopping-list.service";
 
 @Component({
     templateUrl: 'extras.html',
@@ -25,7 +25,8 @@ export class ExtrasPage {
   public workTimeHoursDezim:any[] = [];
   public workTimeHours:any[] = [];
   public workTimeMinutes:any[] = [];
-                            // Alle Vars für Arbeitszeit in Intervall
+
+  // Container für alle Vars für Arbeitszeit in Intervall
   public wtInterval = {     //24*60*60*100 = 86400000, Anzahl ms pro Tag
                             //60*60*1000 = 3600000, Anzahl ms pro Stunde, Offset
     start: new Date(Date.now() - (Date.now() % 86400000) - 86400000 ).toISOString(),
@@ -35,18 +36,19 @@ export class ExtrasPage {
     HoursDezim:"",
     Minutes:0
 };                           //Komplexe Berechnungen für Uhrzeitbereinigung
-
-  constructor(private shopping: ShoppingListService, private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
+    // Firebase_Test: private shopping: ShoppingListService,
+  constructor( private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
     //this.globVars.timer=30;
   }
 
   ionViewWillEnter() {
 
+/* Firebase_Test
 
     this.shopping.addItem(this.item).then(ref=> {
           console.log(ref.key);
         })
-
+*/
 //  alert("Browser-Platform:"+this.globVars.browserPlatform+" currPf: "+this.globVars.currPlatform);
   }
   //angeblich notwendig, damit die Dialoge "aktiviert" werden.
