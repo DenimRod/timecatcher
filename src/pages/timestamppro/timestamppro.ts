@@ -12,20 +12,18 @@ import { ToastController } from 'ionic-angular';
 export class TimestampProPage {
 @ViewChild('focusInput') myInput;
 
-  constructor(public globVars: GlobalVars, public navCtrl: NavController,public keyboard: Keyboard,
-    private toastCtrl: ToastController)
+  constructor(public globVars: GlobalVars, public navCtrl: NavController,public keyboard: Keyboard, private toastCtrl: ToastController)
   {
     var currStatusNr = 0;
     this.globVars.timer=this.globVars.logoutTime;
     if (this.globVars.autoLogout) this.globVars.countDown();
-    while (this.globVars.globCurrUser.status != this.globVars.tsTyp[currStatusNr]) {
-      ++currStatusNr;
-    }
+    while (this.globVars.globCurrUser.status != this.globVars.tsTyp[currStatusNr])
+    { ++currStatusNr; }
+
     if (currStatusNr >=1 && currStatusNr <=6 ) globVars.workTimeRuns=true
     else globVars.workTimeRuns=false;
     this.globVars.globCurrUser.worktimeToday=0;
     this.globVars.workTimeCounter();
-  //  alert("in Timestamppro1:"+this.globVars.currPlatform);
   }
 
   ionViewDidEnter() {
@@ -37,8 +35,7 @@ export class TimestampProPage {
     if (this.globVars.currPlatform=="Handy") this.keyboard.close();
   }
 
-//-----------------------------------------------------------------------------------
-  public handleTEXT(){
+public handleTEXT(){
     this.globVars.comment = this.globVars.comment.trim();
     let buchungOK = true;  // bekommt erst eine Bedeutung, wenn ABBRUCH der Buchung möglich
     let uhrZeit = false;
@@ -60,7 +57,7 @@ export class TimestampProPage {
         var comment = prompt("["+this.globVars.tsTyp[tsTypeNr]+"] - Kommentar:", this.globVars.comment);
         if (comment !== null) {  // kein Abbruch der Buchung
           this.globVars.comment = comment;
-          this.globVars.makeStamp(this.globVars.tsTyp[tsTypeNr]);
+          this.globVars.makeStampPHP(this.globVars.tsTyp[tsTypeNr]);
         }
         else { // Abbruch der Kommentar-Abfrage -> keine Buchung
 //alert("Abbruch durch User, obwohl Zahl vorne");
@@ -81,7 +78,7 @@ export class TimestampProPage {
         var comment = prompt("["+this.globVars.tsTyp[tsTypeNr]+"] - Kommentar:", this.globVars.comment);
         if (comment !== null) {  // kein Abbruch der Buchung
           this.globVars.comment = comment;
-          this.globVars.makeStamp(this.globVars.tsTyp[tsTypeNr]);
+          this.globVars.makeStampPHP(this.globVars.tsTyp[tsTypeNr]);
         }
         else { // Abbruch der Kommentar-Abfrage -> keine Buchung
           let toast = this.toastCtrl.create({
@@ -115,7 +112,7 @@ export class TimestampProPage {
       */
       if (comment !== null) { // kein Abbruch
         this.globVars.comment = comment;
-        this.globVars.makeStamp(this.globVars.tsTyp[tsTypeNr]);
+        this.globVars.makeStampPHP(this.globVars.tsTyp[tsTypeNr]);
       }
       else {
         let toast = this.toastCtrl.create({

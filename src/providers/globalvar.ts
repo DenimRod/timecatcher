@@ -21,9 +21,9 @@ public globCurrUser:any;
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="V1.0.4"
+public appVers:string="V1.0.5"
 
-public testFlag:number = 0;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
+public testFlag:number = 1;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 timestamppro: Countdown, Zeile 20 Kommentar entfernt
@@ -271,6 +271,7 @@ private toastCtrl: ToastController) {
 public workTimeCounter(){
 // update alle 60 sec
   let update = 60000;
+
   this.workTimeTodayShow = new Date(this.globCurrUser.worktimeToday);
   this.workTimeTodayHour = this.workTimeTodayShow.getUTCHours();
   this.workTimeTodayMin  = this.workTimeTodayShow.getUTCMinutes();
@@ -342,15 +343,18 @@ public calcWorkTime(tsList:any[]){
   return(sum);
 }
 
-public makeStamp(stampType:string){
+  //Copy of makeStamp using makestamp.php
+public makeStampPHP(stampType:string){
   var makeStamp = true;
   var neuStampTypeNr: number;
   var altStampTypeNr: number;
 //  var currComm : string;
   var splitCommArr: any;
-// im Folgenden: Def: Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
-//               Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
-//               Def: AS = alter status, NS = neuer Status
+/* im Folgenden:
+Def: Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
+Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
+Def: AS = alter status, NS = neuer Status
+*/
   //stampTypNr wird gesetzt durch Vergleich, bis passt
   altStampTypeNr=0;
   while (this.globCurrUser.status != this.tsTyp[altStampTypeNr]) {
@@ -415,6 +419,281 @@ public makeStamp(stampType:string){
   //else-ende
   //Ende der Abfrage bzgl worktimeToday
   //alert("Ende der worktimeToday-Behandlung erreicht");
+
+  // else-> wenn "alter Status"=Arbeits-Typ (1..6) && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
+  // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ(1..60))-> Zeit weiterlaufen lassen
+  // else if (this.clobCurrUser.status=.....)
+  var korrektur = 0; // 0..kein Korrektur-Tag, 1..Korrektur OK, 2.. Korrektur Fehler (z.B. Zeit falsch angegeben,etc.)
+  if (makeStamp) {
+    //ServerZeit wird hochgerechnet aus client + Diff;
+    let ziffern = ['0','1','2','3','4','5','6','7','8','9'];
+    let uhrZiffern = ['0','1','2','3','4','5','6'];
+    let currComment = this.comment;
+//alert ("makestamp1:"+ currComment+"!");
+    if (currComment.charAt(0) == "#" || currComment.charAt(0) == ".") currComment = currComment.substr(1).trim(); // "#" od. "." wird wegggeschnitten
+    //alert ("makestamp2= #:"+ currComment+"!");
+/*      if (currComment.charAt(0) == "k" || currComment.charAt(0) == "K") { // möglicherweise Korrekturbuchung
+        if (currComment.charAt(1) == " " || uhrErsteZiffer.indexOf(currComment.charAt(1)) !=-1) {  // Korrektur-Zeit wird eingearbeitet
+          currComment = currComment.substr(1).trim();
+          korrektur=2;
+        }
+      }
+*/
+    if (currComment.charAt(0) == "k" || currComment.charAt(0) == "K") {  // Korrektur-Zeit wird eingearbeitet
+//alert ("makestamp3= #k:"+ currComment+"!");
+      korrektur = 2;  // wenn später keine korrekte Uhrzeit festgestellt wird, dann Fehler
+      // if erste vier Buchstaben sind Zahlen -> einfügen von ":" in currComment
+      currComment = currComment.substr(1).trim(); // "k" wird weggeschnitten und getrimmt
+      var n = currComment.indexOf(".");
+  //alert(currComment+"--n:"+n);
+      if (n == 2)  {// ersetze . durch : , wenn gleich hinter #k-> wahrscheinlich Uhrzeit gemeint!
+        currComment = currComment.replace(".",":");
+  //alert("Uhrzeit mit . -> Uhrzeit mit : -"+currComment);
+      };
+      // if erste vier Buchstaben sind Zahlen -> einfügen von ":" in currComment
+      if ((uhrZiffern.indexOf(currComment.charAt(0)) !=-1) && (ziffern.indexOf(currComment.charAt(1)) !=-1) &&
+        (uhrZiffern.indexOf(currComment.charAt(2)) !=-1) && (ziffern.indexOf(currComment.charAt(3)) !=-1)) {  // Bsp: "1400" sind nur Uhrzeit-Ziffern ohne ":"
+        let part1=currComment.slice(0,2);
+        let part2=currComment.slice(2);
+        currComment = part1 + ":" + part2;
+      };
+      // entweder: keine vier Ziffern || vier Ziffern mit ":" in der Mitte
+      n = currComment.indexOf(':');
+      if (n !== -1) {  // es gibt einen  Doppelpunkt im Kommentar
+        if (n == 2) {  // Uhrzeit steht am Anfang des Kommentar
+         //zerlegen in HH:MM
+          var uhr = currComment.substr(0,5);
+//alert ("Uhr:"+ uhr+"!");
+          splitCommArr = uhr.split(':');
+          if (splitCommArr.length = 2) {
+//alert("Stunden:"+ splitCommArr[0]+"Minuten:"+ splitCommArr[1]); //Minuten
+            if ((splitCommArr[0].length==2) && (splitCommArr[1].length==2)) { // könnte Uhrzeit + Zusatz-Kommentar sein
+//alert ("wahrscheinlich Uhrzeit:"+ uhr+"!");
+              if ((uhrZiffern.indexOf(uhr.charAt(0)) !=-1) && (ziffern.indexOf(uhr.charAt(1)) !=-1) && (uhr.charAt(2) ==':')
+              && (uhrZiffern.indexOf(uhr.charAt(3)) !=-1) && (ziffern.indexOf(uhr.charAt(4)) !=-1)) {  // sind nur Uhrzeit-Ziffern
+                if ((Number((uhr.charAt(0)+uhr.charAt(1))) >= 0) && (Number((uhr.charAt(0)+uhr.charAt(1))) <= 23) &&
+                  (Number((uhr.charAt(3)+uhr.charAt(4))) <= 59) ) { // ist wirklich Uhrzeit
+//alert("=Uhrzeit!");
+                  korrektur = 1;
+                };
+              };
+            };
+          };
+        };
+        if (korrektur != 1) {
+          this.comment = 'Falsches Zeit-Format: '+this.comment;
+        };
+      }
+      else { // es gibt KEINEN ":" im Kommentar ->keine Uhrzeit im Kommentar -> normal eintragen
+        korrektur = 0;
+        //this.comment = 'Keine Uhrzeit angegeben: '+this.comment;
+      }
+    }
+    //    if (currComment.charAt(0) == "a" || currComment.charAt(0) =="A") {  // Korrektur-Zeit wird eingearbeitet
+    //      alert("Hier kommt später der Alarm");  // .a30 -> 30 Min Alarm
+    //    }
+    //  };
+//alert("comment:"+this.comment+"currComment:"+currComment);
+
+    let clientMillisec = Date.now();
+    this.clientDate = new Date(clientMillisec);
+    this.serverDate = new Date(clientMillisec - this.clientDateDiff);
+    if (korrektur==1) {  // wenn Korrekturbuchung, dann serverDate auf die Zeit der Korrektur-Texts
+      this.serverDate.setHours(splitCommArr[0]);
+      this.serverDate.setMinutes(splitCommArr[1]);
+    //  alert("serverDate(korrigiert):"+this.serverDate.toISOString());
+    };
+    if (korrektur !==2) { // Buchung soll durchgeführt werden
+      let lastTimeStamp = new Date (this.globCurrUser.lasttimestampISO);
+
+      //  alert("sD:"+this.serverDate.toISOString()+"ltsISO:"+lastTimeStamp.toISOString());
+      if (this.serverDate > new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist in der Zukunft
+        var inp = prompt("!!! ACHTUNG !!!", "Korrektur-Zeit wird GESTERN eingetragen - OK?");
+        if (inp !== null) {  // kein Abbruch der Buchung
+          this.serverDate = new Date((this.serverDate.setDate(this.serverDate.getDate()-1)))
+          //alert("gestern:" + this.serverDate.toString());
+        }
+        else korrektur = 2; // nicht eintragen !!!
+      }
+  //alert("test:"+this.comment + "korr:"+korrektur);
+      if (korrektur == 1 && this.comment[0] != "#"){  // alle korrekturen werden auf "#..." gesetzt
+        if (this.comment[0]== ".") this.comment = this.comment.substr(1);
+        this.comment = "#" + this.comment;
+      }
+      if (this.serverDate <= new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist NICHT in der Zukunft
+        if (this.serverDate > lastTimeStamp) {  //die Buchung sollte auch auf TOP angezeigt werden
+      // alert("das zu buchende Datum ist neuer als der letzte Timestamp");
+      // normale Buchung vorbereiten
+
+      // Server-Zeitproblem auf KD-Desktops -> geht 10 min vor - Workaround
+      //if (this.currPlatform == "Desktop") currMillisec-=(600*1000);
+      // Workaround-Ende
+
+      //this.clientDate = (new Date(currMillisec)); // ISO-damit alphabet.Sortierung möglich
+      //Umwandlung von String-> Date-Objekt OK:
+      // Stunden,Minuten mit führender 0
+
+          let Hours="";
+          let Minutes="";
+          if (this.serverDate.getHours()<10) Hours="0"+this.serverDate.getHours()
+          else Hours=this.serverDate.getHours().toString();
+          if (this.serverDate.getMinutes()<10) Minutes="0"+this.serverDate.getMinutes()
+          else Minutes=this.serverDate.getMinutes().toString();
+          this.globCurrUser.lasttimestamp =  this.serverDate.getDate() + "." + (this.serverDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
+          this.globCurrUser.lasttimestampISO = this.serverDate.toISOString(); //schreibt in Orts-Zeit
+        //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
+        //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
+          this.globCurrUser.lastcomment = this.comment;
+          this.globCurrUser.status=stampType;
+
+      //Ab Hier DB-Action! --> Umbau auf PHP
+      var xhr = new XMLHttpRequest();
+        //User-Objekt -> JSON-String -> PHP-Parameter
+      xhr.open("GET", "/server/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+      xhr.send();
+
+      //BACKAND
+          //this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
+        };
+         // if-Ende: "normale Buchung" vorbereiten
+         // if "autoLogout" = Kennung vorläufig für HAUPT-Terminal
+         let hauptTerminal = "";
+         if (this.autoLogout) hauptTerminal ="-!!!KD!!!"
+        this.backand.object.create('Timestamps2', "{'date':'" + this.serverDate.toISOString() + "', 'status':'" +
+        stampType + "','userid':'" + this.globCurrUser.id + "','username':'" +
+        this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform + hauptTerminal +
+        "','browserPlatform':'" + navigator.platform + "'}")
+        .then((res: any) => {
+    //      alert("nach Create: ms->Date:"+this.serverDate.getTime()+ "cms:" + clientMillisec +"clientdiff-ms"+this.clientDateDiff+
+    //      "serverDate:" + this.serverDate.toLocaleString()+
+    //      "--clientDate:" + this.clientDate.toLocaleString()+"!");
+          if (korrektur ==0) {
+            let toast = this.toastCtrl.create({
+              message: 'Zeitstempel wurde eingetragen',
+              duration: 3000,
+              position: 'top'
+            });
+            toast.onDidDismiss(() => {});
+            toast.present();
+            this.comment = "";
+          }
+          else {  // korrektur ==1
+            let toast = this.toastCtrl.create({
+              message: 'Korrektur-Zeitstempel wurde eingetragen',
+              duration: 4000,
+              position: 'top'
+            });
+            toast.onDidDismiss(() => {});
+            toast.present();
+            this.comment = "";
+          };
+        },
+        (err: any) => {
+          alert(err.data);
+        });
+        this.comment = "";
+      }
+      else { // Fehler
+        let toast = this.toastCtrl.create({
+          message: '!!!KEIN!!! Zeitstempel eingetragen - Korrektur-Zeit in Zukunft',
+          duration: 4000,
+          showCloseButton: false,
+          position: 'middle'
+        });
+        toast.onDidDismiss(() => {});
+        toast.present();
+      };
+    }
+    else {   // korrektur=2 Fehler in Korrektur-Kommentar ->Abbruch
+      let toast = this.toastCtrl.create({
+        message: '!!!KEIN!!! Zeitstempel eingetragen - Fehler bei Korrektur-Text',
+        duration: 4000,
+        showCloseButton: false,
+        position: 'middle'
+      });
+      toast.onDidDismiss(() => {});
+      toast.present();
+    };
+  } // end-if makestamp
+
+}
+
+public makeStamp(stampType:string){
+  var makeStamp = true;
+  var neuStampTypeNr: number;
+  var altStampTypeNr: number;
+//  var currComm : string;
+  var splitCommArr: any;
+/* im Folgenden:
+Def: Arbeits-Typ=(1..6)=(Arbeit EIN, AD-Fahrt, Tele-Arbeit, AD-Kunde, P1, P2,)
+Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
+Def: AS = alter status, NS = neuer Status
+*/
+  //stampTypNr wird gesetzt durch Vergleich, bis passt
+  altStampTypeNr=0;
+  while (this.globCurrUser.status != this.tsTyp[altStampTypeNr]) {
+    ++altStampTypeNr;
+  };
+  neuStampTypeNr=0;
+  while (stampType != this.tsTyp[neuStampTypeNr]) {
+    ++neuStampTypeNr;
+  };
+  //alert("MAKESTAMP-Start- alter Status:"+this.globCurrUser.status+"-altStampTypeNr:"+altStampTypeNr+"-neuer Status:"+stampType+"-neuStampTypeNr:"+neuStampTypeNr);
+  //if AS = Arbeits-Stop-Typ=(Urlaub=8,Arbeit AUS=9,Krank=0)
+  if ((altStampTypeNr==0 || altStampTypeNr==8 )|| altStampTypeNr==9)
+    //&& NS = Arbeits-Typ (1..6)= Übergang von Arbeits-Stop auf Arbeit -> worktimeToday auf 0!
+    if (neuStampTypeNr>=1 && neuStampTypeNr<=6) {
+      // !!! könnte auch Re-Start von Arbeit am selben Tag(oder nach Mitternacht) sein
+    //  alert("Tagesarbeitszeit wird auf 0 gesetzt!"); //T-Arbeitszeit auf Null setzen = 0
+      this.globCurrUser.worktimeToday= 0;
+      this.workTimeRuns=true;
+
+    }
+    // NS ist AUCH Arbeits-Stop-Typ+Pause (7,8,9,0) -> Zweitstempel, warum auch immer
+    else
+      if (neuStampTypeNr==7) { // NS=Pause=7
+      //  alert("Übergang von Arbeits-Stop-Typ auf Pause");
+      } // else NS=(8,9,0)
+      else {
+      //  alert("Übergang von Status: "+this.globCurrUser.status+" auf: "+ stampType+ "- Arbeitszeit läuft weiterhin nicht");
+      }
+    //else-Ende
+  else // = AS ist Arbeits-Typ (1..6) oder Pause=7
+
+    if (altStampTypeNr==7) { // AS = Pause=7
+      // AS=Pause=7 && NS = Arbeits-Typen
+      if (neuStampTypeNr>=1 && neuStampTypeNr<=6) {
+        //alert("Tagesarbeitszeit läuft ab jetzt weiter");
+        this.workTimeRuns=true;
+      }
+      else { // AS=Pause=7 && NS = 7,8,9,0 = Pause+Arbeits-Stop-Typ
+        //workTimeRuns bleibt auf STOP
+        this.workTimeRuns=false;
+        //alert("alter Status= Pause=7 && neuer Status= 7,8,9,0"+this.workTimeRuns);
+      }  //else-Ende
+    }
+    else // AS = Arbeits-Typ (1..6)
+      if (neuStampTypeNr>=1 && neuStampTypeNr<=6) {// Arbeit läuft weiter
+        //alert("alter Status= Arbeits-Typ(=1..6) && neuer Status= Arbeits-Typ (=1..6)");
+      }
+      else
+        if (neuStampTypeNr==7) {// von Arbeit auf Pause
+      //    alert ("von Arbeit auf Pause");
+          // letzte Arbeitszeit wird zu worktimeToday hinzugezählt
+              // aktuelle Zeit - lasttimestamp = Arbeitszeit (ms)
+          this.workTimeRuns=false;
+        }
+        else {  // von Arbeit auf Arbeits-Stop
+        //  alert("alter Status= Arbeits-Typ(=1..6) && neuer Status= Arbeits-Stop-Typ(=8,9,0)");
+          // letzte Arbeitszeit wird zu worktimeToday hinzugezählt
+          this.workTimeRuns=false;
+        }
+      //else-ende
+    //else-ende
+  //else-ende
+  //Ende der Abfrage bzgl worktimeToday
+  //alert("Ende der worktimeToday-Behandlung erreicht");
+
   // else-> wenn "alter Status"=Arbeits-Typ (1..6) && ("neuer Status"= Arbeits-Stop-Typ) -> worktimeToday anhalten
   // else-> wenn "alter Status"= (Pause) && ("neuer Status"= Arbeits-Typ(1..60))-> Zeit weiterlaufen lassen
   // else if (this.clobCurrUser.status=.....)
@@ -603,16 +882,6 @@ public makeStamp(stampType:string){
     };
   } // end-if makestamp
 
-/*    READ ID OF CREATED TIMESTAMP
-  .then((res: any) => {
-    let items:any;
-    items = res.data.__metadata;
-    alert(items.id);
-  },
-  (err: any) => {
-    alert(err.data);
-  });
-*/
 }
 
 public KW(){

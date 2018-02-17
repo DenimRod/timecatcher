@@ -208,15 +208,18 @@ ABFRAGE FÜR HANDY/DESKTOP */
     }
   }
 
+  //Verwendt login.php um den User mittels PIN einzuloggen
 public checkUserPHP(){
-  var itemsphp:any[]=[];
   var xhr = new XMLHttpRequest();
+    //Sobald Request bereit, hol dir den entsprechenden USER
   xhr.onreadystatechange = () => {
     if ((xhr.readyState == 4) && (xhr.status == 200 )) {
       this.items = JSON.parse(xhr.responseText);
         //zumindest 1 User wurde gefunden-> nimm den 1. in der Liste
       if (this.items.length > 0) {
         this.globVars.globCurrUser = this.items[0];
+
+        //Missing: Login-DB + ServerClientDiff
 
           //Check Userlevel pro/normal
         if (this.globVars.globCurrUser.applevel == "pro"){
@@ -225,23 +228,21 @@ public checkUserPHP(){
         else {
           this.navCtrl.push(TabsPage);
         }
-        this.inputID = '';
       }
-        //sonst -> falsches PW
+        //sonst -> falscher PIN
       else {
         alert ("This user doesn't exist!");
-        this.inputID = '';
-        this.textInput = '';
       }
     }
   }
+    //Ruf login.php mit der inputID als Parameter auf
   xhr.open("GET", "/server/login.php?inputID=" + this.inputID, true);
   xhr.send();
+  this.inputID = '';
+  this.textInput = '';
 }
 
   public checkUser(){
-  //  alert("checkUser-InputID:"+this.inputID);
-
   // neue Idee für Tages-Arbeitszeit: wird dann auf 0 gesetzt, wenn der Übergang von
   // "Arbeit AUS" auf "Arbeit"= EIN,AD-Fahrt,...Projekt2 erfolgt.(in globalvar.ts/makestamp) Das ist der Arbeitsbeginn!
   // Arbeitszeit= Tag, Woche, Monats- Arbeitszeit
@@ -257,47 +258,6 @@ public checkUserPHP(){
       this.items = res.data;
       if (this.items.length > 0) {  //zumindest 1 User wurde gefunden-> nehme den 1. in der Liste
         this.globVars.globCurrUser = this.items[0];
-/* -- andere Lösung für worktimeToday zurücksetzen über makeStamp, diese Lösung für Wochen/Monats-Arbeitszeit vielleicht gut
-        // COMPANY QUERY für Tages-Arbeitszeit-Prüfung + Rücksetzung
-        let params2 = {
-          filter: [
-            this.backand.helpers.filter.create('id', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.companyid),
-          ],
-        }
-        this.backand.object.getList('Companies', params2)
-        .then((res: any) => {
-          this.globVars.globCurrComp = res.data[0];
-
-          // Check if last login was before today
-          // if monatstag != last monatstag  ...
-          let currentDate = new Date();
-          this.globVars.globCurrComp.lastLoginDay = currentDate.getDate(); // getDate=day of Month 1..31
-          //get every user of this company and set worktimeToday = 0
-          let params3 = {
-            filter: [
-              this.backand.helpers.filter.create('companyid', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrComp.id),
-            ],
-          }
-          this.backand.object.getList('Users', params3)
-          .then((res: any) => {
-            this.allusers = res.data;
-            var d = new Date(0);
-            for (let i=0;i<this.allusers.length;i++){
-              this.allusers[i].worktimeToday=d;
-              this.backand.object.update('Users', i+1, this.allusers[i]);
-            }
-          },
-          (err: any) => {
-            alert(err.data);
-          });
-        },
-          (err: any) => {
-          alert(err.data);
-        });
-*/
-        // auf Handy?  ---- wird jetzt über navigator.platform in globvar.ts gelöst
-          //if (this.onHandy) this.globVars.currPlatform="Handy"
-          //else this.globVars.currPlatform="Desktop";
 
      // Time-INIT
      // gleichzeitig wird ein Eintrag in die Login-DB-Objekt gemacht -> alle Logins werden dokumentiert
@@ -366,8 +326,6 @@ public checkUserPHP(){
           });
          //end TimeInit
 
-
-
   // SHOW Timestamp dependig on user level
         if (this.globVars.globCurrUser.applevel == "pro"){
           this.navCtrl.push(TabsProPage);
@@ -387,78 +345,4 @@ public checkUserPHP(){
       alert(err.data);
     });
   }
-
-
-/*    public getAuthTokenSimple() {
-      this.auth_type = 'Token';
-      this.backand.signin(this.username, this.password)
-        .then((res: any) => {
-          this.auth_status = 'OK';
-          this.is_auth_error = false;
-          this.loggedInUser = res.data.username;
-          this.username = '';
-          this.password = '';
-        },
-        (error: any) => {
-          let errorMessage: string = error.data.error_description;
-          this.auth_status = `Error: ${errorMessage}`;
-          this.is_auth_error = true;
-          this.auth_status = 'ERROR';
-        }
-      );
-    }
-
-    public useAnonymousAuth() {
-      this.backand.useAnonymousAuth()
-        .then((res: any) => {
-          this.auth_status = 'OK';
-          this.is_auth_error = false;
-          this.loggedInUser = res.data.username;
-        },
-        (error: any) => {
-          let errorMessage: string = error.data.error_description;
-          this.auth_status = `Error: ${errorMessage}`;
-          this.is_auth_error = true;
-          this.auth_status = 'ERROR';
-        });
-    }
-
-    public socialSignin(provider: string) {
-      this.backand.socialSignin(provider)
-        .then((res: any) => {
-          this.auth_status = 'OK';
-          this.is_auth_error = false;
-          this.loggedInUser = res.data.username;
-        },
-        (error: any) => {
-          let errorMessage: string = error.data.error_description;
-          this.auth_status = `Error: ${errorMessage}`;
-          this.is_auth_error = true;
-          this.auth_status = 'ERROR';
-        }
-      );
-    }
-
-    public signOut() {
-      this.auth_status = null;
-      this.backand.signout();
-    }
-
-
-    public changePassword() {
-      if (this.newPassword != this.confirmNewPassword){
-        alert('Passwords should match');
-        return;
-      }
-      this.backand.changePassword(this.oldPassword, this.newPassword)
-        .then((res: any) => {
-          alert('Password changed');
-          this.oldPassword = this.newPassword = this.confirmNewPassword = '';
-        },
-        (err: any) => {
-          alert(err.data)
-        }
-      );
-    }
-*/
 }

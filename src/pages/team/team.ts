@@ -17,10 +17,10 @@ export class TeamPage {
   }
 
   ionViewWillEnter() {
-    this.reloadTeam(null);
+    this.reloadTeamPHP(null);
   };
 
-  //Aufruf mit (1) sortiert alphabetisch, (0) zeitlich
+    //Aufruf mit (1) sortiert alphabetisch, (0) zeitlich
   changeSort(alpha:boolean){
     if(alpha){
       this.globVars.teamSortAlpha = true;
@@ -28,11 +28,41 @@ export class TeamPage {
     else{
       this.globVars.teamSortAlpha = false;
     }
-    this.reloadTeam(null);
+    this.reloadTeamPHP(null);
   }
 
+    // Kopie von ReloadTeam --> PHP
     // Falls mit Parameter aufgerufen -> Refresher-Objekt für Pull-Reload
-  reloadTeam(refresher){
+  reloadTeamPHP(refresher){
+  let sortby: String;
+  let direction: String;
+  if (this.globVars.teamSortAlpha) {      //alphabetisch sortiert
+      sortby = "name";
+      direction = "ASC";
+  }
+  else {                                  //nach Zeitpunkt sortiert
+    sortby = "lasttimestampISO";
+    direction = "DESC";
+  };
+
+  var xhr = new XMLHttpRequest();
+    //Sobald Request bereit, hol dir die entsprechenden USER
+  xhr.onreadystatechange = () => {
+    if ((xhr.readyState == 4) && (xhr.status == 200 )) {
+    //  alert(xhr.responseText)
+        this.users = JSON.parse(xhr.responseText);
+      if(refresher){
+        refresher.complete();
+      }
+    }
+  }
+    //Ruf relaodteam.php mit den entsprechenden Parametern auf
+  xhr.open("GET", "/server/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction='" + direction + "'", true);
+  xhr.send();
+};
+
+      // Falls mit Parameter aufgerufen -> Refresher-Objekt für Pull-Reload
+    reloadTeam(refresher){
     let params: any;
     if (this.globVars.teamSortAlpha) {      //alphabetisch sortiert
       params = {

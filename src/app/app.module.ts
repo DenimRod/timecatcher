@@ -6,7 +6,6 @@ window["io"] = io;
 
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
-import { CrudPage } from '../pages/crud/crud';
 import { TimestampPage } from '../pages/timestamp/timestamp';
 import { TeamPage } from '../pages/team/team';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -35,7 +34,6 @@ import { GlobalVars } from '../providers/globalvar';
   declarations: [
     MyApp,
     LoginPage,
-    CrudPage,
     TimestampPage,
     TeamPage,
     ExtrasPage,
@@ -54,7 +52,6 @@ import { GlobalVars } from '../providers/globalvar';
   entryComponents: [
     MyApp,
     LoginPage,
-    CrudPage,
     TimestampPage,
     ExtrasPage,
     TeamPage,
