@@ -1,0 +1,65 @@
+--- Alte Kommentare aus ZEN ---
+
+1) login.ts
+
+  Lösung für Arbeitszeit zurücksetzen
+
+    /* -- andere Lösung für worktimeToday zurücksetzen über makeStamp, diese Lösung für Wochen/Monats-Arbeitszeit vielleicht gut
+
+      // COMPANY QUERY für Tages-Arbeitszeit-Prüfung + Rücksetzung
+      let params2 = {
+        filter: [
+          this.backand.helpers.filter.create('id', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.companyid),
+        ],
+      }
+      this.backand.object.getList('Companies', params2)
+      .then((res: any) => {
+        this.globVars.globCurrComp = res.data[0];
+
+        // Check if last login was before today
+        // if monatstag != last monatstag  ...
+        let currentDate = new Date();
+        this.globVars.globCurrComp.lastLoginDay = currentDate.getDate(); // getDate=day of Month 1..31
+        //get every user of this company and set worktimeToday = 0
+        let params3 = {
+          filter: [
+            this.backand.helpers.filter.create('companyid', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrComp.id),
+          ],
+        }
+        this.backand.object.getList('Users', params3)
+        .then((res: any) => {
+          this.allusers = res.data;
+          var d = new Date(0);
+          for (let i=0;i<this.allusers.length;i++){
+            this.allusers[i].worktimeToday=d;
+            this.backand.object.update('Users', i+1, this.allusers[i]);
+          }
+        },
+        (err: any) => {
+          alert(err.data);
+        });
+      },
+        (err: any) => {
+        alert(err.data);
+      }); */
+
+  Handy-Abfrage
+
+        // auf Handy?  ---- wird jetzt über navigator.platform in globvar.ts gelöst
+          //if (this.onHandy) this.globVars.currPlatform="Handy"
+          //else this.globVars.currPlatform="Desktop";
+
+2) Globvar.ts
+
+  ID eines gerade in Back& erstellten Objekts auslesen
+
+    /*    READ ID OF CREATED TIMESTAMP
+      .then((res: any) => {
+        let items:any;
+        items = res.data.__metadata;
+        alert(items.id);
+      },
+      (err: any) => {
+        alert(err.data);
+      });
+    */

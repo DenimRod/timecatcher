@@ -33,7 +33,7 @@ export class TeamPage {
 
     // Kopie von ReloadTeam --> PHP
     // Falls mit Parameter aufgerufen -> Refresher-Objekt für Pull-Reload
-  reloadTeamPHP(refresher){
+reloadTeamPHP(refresher){
   let sortby: String;
   let direction: String;
   if (this.globVars.teamSortAlpha) {      //alphabetisch sortiert
@@ -49,20 +49,19 @@ export class TeamPage {
     //Sobald Request bereit, hol dir die entsprechenden USER
   xhr.onreadystatechange = () => {
     if ((xhr.readyState == 4) && (xhr.status == 200 )) {
-    //  alert(xhr.responseText)
         this.users = JSON.parse(xhr.responseText);
       if(refresher){
         refresher.complete();
       }
     }
   }
-    //Ruf relaodteam.php mit den entsprechenden Parametern auf
-  xhr.open("GET", "/server/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction='" + direction + "'", true);
+    //Ruf reloadteam.php mit den entsprechenden Parametern auf
+  xhr.open("GET", "/server/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction=" + direction, true);
   xhr.send();
 };
 
       // Falls mit Parameter aufgerufen -> Refresher-Objekt für Pull-Reload
-    reloadTeam(refresher){
+  reloadTeam(refresher){
     let params: any;
     if (this.globVars.teamSortAlpha) {      //alphabetisch sortiert
       params = {

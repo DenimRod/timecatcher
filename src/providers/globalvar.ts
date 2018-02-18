@@ -559,6 +559,46 @@ Def: AS = alter status, NS = neuer Status
          // if "autoLogout" = Kennung vorläufig für HAUPT-Terminal
          let hauptTerminal = "";
          if (this.autoLogout) hauptTerminal ="-!!!KD!!!"
+
+       //PHP-DB
+        var xhrTS = new XMLHttpRequest();
+          //Sobald Request bereit, schreib den TS und warte auf Erfolg
+        xhrTS.onreadystatechange = () => {
+          if ((xhrTS.readyState == 4) && (xhrTS.status == 200 )) {
+
+            if (korrektur ==0) {
+              let toast = this.toastCtrl.create({
+                message: 'Zeitstempel wurde eingetragen',
+                duration: 3000,
+                position: 'top'
+              });
+              toast.onDidDismiss(() => {});
+              toast.present();
+              this.comment = "";
+            }
+            else {  // korrektur ==1
+              let toast = this.toastCtrl.create({
+                message: 'Korrektur-Zeitstempel wurde eingetragen',
+                duration: 4000,
+                position: 'top'
+              });
+              toast.onDidDismiss(() => {});
+              toast.present();
+              this.comment = "";
+            };
+
+          }
+        }
+          //Ruf makestamp.php mit dem TS als JSON-Obj. auf
+        let jsonTS = '{"date":"' + this.serverDate.toISOString() + '", "status":"' + stampType + '","userid":"' + this.globCurrUser.id + '","username":"' + this.globCurrUser.name + '","comment":"' + this.comment + '","device":"' + this.currPlatform + hauptTerminal +
+        '","browserPlatform":"' + navigator.platform + '"}'
+
+        xhrTS.open("GET", "/server/makestamp.php?jsonString=" + jsonTS, true);
+        xhrTS.send();
+
+        this.comment = "";
+      //BACKAND
+      /*
         this.backand.object.create('Timestamps2', "{'date':'" + this.serverDate.toISOString() + "', 'status':'" +
         stampType + "','userid':'" + this.globCurrUser.id + "','username':'" +
         this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform + hauptTerminal +
@@ -591,7 +631,7 @@ Def: AS = alter status, NS = neuer Status
         (err: any) => {
           alert(err.data);
         });
-        this.comment = "";
+        this.comment = ""; */
       }
       else { // Fehler
         let toast = this.toastCtrl.create({

@@ -11,12 +11,11 @@ $companyid = $_GET['companyid'];
 $sortby = $_GET['sortby'];
 $direction = $_GET['direction'];
 
-if($direction == ASC){
-  $directionPHP = "ASC";
-}
-else {$directionPHP = "DESC";}
+if($direction == "ASC")
+  {$sortby .= " ASC";}
+else {$sortby .=" DESC";}
   // ? = Parameter, werden danach mit Werten befüllt
-if ($stmt = $conn->prepare('SELECT * FROM Users WHERE companyid = ? ORDER BY '. $sortby . ' ASC')) {
+if ($stmt = $conn->prepare('SELECT * FROM Users WHERE companyid = ? ORDER BY '. $sortby)) {
 
     /* bind parameters to values */
     $stmt->bind_param("i", $companyid);

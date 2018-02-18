@@ -6,22 +6,23 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
    die("Connection failed: " . $conn->connect_error);
 }
+echo ("!");
   //Get params
-$inputID = $_GET['inputID'];
-  //Get user according to InputID
-$sql = 'SELECT * FROM Users WHERE password = ' . $inputID;
-$result = $conn->query($sql);
-echo '[';
+$jsonString = $_GET['jsonString'];
+  //Json String -> PHP Array
+$jsonArray = json_decode($jsonString,true);
 
-    // output data of each row
-   $rowNr = 0;
-   while($row = $result->fetch_assoc()) {
-     $rowNr++;
-     echo '{ "id":"' . $row["id"]. '", "name":"' . $row["name"] . '", "password":"' . $row["password"] . '", "status":"' . $row["status"] . '", "applevel":"' . $row["applevel"] . '", "companyid":"' . $row["companyid"] . '", "lasttimestamp":"' . $row["lasttimestamp"] . '", "lastcomment":"' . $row["lastcomment"] . '", "worktimeToday":"' . $row["worktimeToday"] . '", "lasttimestampISO":"' . $row["lasttimestampISO"] . '", "lasttimestampUTC_d":"' . $row["lasttimestampUTC_d"] . '", "userID":"' . $row["userID"] . '" }';
-     if ($rowNr < $result->num_rows) {
-       echo ',';
-     }
-   }
-echo ']';
+  // ? = Parameter, werden danach mit Werten befüllt
+if ($stmt = $conn->prepare('INSERT INTO Timestamps (date, status, device, userid, username, comment, browserPlatform) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
+
+    /* bind parameters to values */
+    $stmt->bind_param("sssisss", $jsonArray['date'], $jsonArray['status'],$jsonArray['device'], $jsonArray['userid'], $jsonArray['username'], $jsonArray['comment'], $jsonArray['browserPlatform']);
+
+    /* execute query */
+    $stmt->execute();
+    /* close statement */
+    $stmt->close();
+}
+
 $conn->close();
 ?>
