@@ -14,14 +14,13 @@ export class GlobalVars {
 
 public comment:string="";
 public globCurrComp:any;
-public globCurrUser:any;
-// obige Struktur wird aus DB übernommen, wenn User festgelegt wird
+public globCurrUser:any;  // wird aus DB übernommen
 //         worktimeToday
 //
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="V1.0.6"
+public appVers:string="V1.0.6A"
 
 public testFlag:number = 1;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
@@ -565,7 +564,7 @@ Def: AS = alter status, NS = neuer Status
           //Sobald Request bereit, schreib den TS und warte auf Erfolg
         xhrTS.onreadystatechange = () => {
           if ((xhrTS.readyState == 4) && (xhrTS.status == 200 )) {
-
+            console.log(xhrTS.responseText);
             if (korrektur ==0) {
               let toast = this.toastCtrl.create({
                 message: 'Zeitstempel wurde eingetragen',
@@ -590,9 +589,11 @@ Def: AS = alter status, NS = neuer Status
           }
         }
           //Ruf makestamp.php mit dem TS als JSON-Obj. auf
-        let jsonTS = '{"date":"' + this.serverDate.toISOString() + '", "status":"' + stampType + '","userid":"' + this.globCurrUser.id + '","username":"' + this.globCurrUser.name + '","comment":"' + this.comment + '","device":"' + this.currPlatform + hauptTerminal +
+            //encodeURIComponent ist notwendig, da # nicht erlaubt in URI!
+        let jsonTS = '{"date":"' + this.serverDate.toISOString() + '", "status":"' + stampType + '","userid":"' + this.globCurrUser.id + '","username":"' + this.globCurrUser.name + '","comment":"' + encodeURIComponent(this.comment) + '","device":"' + this.currPlatform + hauptTerminal +
         '","browserPlatform":"' + navigator.platform + '"}'
 
+        console.log(jsonTS);
         xhrTS.open("GET", "/server/makestamp.php?jsonString=" + jsonTS, true);
         xhrTS.send();
 

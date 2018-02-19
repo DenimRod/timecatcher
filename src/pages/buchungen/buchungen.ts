@@ -106,9 +106,8 @@ export class BuchungenPage {
       }
     }
       //Ruf reloadbuchungen.php mit der userid auf
-    xhr.open("GET", "/server/reloadbuchungen.php?userid=" + this.globVars.globCurrUser.userID, true);
+    xhr.open("GET", "/server/reloadbuchungen.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
     xhr.send();
-
   }
 
 public reloadBuchungen(refresher){
@@ -197,7 +196,7 @@ public reloadBuchungen(refresher){
 
 public moreBuchungen500(){
   this.buchungenAmount += 500;
-  this.reloadBuchungen(null);
+  this.reloadBuchungenPHP(null);
 }
 
 public moreBuchungen(){

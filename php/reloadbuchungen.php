@@ -8,12 +8,13 @@ if ($conn->connect_error) {
 }
   //Get params
 $userid = $_GET['userid'];
+$amount = $_GET['amount'];
 
   // ? = Parameter, werden danach mit Werten befüllt
-if ($stmt = $conn->prepare('SELECT * FROM Timestamps WHERE userid = ? ORDER BY date DESC LIMIT 0 , 30')) {
+if ($stmt = $conn->prepare('SELECT * FROM Timestamps WHERE userid = ? ORDER BY date DESC LIMIT 0 , ?')) {
 
     /* bind parameters to values */
-    $stmt->bind_param("i", $userid);
+    $stmt->bind_param("ii", $userid, $amount);
 
     /* execute query */
     $stmt->execute();

@@ -6,11 +6,13 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
    die("Connection failed: " . $conn->connect_error);
 }
-echo ("!");
+
   //Get params
 $jsonString = $_GET['jsonString'];
   //Json String -> PHP Array
 $jsonArray = json_decode($jsonString,true);
+echo ($jsonString);
+echo ($jsonArray['username']);
 
   // ? = Parameter, werden danach mit Werten befüllt
 if ($stmt = $conn->prepare('INSERT INTO Timestamps (date, status, device, userid, username, comment, browserPlatform) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
