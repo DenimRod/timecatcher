@@ -213,6 +213,7 @@ public checkUserPHP(){
     //Sobald Request bereit, hol dir den entsprechenden USER
   xhr.onreadystatechange = () => {
     if ((xhr.readyState == 4) && (xhr.status == 200 )) {
+      alert("request came back");
       this.items = JSON.parse(xhr.responseText);
         //zumindest 1 User wurde gefunden-> nimm den 1. in der Liste
       if (this.items.length > 0) {
@@ -284,8 +285,11 @@ public checkUserPHP(){
                 };
               }
             }
+              alert("first!");
             if (this.globVars.testFlag==0) {
-              xhr2.open("GET", "/../../getlogin.php?loginid=" + insert_id, true);
+              alert("1!");
+              xhr2.open("GET", "http://ordination-kutschera.at/php/getlogin.php?=" + insert_id, true);
+              alert("2!");
             }
             else {
               xhr2.open("GET", "/server/getlogin.php?loginid=" + insert_id, true)
@@ -296,7 +300,15 @@ public checkUserPHP(){
 
         let jsonLogin = '{"name":"'+this.globVars.globCurrUser.name+'", "userID":"' + this.globVars.globCurrUser.userID+'", "device":"'+this.globVars.currPlatform +':'+this.plt.platforms()+'"}'
 
-        xhr1.open("GET", "/server/createlogin.php?jsonString=" + jsonLogin, true);
+        if (this.globVars.testFlag==0) {
+          alert("1!");
+          xhr1.open("GET", "http://ordination-kutschera.at/php/createLogin.php?jsonString=" + jsonLogin, true);
+          alert("2!");
+        }
+        else {
+          xhr1.open("GET", "/server/createlogin.php?jsonString=" + jsonLogin, true);
+        }
+
         xhr1.send();
 /*
         .then((res1:any) => {
@@ -319,8 +331,19 @@ public checkUserPHP(){
     }
   }
     //Ruf login.php mit der inputID als Parameter auf
-  xhr.open("GET", "/server/login.php?inputID=" + this.inputID, true);
+    if (this.globVars.localserver==false) {
+      alert("1!");
+      xhr.open("GET", "http://ordination-kutschera.at/beta/php/login.php?inputID="  + this.inputID, true);
+      alert("2!");
+    }
+    else {
+      xhr.open("GET", "/server/login.php?inputID=" + this.inputID, true);
+    }
+
   xhr.send();
+  alert("status:" + xhr.status + " readystate" + xhr.readyState);
+  alert("status:" + xhr.status + " readystate" + xhr.readyState);
+  alert("status:" + xhr.status + " readystate" + xhr.readyState);
   this.inputID = '';
   this.textInput = '';
 }
