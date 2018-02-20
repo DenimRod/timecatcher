@@ -2,7 +2,7 @@
 //   teamSortAlpha (Alex)
 
 import { Injectable } from '@angular/core';
-import { BackandService } from '@backand/angular2-sdk';
+//import { BackandService } from '@backand/angular2-sdk';
 import { App } from 'ionic-angular';
 import { LoginPage } from '../pages/login/login';
 import { Device } from '@ionic-native/device';
@@ -20,9 +20,9 @@ public globCurrUser:any;  // wird aus DB übernommen
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="V1.0.6A"
+public appVers:string="V1.1"
 
-public testFlag:number = 1;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
+public testFlag:number = 0;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 timestamppro: Countdown, Zeile 20 Kommentar entfernt
@@ -183,8 +183,8 @@ public ZEN_Devices = [              // alle Devices werden hier eingetragen
     devCode: "r9a9b9c99999"
   }
 ];
-
-constructor(public backand: BackandService, public app:App, private device:Device, public platform:Platform,
+  //BACKAND-Backup public backand: BackandService,
+constructor(public app:App, private device:Device, public platform:Platform,
 private toastCtrl: ToastController) {
   this.globCurrUser = null;
   this.KW_akt = this.KW();
@@ -542,7 +542,8 @@ Def: AS = alter status, NS = neuer Status
           this.globCurrUser.lasttimestampISO = this.serverDate.toISOString(); //schreibt in Orts-Zeit
         //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
         //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
-          this.globCurrUser.lastcomment = this.comment;
+            //# in URL nicht erlaubt!
+          this.globCurrUser.lastcomment = encodeURIComponent(this.comment);
           this.globCurrUser.status=stampType;
 
       //Ab Hier DB-Action! --> Umbau auf PHP
@@ -550,8 +551,10 @@ Def: AS = alter status, NS = neuer Status
         //User-Objekt -> JSON-String -> PHP-Parameter
       xhr.open("GET", "/server/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
       xhr.send();
+        //rücksetzen der Raute im lokalen GlobCurrUser-Objekt
+      this.globCurrUser.lastcomment = this.comment;
 
-      //BACKAND
+      //BACKAND-Backup
           //this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
         };
          // if-Ende: "normale Buchung" vorbereiten
@@ -564,7 +567,6 @@ Def: AS = alter status, NS = neuer Status
           //Sobald Request bereit, schreib den TS und warte auf Erfolg
         xhrTS.onreadystatechange = () => {
           if ((xhrTS.readyState == 4) && (xhrTS.status == 200 )) {
-            console.log(xhrTS.responseText);
             if (korrektur ==0) {
               let toast = this.toastCtrl.create({
                 message: 'Zeitstempel wurde eingetragen',
@@ -593,12 +595,11 @@ Def: AS = alter status, NS = neuer Status
         let jsonTS = '{"date":"' + this.serverDate.toISOString() + '", "status":"' + stampType + '","userid":"' + this.globCurrUser.id + '","username":"' + this.globCurrUser.name + '","comment":"' + encodeURIComponent(this.comment) + '","device":"' + this.currPlatform + hauptTerminal +
         '","browserPlatform":"' + navigator.platform + '"}'
 
-        console.log(jsonTS);
         xhrTS.open("GET", "/server/makestamp.php?jsonString=" + jsonTS, true);
         xhrTS.send();
 
         this.comment = "";
-      //BACKAND
+      //BACKAND-Backup
       /*
         this.backand.object.create('Timestamps2', "{'date':'" + this.serverDate.toISOString() + "', 'status':'" +
         stampType + "','userid':'" + this.globCurrUser.id + "','username':'" +
@@ -656,9 +657,35 @@ Def: AS = alter status, NS = neuer Status
       toast.present();
     };
   } // end-if makestamp
-
 }
 
+public KW(){
+  var date = new Date();
+  // Get thursday
+  // In JavaScript the Sunday has value 0 as return value of getDay() function.
+  // So we have to order them first ascending from Monday to Sunday
+  // Monday: ((1+6) % 7) = 0
+  // Tuesday ((2+6) % 7) = 1
+  // Wednesday: ((3+6) % 7) = 2
+  // Thursday: ((4+6) % 7) = 3
+  // Friday: ((5+6) % 7) = 4
+  // Saturday: ((6+6) % 7) = 5
+  // Sunday: ((0+6) % 7) = 6
+  // (3 - result) is necessary to get the Thursday of the current week.
+  // If we want to have Tuesday it would be (1-result)
+  var currentThursday = new Date(date.getTime() +(3-((date.getDay()+6) % 7)) * 86400000);
+  // At the beginnig or end of a year the thursday could be in another year.
+  var yearOfThursday = currentThursday.getFullYear();
+  // Get first Thursday of the year
+  var firstThursday = new Date(new Date(yearOfThursday,0,4).getTime() +(3-((new Date(yearOfThursday,0,4).getDay()+6) % 7)) * 86400000);
+  // +1 we start with week number 1
+  // +0.5 an easy and dirty way to round result (in combinationen with Math.floor)
+  var KW = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000/7);
+  return KW;
+}
+
+  //BACKEND-Backup, delete when PHP works without errors
+/*
 public makeStamp(stampType:string){
   var makeStamp = true;
   var neuStampTypeNr: number;
@@ -671,6 +698,7 @@ Def: Arbeits-Stop-Typ= (Pause=7, Urlaub=8, Arbeit AUS=9, Krank=  0)
 Def: AS = alter status, NS = neuer Status
 */
   //stampTypNr wird gesetzt durch Vergleich, bis passt
+  /*
   altStampTypeNr=0;
   while (this.globCurrUser.status != this.tsTyp[altStampTypeNr]) {
     ++altStampTypeNr;
@@ -754,6 +782,7 @@ Def: AS = alter status, NS = neuer Status
         }
       }
 */
+/*
     if (currComment.charAt(0) == "k" || currComment.charAt(0) == "K") {  // Korrektur-Zeit wird eingearbeitet
 //alert ("makestamp3= #k:"+ currComment+"!");
       korrektur = 2;  // wenn später keine korrekte Uhrzeit festgestellt wird, dann Fehler
@@ -924,39 +953,6 @@ Def: AS = alter status, NS = neuer Status
   } // end-if makestamp
 
 }
-
-public KW(){
-  var date = new Date();
-  // Get thursday
-  // In JavaScript the Sunday has value 0 as return value of getDay() function.
-  // So we have to order them first ascending from Monday to Sunday
-  // Monday: ((1+6) % 7) = 0
-  // Tuesday ((2+6) % 7) = 1
-  // Wednesday: ((3+6) % 7) = 2
-  // Thursday: ((4+6) % 7) = 3
-  // Friday: ((5+6) % 7) = 4
-  // Saturday: ((6+6) % 7) = 5
-  // Sunday: ((0+6) % 7) = 6
-  // (3 - result) is necessary to get the Thursday of the current week.
-  // If we want to have Tuesday it would be (1-result)
-  var currentThursday = new Date(date.getTime() +(3-((date.getDay()+6) % 7)) * 86400000);
-  // At the beginnig or end of a year the thursday could be in another year.
-  var yearOfThursday = currentThursday.getFullYear();
-  // Get first Thursday of the year
-  var firstThursday = new Date(new Date(yearOfThursday,0,4).getTime() +(3-((new Date(yearOfThursday,0,4).getDay()+6) % 7)) * 86400000);
-  // +1 we start with week number 1
-  // +0.5 an easy and dirty way to round result (in combinationen with Math.floor)
-  var KW = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000/7);
-  return KW;
-}
-
-/*  setglobCurrUserId(value) {
-   this.globCurrUserId = value;
-  }
-
-  getglobCurrUserId() {
-    return this.globCurrUserId;
-  }
 */
 
 } //export Class: GlobalVars

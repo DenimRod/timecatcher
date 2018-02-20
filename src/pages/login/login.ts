@@ -140,11 +140,10 @@ xhr.send();
   if(this.globVars.testFlag==1){
     this.inputID = "333";
     this.checkUserPHP();
-    //this.checkUser();
   }
   if(this.globVars.testFlag==2){
     this.inputID = "222";
-    this.checkUser();
+    this.checkUserPHP();
   }
 }
 /*
@@ -174,7 +173,7 @@ ABFRAGE FÜR HANDY/DESKTOP */
         alert("Eingabe-Text ist ein Reg.Code"+this.globVars.ZEN_Devices[i].MA+"---geplant: Registrierung schreiben+Eintrag, dass registriert")//Registrierung schreiben
         //weiter zu CheckUser
         this.inputID=this.globVars.ZEN_Devices[i].usrPin;
-        this.checkUser();
+        this.checkUserPHP();
         return;
       }
       // wenn kein Reg-Code gefunden, obwohl "r" erster Buchstabe ist
@@ -191,7 +190,7 @@ ABFRAGE FÜR HANDY/DESKTOP */
     this.inputID = tempId; */
 
     this.inputID = this.textInput;
-    this.checkUser();
+    this.checkUserPHP();
     }
 
   public handlePIN(inputNumber:string){
@@ -204,7 +203,7 @@ ABFRAGE FÜR HANDY/DESKTOP */
     this.inputID += inputNumber;
     this.textInput += inputNumber;
     if (this.inputID.length == this.globVars.pinLength){
-      this.checkUser();
+      this.checkUserPHP();
     }
   }
 
@@ -219,8 +218,87 @@ public checkUserPHP(){
       if (this.items.length > 0) {
         this.globVars.globCurrUser = this.items[0];
 
-        //Missing: Login-DB + ServerClientDiff
+        var loginRec: any;
+        var insert_id: number;
 
+        var xhr1 = new XMLHttpRequest();
+          //Sobald Request bereit, schreib den TS und warte auf Erfolg
+        xhr1.onreadystatechange = () => {
+          if ((xhr1.readyState == 4) && (xhr1.status == 200 )) {
+            insert_id = Number(xhr1.responseText);
+
+            var xhr2 = new XMLHttpRequest();
+              //Sobald Request bereit, schreib den TS und warte auf Erfolg
+            xhr2.onreadystatechange = () => {
+              if ((xhr2.readyState == 4) && (xhr2.status == 200 )) {
+                var res2 = {"data": []};
+
+                res2.data = JSON.parse(xhr2.responseText);
+
+                  // hole Client-Zeit
+                let clientMilliSec = Date.now();
+                this.globVars.clientDate = new Date(Date.now());
+                  // hole Server-Zeit aus geschriebenen Login-rec
+                loginRec = res2.data[0];
+                this.globVars.serverDate = new Date(loginRec.createdAt);
+                let servMilliSec = this.globVars.serverDate.getTime();
+                this.globVars.clientDateDiff = clientMilliSec - servMilliSec;
+
+                // Beispiele: auf Ri-Erazer: +1500ms
+            //    alert("sms:" + servMilliSec + "cms:" + clientMilliSec +"clientdiff-ms"+this.globVars.clientDateDiff+
+            //    "CreatedAT=serverDate:" + this.globVars.serverDate.toLocaleString()+
+            //    "--clientDate:" + this.globVars.clientDate.toLocaleString()+"!");
+
+            /*  für Ausgabe des kompletten res-records:
+                  let Aus1Str = JSON.stringify(loginRec).substr(1,160);
+                  let Aus2Str = JSON.stringify(loginRec).substr(160,160);
+                  let Aus3Str = JSON.stringify(loginRec).substr(320,160);
+                  let Aus4Str = JSON.stringify(loginRec).substr(480,160);
+                  let Aus5Str = JSON.stringify(loginRec).substr(640,160);
+                  let Aus6Str = JSON.stringify(loginRec).substr(800,160);
+                  let Aus7Str = JSON.stringify(loginRec).substr(960,160);
+                  let Aus8Str = JSON.stringify(loginRec).substr(1120,160);
+                  let Aus9Str = JSON.stringify(loginRec).substr(1280,160);
+                  let AusaStr = JSON.stringify(loginRec).substr(1440,160);
+                  let AusbStr = JSON.stringify(loginRec).substr(1600,160);
+                  alert("LRec1:"+Aus1Str);
+                  alert("LRec2:"+Aus2Str);
+                  alert("LRec3:"+Aus3Str);
+                  alert("LRec4:"+Aus4Str);
+                  alert("LRec5:"+Aus5Str);
+                  alert("LRec6:"+Aus6Str);
+                  alert("LRec7:"+Aus7Str);
+                  alert("LRec8:"+Aus8Str);
+                  alert("LRec9:"+Aus9Str);
+                  alert("LReca:"+Aus9Str);
+                  alert("LRecb:"+Aus9Str);
+            */
+                // ?? ServerDatum <> letztes Timestamp-Datum? -> vorletzter Arbeitstag setzen
+
+                var d = new Date(this.globVars.globCurrUser.lasttimestampISO);
+                if (d.getDate() !== this.globVars.serverDate.getDate()){
+                  // Datum d. Logins hat sich geändert -> letzter Arbeitstag speichern in vorletzter = b(efore)last...
+                  // klappt nicht mit "blasttimestamp", weil Backand-DB Fehler hat : deswegen ...UTC_d (war schon für Test definiert)
+                  // alert("Datum NEU: oldDate:"+d.getDate()+"newDate:"+this.globVars.serverDate.getDate());
+                  this.globVars.globCurrUser.lasttimestampUTC_d = this.globVars.globCurrUser.lasttimestampISO;
+                };
+              }
+            }
+            xhr2.open("GET", "/server/getlogin.php?loginid=" + insert_id, true);
+            xhr2.send();
+          }
+        }
+
+        let jsonLogin = '{"name":"'+this.globVars.globCurrUser.name+'", "userID":"' + this.globVars.globCurrUser.userID+'", "device":"'+this.globVars.currPlatform +':'+this.plt.platforms()+'"}'
+
+        xhr1.open("GET", "/server/createlogin.php?jsonString=" + jsonLogin, true);
+        xhr1.send();
+/*
+        .then((res1:any) => {
+          let params = "";
+          this.backand.object.getOne('Login',res1.data.__metadata.id, params)
+          .then((res2: any) => {
+*/
           //Check Userlevel pro/normal
         if (this.globVars.globCurrUser.applevel == "pro"){
           this.navCtrl.push(TabsProPage);
@@ -242,6 +320,9 @@ public checkUserPHP(){
   this.textInput = '';
 }
 
+  //BACKAND-Backup
+  
+/*
   public checkUser(){
   // neue Idee für Tages-Arbeitszeit: wird dann auf 0 gesetzt, wenn der Übergang von
   // "Arbeit AUS" auf "Arbeit"= EIN,AD-Fahrt,...Projekt2 erfolgt.(in globalvar.ts/makestamp) Das ist der Arbeitsbeginn!
@@ -307,6 +388,7 @@ public checkUserPHP(){
                 alert("LRecb:"+Aus9Str);
           */
               // ?? ServerDatum <> letztes Timestamp-Datum? -> vorletzter Arbeitstag setzen
+              /*
               var d = new Date(this.globVars.globCurrUser.lasttimestampISO);
               if (d.getDate() !== this.globVars.serverDate.getDate()){
                 // Datum d. Logins hat sich geändert -> letzter Arbeitstag speichern in vorletzter = b(efore)last...
@@ -326,7 +408,7 @@ public checkUserPHP(){
           });
          //end TimeInit
 
-  // SHOW Timestamp dependig on user level
+  // SHOW Timestamp Page dependig on user level
         if (this.globVars.globCurrUser.applevel == "pro"){
           this.navCtrl.push(TabsProPage);
         }
@@ -345,4 +427,5 @@ public checkUserPHP(){
       alert(err.data);
     });
   }
+  */
 }

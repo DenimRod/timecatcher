@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import 'rxjs/Rx'
-import { BackandService } from '@backand/angular2-sdk';
+//import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
 import { TimestampPage } from '../timestamp/timestamp';
 import { GlobalVars } from '../../providers/globalvar';
@@ -19,7 +19,8 @@ export class BuchungenPage {
   public endOfBuchungen = true;
   public buchungenAmount = 20;
 
-  constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
+    //BACKAND-Backup: private backand: BackandService,
+  constructor(public navCtrl: NavController, public globVars: GlobalVars) {
     //this.globVars.timer=30;
   }
 
@@ -105,11 +106,13 @@ export class BuchungenPage {
 
       }
     }
-      //Ruf reloadbuchungen.php mit der userid auf
-    xhr.open("GET", "/server/reloadbuchungen.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
+      //Ruf getstamps.php mit der userid und amount auf
+    xhr.open("GET", "/server/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
     xhr.send();
   }
 
+  //BACKAND-Backup
+/*
 public reloadBuchungen(refresher){
   this.nextBuchungenPage = 2;         //sobald refesht wird --> Reset aller TS
 
@@ -185,69 +188,19 @@ public reloadBuchungen(refresher){
     if(refresher){
       refresher.complete();
     }
-},
-(err: any) => {
-  alert(err.data);
-  if(refresher){
-    refresher.complete();
+  },
+  (err: any) => {
+    alert(err.data);
+    if(refresher){
+      refresher.complete();
+    }
   }
-});
+);
 }
 
 public moreBuchungen500(){
   this.buchungenAmount += 500;
   this.reloadBuchungenPHP(null);
 }
-
-public moreBuchungen(){
-
-  let params = {
-    filter: this.backand.helpers.filter.create('username', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.name),
-    sort:   this.backand.helpers.sort.create('date', this.backand.helpers.sort.orders.desc),
-    pageSize: 20,
-
-    pageNumber: this.nextBuchungenPage,      //Hol die nächste Seite
-  }
-  this.backand.object.getList('Timestamps2', params)
-   .then((res: any) => {
-     let i=0;
-     let weekDay="";
-     let datumHelper=null;
-
-     while (i<res.data.length) {          //UTC Strings -> Lokale Zeit
-       datumHelper = new Date(res.data[i].date);
-       res.data[i].date = datumHelper.toString().substr(0,21);
-       weekDay=res.data[i].date.substr(0,3)
-       switch (weekDay) {
-         case "Mon": weekDay ="Mo";
-           break;
-         case "Tue": weekDay ="Di";
-           break;
-         case "Wed": weekDay ="Mi";
-           break;
-         case "Thu": weekDay ="Do";
-             break;
-         case "Fri": weekDay ="Fr";
-             break;
-         case "Sat": weekDay ="Sa";
-             break;
-         case "Sun": weekDay ="So";
-             break;
-       }
-       res.data[i].date = weekDay+res.data[i].date.substr(3,21);
-       //  alert(i+"-Datum:"+res.data[i].datum+"----"+res.data[i].date);
-       ++i;
-     };
-     this.buchungen = this.buchungen.concat(res.data)
-     if(res.data.length < 20){
-       this.endOfBuchungen = true;
-     }
-
-},
-(err: any) => {
-  alert(err.data);
-});
-this.nextBuchungenPage++;
-}
-
+*/
 }

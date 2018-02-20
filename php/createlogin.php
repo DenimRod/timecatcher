@@ -13,13 +13,17 @@ $jsonString = $_GET['jsonString'];
 $jsonArray = json_decode($jsonString,true);
 
   // ? = Parameter, werden danach mit Werten befüllt
-if ($stmt = $conn->prepare('INSERT INTO Timestamps (date, status, device, userid, username, comment, browserPlatform) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
+if ($stmt = $conn->prepare('INSERT INTO Login (name, device, userID) VALUES (?, ?, ?)')) {
 
     /* bind parameters to values */
-    $stmt->bind_param("sssisss", $jsonArray['date'], $jsonArray['status'],$jsonArray['device'], $jsonArray['userid'], $jsonArray['username'], $jsonArray['comment'], $jsonArray['browserPlatform']);
+    $stmt->bind_param("ssi", $jsonArray['name'], $jsonArray['device'],$jsonArray['userID']);
 
     /* execute query */
     $stmt->execute();
+
+      //get id of created object
+    echo $conn->insert_id;
+
     /* close statement */
     $stmt->close();
 }

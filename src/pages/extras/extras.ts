@@ -1,11 +1,11 @@
 import {Component, ViewChild} from '@angular/core';
 import 'rxjs/Rx'
-import { BackandService } from '@backand/angular2-sdk';
+//import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
 import { TimestampPage } from '../timestamp/timestamp';
 import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
-import { Item } from '../../models/item/item.model';
+//import { Item } from '../../models/item/item.model';
 //import { ShoppingListService } from "../../providers/shopping-list.service";
 
 @Component({
@@ -13,12 +13,12 @@ import { Item } from '../../models/item/item.model';
     selector: 'page-extras',
 })
 export class ExtrasPage {
-  item: Item = {
+/*  item: Item = {
     name: 'TEST',
     quantity: 1,
     price: 123,
   }
-
+*/
   public users:any[]=[];
   public noTSFound = false;
   public buchungenMonth:any[][]=[];
@@ -26,18 +26,22 @@ export class ExtrasPage {
   public workTimeHours:any[] = [];
   public workTimeMinutes:any[] = [];
 
-  // Container für alle Vars für Arbeitszeit in Intervall
-  public wtInterval = {     //24*60*60*100 = 86400000, Anzahl ms pro Tag
-                            //60*60*1000 = 3600000, Anzahl ms pro Stunde, Offset
+    // Container für alle Vars für Arbeitszeit in Intervall
+      //24*60*60*100 = 86400000, Anzahl ms pro Tag
+      //60*60*1000 = 3600000, Anzahl ms pro Stunde, Offset
+  public wtInterval = {
+      //01.00 des gestrigen Tages [vermutlich]
     start: new Date(Date.now() - (Date.now() % 86400000) - 86400000 ).toISOString(),
+      //23.59 des heutigen Tages
     end: new Date(Date.now() + (86400000 - Date.now() % 86400000) - 3600001).toISOString(),
     sum:0,
     Hours:0,
     HoursDezim:"",
     Minutes:0
-};                           //Komplexe Berechnungen für Uhrzeitbereinigung
+};
     // Firebase_Test: private shopping: ShoppingListService,
-  constructor( private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
+    // BACKAND-Backup  private backand: BackandService,
+  constructor(public navCtrl: NavController, public globVars: GlobalVars) {
     //this.globVars.timer=30;
   }
 
@@ -49,7 +53,6 @@ export class ExtrasPage {
           console.log(ref.key);
         })
 */
-//  alert("Browser-Platform:"+this.globVars.browserPlatform+" currPf: "+this.globVars.currPlatform);
   }
   //angeblich notwendig, damit die Dialoge "aktiviert" werden.
  //onDeviceReady();
@@ -71,6 +74,80 @@ export class ExtrasPage {
 */
 //  alert('nach dialogs');
 
+public calcIntervalPHP(){
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = () => {
+    if ((xhr.readyState == 4) && (xhr.status == 200 )) {
+        //res Objekt erstellen, analog zu Back& -> Code kompatibel
+      var res = {"data": []};
+      res.data = JSON.parse(xhr.responseText);
+
+      let i=0;
+      let dayCount=0;
+      let i_start=0;
+      let dateHelper=null;
+      let dateHelperStr="";
+      let startDate = new Date(this.wtInterval.start);
+      let endDate = new Date(this.wtInterval.end);
+      let startReached=false;
+      this.noTSFound = false;
+      this.buchungenMonth = [];
+      this.wtInterval.sum = 0;
+
+      while (i<res.data.length){        //Such den ersten TS <= "end"
+        dateHelper = new Date(res.data[i].date)
+        i++;
+        if(dateHelper <= endDate) break;
+      }
+      if(dateHelper <= startDate) {    //Falls erstes Datum bereits <= "start"
+        this.noTSFound = true;         //-> Keine TS im Zeitraum
+        return 0;
+      }
+      dateHelperStr = dateHelper.toISOString();  //dateHelper = erstes Datum
+      i_start = i-1;
+                               //Unterteile in einzelne Tage bis start erreicht
+      while (i<res.data.length && !startReached){
+
+        while (i<res.data.length) {        //geh so weit, bis sich Datum ändert
+          if(res.data[i].date.substr(0,10) != dateHelperStr.substr(0,10))
+          {
+             dateHelper = new Date(res.data[i].date) //falls <= "start" -> done
+             if (dateHelper < startDate) startReached = true;
+             break;                         //i ist Index des nächsten Tages
+          }
+          i++;
+        }                                   //Teile bis i
+        this.buchungenMonth[dayCount] = res.data.slice(i_start,i);
+                                         //Berechne die Arbeitszeit
+        let workTimeSum = this.globVars.calcWorkTime(this.buchungenMonth[dayCount]);
+        let workTimeSumDate = new Date(workTimeSum);
+        this.workTimeHours[dayCount] = workTimeSumDate.getUTCHours();
+        this.workTimeMinutes[dayCount] = workTimeSumDate.getUTCMinutes();
+                           //Addiere zur Gesamtsumme (in Minuten)
+        let justMinutes = this.workTimeHours[dayCount]*60 + this.workTimeMinutes[dayCount]
+        this.wtInterval.sum += (justMinutes);
+        //Anzeige in Dezimaldarstellung
+        this.workTimeHoursDezim[dayCount] = (justMinutes /60).toFixed(2);
+
+        dateHelperStr = dateHelper.toISOString();    //Update auf neuen Tag
+        i_start = i;
+        i++;
+        dayCount++;
+      }
+
+      this.wtInterval.Hours = Math.floor(this.wtInterval.sum / 60);
+      this.wtInterval.Minutes = this.wtInterval.sum % 60;
+      this.wtInterval.HoursDezim = (this.wtInterval.sum / 60).toFixed(2);
+
+    }
+  }
+    //Ruf getstamps.php mit der userid und hol 1000 TS
+  xhr.open("GET", "/server/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=1000", true);
+  xhr.send();
+}
+
+  //BACKEND-Backup, delete when PHP works without errors
+/*
 public calcInterval(){
     let params = {
       filter: this.backand.helpers.filter.create('username', this.backand.helpers.filter.operators.text.equals, this.globVars.globCurrUser.name),
@@ -190,6 +267,7 @@ public calcInterval(){
        if(res.data.length == this.buchungenAmount) this.endOfBuchungen = false;
        else this.endOfBuchungen = true;
 */
+/*
   },
   (err: any) => {
     alert(err.data);
@@ -197,6 +275,6 @@ public calcInterval(){
   });
 
 }
-
+*/
 
 }
