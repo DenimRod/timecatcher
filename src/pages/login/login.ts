@@ -284,7 +284,12 @@ public checkUserPHP(){
                 };
               }
             }
-            xhr2.open("GET", "/server/getlogin.php?loginid=" + insert_id, true);
+            if (this.globVars.testFlag==0) {
+              xhr2.open("GET", "/../../getlogin.php?loginid=" + insert_id, true);
+            }
+            else {
+              xhr2.open("GET", "/server/getlogin.php?loginid=" + insert_id, true)
+            }
             xhr2.send();
           }
         }
@@ -321,7 +326,7 @@ public checkUserPHP(){
 }
 
   //BACKAND-Backup
-  
+
 /*
   public checkUser(){
   // neue Idee für Tages-Arbeitszeit: wird dann auf 0 gesetzt, wenn der Übergang von
