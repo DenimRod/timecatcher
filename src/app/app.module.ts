@@ -16,7 +16,7 @@ import { TimestampProPage } from '../pages/timestamppro/timestamppro';
 
 import { Keyboard } from '@ionic-native/keyboard';
 import { Device } from '@ionic-native/device';
-import { BackandService } from '@backand/angular2-sdk';
+//import { BackandService } from '@backand/angular2-sdk';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Dialogs } from '@ionic-native/dialogs';
@@ -63,7 +63,7 @@ import { GlobalVars } from '../providers/globalvar';
   providers: [
     StatusBar,
     SplashScreen,
-    BackandService,
+  //  BackandService,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     {provide: LOCALE_ID, useValue: 'de-AT' },
     GlobalVars,

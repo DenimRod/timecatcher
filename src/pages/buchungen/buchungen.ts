@@ -107,7 +107,13 @@ export class BuchungenPage {
       }
     }
       //Ruf getstamps.php mit der userid und amount auf
-    xhr.open("GET", "/server/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
+      if (this.globVars.testFlag==0) {
+        xhr.open("GET", "https://ordination-kutschera/beta/php/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
+      }
+      else {
+            xhr.open("GET", "/server/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
+      }
+
     xhr.send();
   }
 

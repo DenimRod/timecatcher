@@ -11,8 +11,8 @@ import { GlobalVars } from '../../providers/globalvar';
 export class TeamPage {
 
   public users:any[]=[];
-
-  constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars) {
+    //private backand: BackandService
+  constructor(public navCtrl: NavController, public globVars: GlobalVars) {
     //this.globVars.timer=30;
   }
 
@@ -31,8 +31,10 @@ export class TeamPage {
     this.reloadTeamPHP(null);
   }
 
+
     // Kopie von ReloadTeam --> PHP
     // Falls mit Parameter aufgerufen -> Refresher-Objekt für Pull-Reload
+
 reloadTeamPHP(refresher){
   let sortby: String;
   let direction: String;
@@ -56,11 +58,17 @@ reloadTeamPHP(refresher){
     }
   }
     //Ruf reloadteam.php mit den entsprechenden Parametern auf
-  xhr.open("GET", "/server/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction=" + direction, true);
+    if (this.globVars.testFlag == 0) {
+      xhr.open("GET", "https://ordination-kutschera/beta/php/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction=" + direction, true);
+    }
+    else {
+        xhr.open("GET", "/server/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction=" + direction, true);
+    }
   xhr.send();
 };
-
+    //BACKEND-Backup
       // Falls mit Parameter aufgerufen -> Refresher-Objekt für Pull-Reload
+      /*
   reloadTeam(refresher){
     let params: any;
     if (this.globVars.teamSortAlpha) {      //alphabetisch sortiert
@@ -92,5 +100,5 @@ reloadTeamPHP(refresher){
       }
     });
   };
-
+*/
 }

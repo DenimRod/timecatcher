@@ -5,7 +5,7 @@
   "proxies": [
     {
       "path": "/server",
-      "proxyUrl": "http://ordination-kutschera.at"
+      "proxyUrl": "https://ordination-kutschera.at"
     }
   ],
   "integrations": {

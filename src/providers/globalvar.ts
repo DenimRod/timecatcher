@@ -20,10 +20,10 @@ public globCurrUser:any;  // wird aus DB übernommen
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="V1.1A"
+public appVers:string="V1.1"
 
-public localserver:boolean = false;
-public testFlag:number = 0;  //AutoLogin mit Julian -> 1, Richie 2, sonst 0
+public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
+                              //ausliefern: 0!!!
 /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
 public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 timestamppro: Countdown, Zeile 20 Kommentar entfernt
@@ -550,7 +550,13 @@ Def: AS = alter status, NS = neuer Status
       //Ab Hier DB-Action! --> Umbau auf PHP
       var xhr = new XMLHttpRequest();
         //User-Objekt -> JSON-String -> PHP-Parameter
-      xhr.open("GET", "/server/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+        if (this.testFlag == 0) {
+          xhr.open("GET", "https://ordination-kutschera/beta/php/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+        }
+        else {
+                xhr.open("GET", "/server/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+        }
+
       xhr.send();
         //rücksetzen der Raute im lokalen GlobCurrUser-Objekt
       this.globCurrUser.lastcomment = this.comment;
@@ -596,7 +602,13 @@ Def: AS = alter status, NS = neuer Status
         let jsonTS = '{"date":"' + this.serverDate.toISOString() + '", "status":"' + stampType + '","userid":"' + this.globCurrUser.id + '","username":"' + this.globCurrUser.name + '","comment":"' + encodeURIComponent(this.comment) + '","device":"' + this.currPlatform + hauptTerminal +
         '","browserPlatform":"' + navigator.platform + '"}'
 
-        xhrTS.open("GET", "/server/makestamp.php?jsonString=" + jsonTS, true);
+        if (this.testFlag == 0) {
+          xhr.open("GET", "https://ordination-kutschera/beta/php/makestamp.php?jsonString=" + jsonTS, true);
+        }
+        else {
+          xhrTS.open("GET", "/server/makestamp.php?jsonString=" + jsonTS, true);
+        }
+
         xhrTS.send();
 
         this.comment = "";

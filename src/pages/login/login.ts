@@ -26,10 +26,12 @@ export class LoginPage {
   inputID:string = ''; // = User-ID aus Text-Input-String
 
   public items:any[] = [];
+  public login: any[]=[];
   public allusers:any[] = [];
   public onHandy:boolean=false;
 
-  constructor(private backand: BackandService, public navCtrl: NavController, public globVars: GlobalVars,
+    //private backand: BackandService,
+  constructor(public navCtrl: NavController, public globVars: GlobalVars,
      public plt: Platform, private dialogs: Dialogs,private nfc: NFC, private ndef: Ndef,
      // private localNotifications: LocalNotifications
   ) {  }
@@ -137,11 +139,11 @@ xhr.send();
   }
 
 //not so crazy workaround for no login
-  if(this.globVars.testFlag==1){
+  if(this.globVars.testFlag==2){
     this.inputID = "333";
     this.checkUserPHP();
   }
-  if(this.globVars.testFlag==2){
+  if(this.globVars.testFlag==3){
     this.inputID = "222";
     this.checkUserPHP();
   }
@@ -213,13 +215,12 @@ public checkUserPHP(){
     //Sobald Request bereit, hol dir den entsprechenden USER
   xhr.onreadystatechange = () => {
     if ((xhr.readyState == 4) && (xhr.status == 200 )) {
-      alert("request came back");
       this.items = JSON.parse(xhr.responseText);
         //zumindest 1 User wurde gefunden-> nimm den 1. in der Liste
       if (this.items.length > 0) {
         this.globVars.globCurrUser = this.items[0];
 
-        var loginRec: any;
+
         var insert_id: number;
 
         var xhr1 = new XMLHttpRequest();
@@ -232,15 +233,14 @@ public checkUserPHP(){
               //Sobald Request bereit, schreib den TS und warte auf Erfolg
             xhr2.onreadystatechange = () => {
               if ((xhr2.readyState == 4) && (xhr2.status == 200 )) {
-                var res2 = {"data": []};
-
-                res2.data = JSON.parse(xhr2.responseText);
+                var loginRec: any;
+                this.login = JSON.parse(xhr2.responseText);
 
                   // hole Client-Zeit
                 let clientMilliSec = Date.now();
                 this.globVars.clientDate = new Date(Date.now());
                   // hole Server-Zeit aus geschriebenen Login-rec
-                loginRec = res2.data[0];
+                loginRec = this.login[0];
                 this.globVars.serverDate = new Date(loginRec.createdAt);
                 let servMilliSec = this.globVars.serverDate.getTime();
                 this.globVars.clientDateDiff = clientMilliSec - servMilliSec;
@@ -285,11 +285,8 @@ public checkUserPHP(){
                 };
               }
             }
-              alert("first!");
             if (this.globVars.testFlag==0) {
-              alert("1!");
-              xhr2.open("GET", "http://ordination-kutschera.at/php/getlogin.php?=" + insert_id, true);
-              alert("2!");
+              xhr2.open("GET", "https://ordination-kutschera.at/beta/php/getlogin.php?loginid=" + insert_id, true);
             }
             else {
               xhr2.open("GET", "/server/getlogin.php?loginid=" + insert_id, true)
@@ -301,9 +298,7 @@ public checkUserPHP(){
         let jsonLogin = '{"name":"'+this.globVars.globCurrUser.name+'", "userID":"' + this.globVars.globCurrUser.userID+'", "device":"'+this.globVars.currPlatform +':'+this.plt.platforms()+'"}'
 
         if (this.globVars.testFlag==0) {
-          alert("1!");
-          xhr1.open("GET", "http://ordination-kutschera.at/php/createLogin.php?jsonString=" + jsonLogin, true);
-          alert("2!");
+          xhr1.open("GET", "https://ordination-kutschera.at/beta/php/createlogin.php?jsonString=" + jsonLogin, true);
         }
         else {
           xhr1.open("GET", "/server/createlogin.php?jsonString=" + jsonLogin, true);
@@ -331,19 +326,14 @@ public checkUserPHP(){
     }
   }
     //Ruf login.php mit der inputID als Parameter auf
-    if (this.globVars.localserver==false) {
-      alert("1!");
-      xhr.open("GET", "http://ordination-kutschera.at/beta/php/login.php?inputID="  + this.inputID, true);
-      alert("2!");
+    if (this.globVars.testFlag==0) {
+      xhr.open("GET", "https://ordination-kutschera.at/beta/php/login.php?inputID="  + this.inputID, true);
     }
     else {
       xhr.open("GET", "/server/login.php?inputID=" + this.inputID, true);
     }
 
   xhr.send();
-  alert("status:" + xhr.status + " readystate" + xhr.readyState);
-  alert("status:" + xhr.status + " readystate" + xhr.readyState);
-  alert("status:" + xhr.status + " readystate" + xhr.readyState);
   this.inputID = '';
   this.textInput = '';
 }
