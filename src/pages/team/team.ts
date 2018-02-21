@@ -59,7 +59,7 @@ reloadTeamPHP(refresher){
   }
     //Ruf reloadteam.php mit den entsprechenden Parametern auf
     if (this.globVars.testFlag == 0) {
-      xhr.open("GET", "https://ordination-kutschera/beta/php/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction=" + direction, true);
+      xhr.open("GET", "https://ordination-kutschera.at/beta/php/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction=" + direction, true);
     }
     else {
         xhr.open("GET", "/server/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction=" + direction, true);

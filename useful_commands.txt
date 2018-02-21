@@ -1,0 +1,2 @@
+npm run ionic:build --prod
+    Notwendig, damit Version für die Produktion gebuildet wird -> liegt auch im www Ordner

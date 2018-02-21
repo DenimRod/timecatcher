@@ -20,7 +20,7 @@ public globCurrUser:any;  // wird aus DB übernommen
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="V1.1"
+public appVers:string="V1.2"
 
 public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                               //ausliefern: 0!!!
@@ -551,10 +551,10 @@ Def: AS = alter status, NS = neuer Status
       var xhr = new XMLHttpRequest();
         //User-Objekt -> JSON-String -> PHP-Parameter
         if (this.testFlag == 0) {
-          xhr.open("GET", "https://ordination-kutschera/beta/php/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+          xhr.open("GET", "https://ordination-kutschera.at/beta/php/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
         }
         else {
-                xhr.open("GET", "/server/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+          xhr.open("GET", "/server/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
         }
 
       xhr.send();
@@ -603,7 +603,7 @@ Def: AS = alter status, NS = neuer Status
         '","browserPlatform":"' + navigator.platform + '"}'
 
         if (this.testFlag == 0) {
-          xhr.open("GET", "https://ordination-kutschera/beta/php/makestamp.php?jsonString=" + jsonTS, true);
+          xhrTS.open("GET", "https://ordination-kutschera.at/beta/php/makestamp.php?jsonString=" + jsonTS, true);
         }
         else {
           xhrTS.open("GET", "/server/makestamp.php?jsonString=" + jsonTS, true);
