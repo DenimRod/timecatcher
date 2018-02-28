@@ -108,7 +108,7 @@ export class BuchungenPage {
     }
       //Ruf getstamps.php mit der userid und amount auf
       if (this.globVars.testFlag==0) {
-        xhr.open("GET", "https://ordination-kutschera.at/beta/php/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
+        xhr.open("GET", "https://ordination-kutschera.at/zen/php/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
       }
       else {
             xhr.open("GET", "/server/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);

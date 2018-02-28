@@ -241,8 +241,21 @@ public checkUserPHP(){
                 this.globVars.clientDate = new Date(Date.now());
                   // hole Server-Zeit aus geschriebenen Login-rec
                 loginRec = this.login[0];
-                this.globVars.serverDate = new Date(loginRec.createdAt);
+
+
+                //loginRec.createdAt = loginRec.createdAt.substr(0, 10) + 'T' + loginRec.createdAt.substr(11) + 'Z';
+                //Diese Lösung hat Problem: Zeitzone 2x berechnet
+
+                this.globVars.serverDate = new Date(loginRec.createdAt.substr(0, 10));
+                this.globVars.serverDate.setHours(loginRec.createdAt.substr(11, 2));
+                this.globVars.serverDate.setMinutes(loginRec.createdAt.substr(14, 2));
+                this.globVars.serverDate.setSeconds(loginRec.createdAt.substr(17, 2));
+
                 let servMilliSec = this.globVars.serverDate.getTime();
+                  //NICHT NOTWENDIG:
+                  //Korrektur, da Zeitzone 2x (Mysql, JS) einberechnet wird
+                  //servMilliSec = servMilliSec - (60*60*1000);
+
                 this.globVars.clientDateDiff = clientMilliSec - servMilliSec;
 
                 // Beispiele: auf Ri-Erazer: +1500ms
@@ -286,7 +299,7 @@ public checkUserPHP(){
               }
             }
             if (this.globVars.testFlag==0) {
-              xhr2.open("GET", "https://ordination-kutschera.at/beta/php/getlogin.php?loginid=" + insert_id, true);
+              xhr2.open("GET", "https://ordination-kutschera.at/zen/php/getlogin.php?loginid=" + insert_id, true);
             }
             else {
               xhr2.open("GET", "/server/getlogin.php?loginid=" + insert_id, true)
@@ -298,7 +311,7 @@ public checkUserPHP(){
         let jsonLogin = '{"name":"'+this.globVars.globCurrUser.name+'", "userID":"' + this.globVars.globCurrUser.userID+'", "device":"'+this.globVars.currPlatform +':'+this.plt.platforms()+'"}'
 
         if (this.globVars.testFlag==0) {
-          xhr1.open("GET", "https://ordination-kutschera.at/beta/php/createlogin.php?jsonString=" + jsonLogin, true);
+          xhr1.open("GET", "https://ordination-kutschera.at/zen/php/createlogin.php?jsonString=" + jsonLogin, true);
         }
         else {
           xhr1.open("GET", "/server/createlogin.php?jsonString=" + jsonLogin, true);
@@ -327,7 +340,7 @@ public checkUserPHP(){
   }
     //Ruf login.php mit der inputID als Parameter auf
     if (this.globVars.testFlag==0) {
-      xhr.open("GET", "https://ordination-kutschera.at/beta/php/login.php?inputID="  + this.inputID, true);
+      xhr.open("GET", "https://ordination-kutschera.at/zen/php/login.php?inputID="  + this.inputID, true);
     }
     else {
       xhr.open("GET", "/server/login.php?inputID=" + this.inputID, true);

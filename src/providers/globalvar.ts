@@ -20,7 +20,7 @@ public globCurrUser:any;  // wird aus DB übernommen
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="V1.2"
+public appVers:string="V1.2A  Neu: KD-Datenbank"
 
 public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                               //ausliefern: 0!!!
@@ -29,7 +29,7 @@ public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal
 timestamppro: Countdown, Zeile 20 Kommentar entfernt
 */
 public autoLogout = false; // steuert den Logout-Timer
-public logoutTime:number = 7;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
+public logoutTime:number = 10;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
 public pinLength:number = 3;  // Länge des Login-Pins
 public serverDateStr:string=""; // UTC-Zeit des Logins = univ.ServerZeit (Zeit kommt vom Backand-Server!)
 public serverDate: any;
@@ -208,7 +208,7 @@ private toastCtrl: ToastController) {
     BlackBerry
     Opera
 --eigene Handys:
-  ARM          - Thomas, Julian(Nokia)
+  ARM          - Thomas, Julian(Nokia-WinMobile)
   Linux armv7l - Richie
   Linux armv8l - Sigi
   iPhone       - Horst, David
@@ -520,6 +520,10 @@ Def: AS = alter status, NS = neuer Status
         if (this.comment[0]== ".") this.comment = this.comment.substr(1);
         this.comment = "#" + this.comment;
       }
+      var newDate =  new Date(clientMillisec - this.clientDateDiff);
+      //---- Probleme bei WinCE = "ARM"
+      //alert("Test:ServerDate<=newDate?:"+this.serverDate+"?<=?" + newDate +
+      // "--clientMillisec:"+clientMillisec+"clientDateDiff:"+this.clientDateDiff+ "Test-Ende!");
       if (this.serverDate <= new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist NICHT in der Zukunft
         if (this.serverDate > lastTimeStamp) {  //die Buchung sollte auch auf TOP angezeigt werden
       // alert("das zu buchende Datum ist neuer als der letzte Timestamp");
@@ -551,7 +555,7 @@ Def: AS = alter status, NS = neuer Status
       var xhr = new XMLHttpRequest();
         //User-Objekt -> JSON-String -> PHP-Parameter
         if (this.testFlag == 0) {
-          xhr.open("GET", "https://ordination-kutschera.at/beta/php/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+          xhr.open("GET", "https://ordination-kutschera.at/zen/php/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
         }
         else {
           xhr.open("GET", "/server/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
@@ -603,7 +607,7 @@ Def: AS = alter status, NS = neuer Status
         '","browserPlatform":"' + navigator.platform + '"}'
 
         if (this.testFlag == 0) {
-          xhrTS.open("GET", "https://ordination-kutschera.at/beta/php/makestamp.php?jsonString=" + jsonTS, true);
+          xhrTS.open("GET", "https://ordination-kutschera.at/zen/php/makestamp.php?jsonString=" + jsonTS, true);
         }
         else {
           xhrTS.open("GET", "/server/makestamp.php?jsonString=" + jsonTS, true);

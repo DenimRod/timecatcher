@@ -143,7 +143,7 @@ public calcIntervalPHP(){
   }
     //Ruf getstamps.php mit der userid und hol 1000 TS
     if (this.globVars.testFlag==0) {
-      xhr.open("GET", "https://ordination-kutschera.at/beta/php/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=1000", true);
+      xhr.open("GET", "https://ordination-kutschera.at/zen/php/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=1000", true);
     }
     else {
       xhr.open("GET", "/server/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=1000", true);
