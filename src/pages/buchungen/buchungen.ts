@@ -117,6 +117,11 @@ export class BuchungenPage {
     xhr.send();
   }
 
+  public moreBuchungen500(){
+    this.buchungenAmount += 500;
+    this.reloadBuchungenPHP(null);
+  }
+
   //BACKAND-Backup
 /*
 public reloadBuchungen(refresher){
@@ -202,11 +207,6 @@ public reloadBuchungen(refresher){
     }
   }
 );
-}
-
-public moreBuchungen500(){
-  this.buchungenAmount += 500;
-  this.reloadBuchungenPHP(null);
 }
 */
 }

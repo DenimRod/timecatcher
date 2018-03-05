@@ -20,7 +20,7 @@ public globCurrUser:any;  // wird aus DB übernommen
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="V1.2A  Neu: KD-Datenbank"
+public appVers:string="V1.2B  Neu: KD-Datenbank"
 
 public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                               //ausliefern: 0!!!
