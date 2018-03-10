@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 //import { BackandService } from '@backand/angular2-sdk';
 import { App } from 'ionic-angular';
 import { LoginPage } from '../pages/login/login';
-import { Device } from '@ionic-native/device';
+//import { Device } from '@ionic-native/device';
 import { Platform } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 
@@ -20,7 +20,7 @@ public globCurrUser:any;  // wird aus DB übernommen
 // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
 public timer:number = 0;
 public appNameVers:string="KD-ZEN";
-public appVers:string="V1.2B  Neu: KD-Datenbank"
+public appVers:string="V1.2.1"
 
 public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                               //ausliefern: 0!!!
@@ -184,8 +184,8 @@ public ZEN_Devices = [              // alle Devices werden hier eingetragen
     devCode: "r9a9b9c99999"
   }
 ];
-  //BACKAND-Backup public backand: BackandService,
-constructor(public app:App, private device:Device, public platform:Platform,
+  //BACKAND-Backup public backand: BackandService, private device:Device,
+constructor(public app:App,  public platform:Platform,
 private toastCtrl: ToastController) {
   this.globCurrUser = null;
   this.KW_akt = this.KW();
@@ -524,7 +524,7 @@ Def: AS = alter status, NS = neuer Status
       //---- Probleme bei WinCE = "ARM"
       //alert("Test:ServerDate<=newDate?:"+this.serverDate+"?<=?" + newDate +
       // "--clientMillisec:"+clientMillisec+"clientDateDiff:"+this.clientDateDiff+ "Test-Ende!");
-      if (this.serverDate <= new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist NICHT in der Zukunft
+      if (this.serverDate <= newDate) {  //die Korrektur-Buchung ist NICHT in der Zukunft
         if (this.serverDate > lastTimeStamp) {  //die Buchung sollte auch auf TOP angezeigt werden
       // alert("das zu buchende Datum ist neuer als der letzte Timestamp");
       // normale Buchung vorbereiten

@@ -1,10 +1,10 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import 'rxjs/Rx'
 //import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
-import { TimestampPage } from '../timestamp/timestamp';
+//import { TimestampPage } from '../timestamp/timestamp';
 import { GlobalVars } from '../../providers/globalvar';
-import { Platform } from 'ionic-angular';
+//import { Platform } from 'ionic-angular';
 //import { Item } from '../../models/item/item.model';
 //import { ShoppingListService } from "../../providers/shopping-list.service";
 

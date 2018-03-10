@@ -1,12 +1,12 @@
 import {Component, ViewChild} from '@angular/core';
 import 'rxjs/Rx'
-import { BackandService } from '@backand/angular2-sdk';
+//import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
 import { TabsPage } from '../tabs/tabs';
 import { TabsProPage } from '../tabspro/tabspro';
 import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
-import { Dialogs } from '@ionic-native/dialogs';
+//import { Dialogs } from '@ionic-native/dialogs';
 import { NFC, Ndef } from '@ionic-native/nfc';
 //import { LocalNotifications } from 'ionic-native';
 
@@ -30,9 +30,9 @@ export class LoginPage {
   public allusers:any[] = [];
   public onHandy:boolean=false;
 
-    //private backand: BackandService,
+    //private backand: BackandService, private dialogs: Dialogs,
   constructor(public navCtrl: NavController, public globVars: GlobalVars,
-     public plt: Platform, private dialogs: Dialogs,private nfc: NFC, private ndef: Ndef,
+     public plt: Platform, private nfc: NFC, private ndef: Ndef,
      // private localNotifications: LocalNotifications
   ) {  }
 

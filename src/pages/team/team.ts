@@ -1,8 +1,8 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import 'rxjs/Rx'
-import { BackandService } from '@backand/angular2-sdk';
+//import { BackandService } from '@backand/angular2-sdk';
 import { NavController } from 'ionic-angular';
-import { TimestampPage } from '../timestamp/timestamp';
+//import { TimestampPage } from '../timestamp/timestamp';
 import { GlobalVars } from '../../providers/globalvar';
 @Component({
     templateUrl: 'team.html',

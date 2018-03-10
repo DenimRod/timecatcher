@@ -36,9 +36,10 @@ export class TimestampProPage {
   }
 
 public handleTEXT(){
+    var comment = "";
     this.globVars.comment = this.globVars.comment.trim();
     let buchungOK = true;  // bekommt erst eine Bedeutung, wenn ABBRUCH der Buchung möglich
-    let uhrZeit = false;
+    // let uhrZeit = false;
     if (buchungOK) {
       let ziffern = ['0','1','2','3','4','5','6','7','8','9'];
       //prüfen, ob letzte 2 Buchstaben des Kommentars eine Space + eine Zahl ist - Zahl hinter Kommentar wichtiger, als Zahl vorne
@@ -54,7 +55,7 @@ public handleTEXT(){
 //alert("Zahl vorne");
         let tsTypeNr = Number(this.globVars.comment.charAt(0));
         this.globVars.comment = this.globVars.comment.substr(1).trim();
-        var comment = prompt("["+this.globVars.tsTyp[tsTypeNr]+"] - Kommentar:", this.globVars.comment);
+         comment = prompt("["+this.globVars.tsTyp[tsTypeNr]+"] - Kommentar:", this.globVars.comment);
         if (comment !== null) {  // kein Abbruch der Buchung
           this.globVars.comment = comment;
           this.globVars.makeStampPHP(this.globVars.tsTyp[tsTypeNr]);
@@ -75,7 +76,7 @@ public handleTEXT(){
       else {    //1. Buchstabe keine Zahl; -> Arbeits-Typ wird autom auf aktuellen gesetzt
         //this.globVars.comment="";
         var tsTypeNr = this.globVars.tsTyp.indexOf(this.globVars.globCurrUser.status);
-        var comment = prompt("["+this.globVars.tsTyp[tsTypeNr]+"] - Kommentar:", this.globVars.comment);
+         comment = prompt("["+this.globVars.tsTyp[tsTypeNr]+"] - Kommentar:", this.globVars.comment);
         if (comment !== null) {  // kein Abbruch der Buchung
           this.globVars.comment = comment;
           this.globVars.makeStampPHP(this.globVars.tsTyp[tsTypeNr]);
