@@ -8,182 +8,184 @@ import { LoginPage } from '../pages/login/login';
 //import { Device } from '@ionic-native/device';
 import { Platform } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
+import { Message } from '../models/message.model';
 
 @Injectable()
 export class GlobalVars {
+  public appNameVers:string="KD-ZEN";
+  public appVers:string="V1.2.3"
+  public testFlag:number = 1;  //lokal = 1, AutoLogin Julian 2, Richie 3,
+                                //ausliefern: 0!!!
+  public comment:string="";
+  public globCurrComp:any;
+  public globCurrUser:any;  // wird aus DB übernommen
 
-public comment:string="";
-public globCurrComp:any;
-public globCurrUser:any;  // wird aus DB übernommen
-//         worktimeToday
-//
-// public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
-public timer:number = 0;
-public appNameVers:string="KD-ZEN";
-public appVers:string="V1.2.2"
+  public msgList: Message[];
+  public msgListLD: Message[];
+  //         worktimeToday
+  //
+  // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
+  public timer:number = 0;
+  /* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
+  public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
+  timestamppro: Countdown, Zeile 20 Kommentar entfernt
+  */
+  public autoLogout = false; // steuert den Logout-Timer
+  public logoutTime:number = 10;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
+  public pinLength:number = 3;  // Länge des Login-Pins
+  public serverDateStr:string=""; // UTC-Zeit des Logins = univ.ServerZeit (Zeit kommt vom Backand-Server!)
+  public serverDate: any;
+  public clientDateStr:string = ""; // Zeit des Clients
+  public clientDate: any; // Zeit des Clients
+  public clientDateStrUTC:string = "";
+  //public localDate:Date = null; // lokale Zeit, weil auf PCs in KD falsche Zeit, wegen Windows-Domain-Controller-Fehler +10min
+  public clientDateDiff: number = 0; //=localDate-createdat-date(=ServerZeit) =Zeitdiff in ms zwischen localDate und date(universelle Server-Zeit)
+  // bei jedem Login wird ein Eintrag in die Login-DB gemacht -> im createdAt-Feld steht die aktuelle universelle Zeit
+  // jetzt wird die Zeitdifferenz der aktuellen Instanz berechnet und als globale Var geführt
+  // daraus lässt sich über date(Now)(=lokale Zeit)+localDateDiff die "reale"Zeit zu jedem Zeitpunkt berechnen, ohne erneut
+  // beim Server nachfragen zu müssen.
+  public currPlatform = "Desktop";
+  public browserPlatform = navigator.platform;
 
-public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
-                              //ausliefern: 0!!!
-/* später Versuch, ob 1* pro Tag ausloggen sinnvoll ist
-public logouttime:number = 20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
-timestamppro: Countdown, Zeile 20 Kommentar entfernt
-*/
-public autoLogout = false; // steuert den Logout-Timer
-public logoutTime:number = 10;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
-public pinLength:number = 3;  // Länge des Login-Pins
-public serverDateStr:string=""; // UTC-Zeit des Logins = univ.ServerZeit (Zeit kommt vom Backand-Server!)
-public serverDate: any;
-public clientDateStr:string = ""; // Zeit des Clients
-public clientDate: any; // Zeit des Clients
-public clientDateStrUTC:string = "";
-//public localDate:Date = null; // lokale Zeit, weil auf PCs in KD falsche Zeit, wegen Windows-Domain-Controller-Fehler +10min
-public clientDateDiff: number = 0; //=localDate-createdat-date(=ServerZeit) =Zeitdiff in ms zwischen localDate und date(universelle Server-Zeit)
-// bei jedem Login wird ein Eintrag in die Login-DB gemacht -> im createdAt-Feld steht die aktuelle universelle Zeit
-// jetzt wird die Zeitdifferenz der aktuellen Instanz berechnet und als globale Var geführt
-// daraus lässt sich über date(Now)(=lokale Zeit)+localDateDiff die "reale"Zeit zu jedem Zeitpunkt berechnen, ohne erneut
-// beim Server nachfragen zu müssen.
-public currPlatform = "Desktop";
-public browserPlatform = navigator.platform;
+  // public farbe="text-align:center,color:secondary";
+  public KW_akt:number = 0;
+  // tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
+  //                0         1           2           3            4           5          6            7          8          9
+  public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
+  //#Register-------------
+  //     worktimeToday = muss time kleingeschrieben werden, weil in DB so definiert!
+  public workTimeRuns:boolean // Arbeitszeit läuft/gestoppt
+  public workTimeTodayShow = new Date(); //dient zur Anzeige der aktuellen Arbeitszeit
+  public workTimeTodayHour = 1; // dient zur Anzeige der Stunden
+  public workTimeTodayMin  = 0; // dient zur Anzeige der Minuten
+  public workTimeTimeout:any;   // zum Löschen des laufenden Timeouts für workTime-
+  public currDevice:any;
+  public teamSortAlpha = false;
+  public companies =[
+    {
+      ID: 1,
+      name: "Kutschera"
+    },
+    { ID: 2,
+      name: "TestCompany"
+    }
+  ];
+  /*  wenn neues Terminal:
+            1. Terminal-angaben kopieren
+            2. neue devID, usrPIN (Hauptterminal="", MA="Team")
+            3. devAnzahl erhöhen
+            4. autoLogout setzen
+            5. registrierung durchführen
 
-// public farbe="text-align:center,color:secondary";
-public KW_akt:number = 0;
-// tsTyp=Timestamp-Typ -  Array (0..9) - vorläufig 5,6 nicht verwendet (Projekt1,2)
-//                0         1           2           3            4           5          6            7          8          9
-public tsTyp = ["Krank","Arbeit EIN","AD-Fahrt","Tele-Arbeit","AD-Kunde","Projekt 1","Projekt 2", "Pause EIN","Urlaub", "Arbeit AUS"];
-//#Register-------------
-//     worktimeToday = muss time kleingeschrieben werden, weil in DB so definiert!
-public workTimeRuns:boolean // Arbeitszeit läuft/gestoppt
-public workTimeTodayShow = new Date(); //dient zur Anzeige der aktuellen Arbeitszeit
-public workTimeTodayHour = 1; // dient zur Anzeige der Stunden
-public workTimeTodayMin  = 0; // dient zur Anzeige der Minuten
-public workTimeTimeout:any;   // zum Löschen des laufenden Timeouts für workTime-
-public currDevice:any;
-public teamSortAlpha = false;
-public companies =[
-  {
-    ID: 1,
-    name: "Kutschera"
-  },
-  { ID: 2,
-    name: "TestCompany"
-  }
-];
-/*  wenn neues Terminal:
-          1. Terminal-angaben kopieren
-          2. neue devID, usrPIN (Hauptterminal="", MA="Team")
-          3. devAnzahl erhöhen
-          4. autoLogout setzen
-          5. registrierung durchführen
-
- */
-public devAnzahl = 7;
-public ZEN_Devices = [              // alle Devices werden hier eingetragen
-  {
-    devID: 1,
-    usrPin:"21",  // !!!! Pin für Eingabe in Login - muss parallel bleiben zu Datenbank-Users
-                 // als Abkürzung, damit CheckUser genutzt werden kann -> später suche aus DB
-    regDate: "15112017",
-    companyID: 1,
-    MA: "Richie",
-    devMAno: 1,
-    devTyp:"Handy",
-    devOs: "Android6",
-    devBrowser:"Samsung",
-    devName: "SamsungA5",
-    devCode: "r143241"
-  },
-  {
-    devID: 2,
-    usrPin:"21",
-    regDate: "r15112017",
-    companyID: 1,
-    MA: "Richie",
-    devMAno: 2,
-    devTyp:"Desktop",
-    devOs: "Windows10",
-    devBrowser:"Firefox",
-    devName: "Ri-Erazer",
-    devCode: "r143242"
-  },
-  {
-    devID: 3,
-    usrPin:"21",
-    regDate: "15112017",
-    companyID: 1,
-    MA: "Richie",
-    devMAno: 3,
-    devTyp:"Desktop",
-    devOs: "Windows7",
-    devBrowser:"Firefox",
-    devName: "Ri-Toshiba",
-    devCode: "r143243"
-  },
-  {
-    devID: 4,
-    usrPin:"11",
-    regDate: "15112017",
-    companyID: 1,
-    MA: "Horst",
-    devMAno: 1,
-    devTyp:"Handy",
-    devOs: "iOS6",
-    devBrowser:"Safari",
-    devName: "Ho-iPhone",
-    devCode: "r343241"
-  },
-  {
-    devID: 5,
-    usrPin:"11",
-    regDate: "15112017",
-    companyID: 1,
-    MA: "Horst",
-    devMAno: 2,
-    devTyp:"Desktop",
-    devBrowser:"Firefox",
-    devOs: "Windows7",
-    devName: "Horst-PC",
-    devCode: "r432241"
-  },
-  {
-    devID: 6,
-    usrPin:"23",
-    regDate: "15112017",
-    companyID: 1,
-    MA: "Emir",
-    devMAno: 1,
-    devTyp:"Desktop",
-    devBrowser:"Firefox",
-    devOs: "Windows7",
-    devName: "Emir-PC",
-    devCode: "r331241"
-  },
-  { // Haupt-Terminal
-    devID: 7,
-    usrPin:"",
-    regDate: "15112017",
-    companyID: 1,
-    MA: "Team",
-    devMAno: 1,
-    devTyp:"Win-Tablet",
-    devBrowser:"Chrome",
-    devOs: "Windows10",
-    devName: "Haupt-Terminal",
-    devCode: "r331241"
-  },
-  {  // nur als Abschluss-Element, damit kein Überlauf bei Abfrage - muss immer letztes bleiben
-    devID: 99999,
-    usrPin:"9a9b9c",
-    regDate: "15112017",
-    companyID: 1,
-    MA: "Dummy",
-    devMAno: 1,
-    devTyp:"Desktop",
-    devBrowser:"Firefox",
-    devOs: "Windows7",
-    devName: "Dummy-PC",
-    devCode: "r9a9b9c99999"
-  }
-];
+   */
+  public devAnzahl = 7;
+  public ZEN_Devices = [              // alle Devices werden hier eingetragen
+    {
+      devID: 1,
+      usrPin:"21",  // !!!! Pin für Eingabe in Login - muss parallel bleiben zu Datenbank-Users
+                   // als Abkürzung, damit CheckUser genutzt werden kann -> später suche aus DB
+      regDate: "15112017",
+      companyID: 1,
+      MA: "Richie",
+      devMAno: 1,
+      devTyp:"Handy",
+      devOs: "Android6",
+      devBrowser:"Samsung",
+      devName: "SamsungA5",
+      devCode: "r143241"
+    },
+    {
+      devID: 2,
+      usrPin:"21",
+      regDate: "r15112017",
+      companyID: 1,
+      MA: "Richie",
+      devMAno: 2,
+      devTyp:"Desktop",
+      devOs: "Windows10",
+      devBrowser:"Firefox",
+      devName: "Ri-Erazer",
+      devCode: "r143242"
+    },
+    {
+      devID: 3,
+      usrPin:"21",
+      regDate: "15112017",
+      companyID: 1,
+      MA: "Richie",
+      devMAno: 3,
+      devTyp:"Desktop",
+      devOs: "Windows7",
+      devBrowser:"Firefox",
+      devName: "Ri-Toshiba",
+      devCode: "r143243"
+    },
+    {
+      devID: 4,
+      usrPin:"11",
+      regDate: "15112017",
+      companyID: 1,
+      MA: "Horst",
+      devMAno: 1,
+      devTyp:"Handy",
+      devOs: "iOS6",
+      devBrowser:"Safari",
+      devName: "Ho-iPhone",
+      devCode: "r343241"
+    },
+    {
+      devID: 5,
+      usrPin:"11",
+      regDate: "15112017",
+      companyID: 1,
+      MA: "Horst",
+      devMAno: 2,
+      devTyp:"Desktop",
+      devBrowser:"Firefox",
+      devOs: "Windows7",
+      devName: "Horst-PC",
+      devCode: "r432241"
+    },
+    {
+      devID: 6,
+      usrPin:"23",
+      regDate: "15112017",
+      companyID: 1,
+      MA: "Emir",
+      devMAno: 1,
+      devTyp:"Desktop",
+      devBrowser:"Firefox",
+      devOs: "Windows7",
+      devName: "Emir-PC",
+      devCode: "r331241"
+    },
+    { // Haupt-Terminal
+      devID: 7,
+      usrPin:"",
+      regDate: "15112017",
+      companyID: 1,
+      MA: "Team",
+      devMAno: 1,
+      devTyp:"Win-Tablet",
+      devBrowser:"Chrome",
+      devOs: "Windows10",
+      devName: "Haupt-Terminal",
+      devCode: "r331241"
+    },
+    {  // nur als Abschluss-Element, damit kein Überlauf bei Abfrage - muss immer letztes bleiben
+      devID: 99999,
+      usrPin:"9a9b9c",
+      regDate: "15112017",
+      companyID: 1,
+      MA: "Dummy",
+      devMAno: 1,
+      devTyp:"Desktop",
+      devBrowser:"Firefox",
+      devOs: "Windows7",
+      devName: "Dummy-PC",
+      devCode: "r9a9b9c99999"
+    }
+  ];
   //BACKAND-Backup public backand: BackandService, private device:Device,
 constructor(public app:App,  public platform:Platform,
 private toastCtrl: ToastController) {
@@ -315,6 +317,8 @@ public calcWorkTime(tsList:any[]){
   let begin=null;
   let end=null;
   let sum=0;
+    //Messages: 0 = Error, 1 = Warning
+  let currMsgList = new Array<Message>();
 
   for(let i=tsList.length-1; i>-1; i--){  //Suche nach Arbeitsbeginn
     let tsNumber = this.getTSNumber(tsList[i].status);
@@ -335,12 +339,21 @@ public calcWorkTime(tsList:any[]){
       }
     }                                     //Wiederhole bis zum Ende der Liste
   }
-  if(workON){ //Falls kein Arbeitsende gefunden, nimm Differenz zu jetziger Zeit
-    end = (Date.now() - this.clientDateDiff);
-    end -= end % 60000;
-    sum += end - begin;
+  if(workON){ //Falls kein Arbeitsende gefunden, überprüfe Datum
+    let today = Date.now();
+              //falls Datum = heute -> AZ läuft -> Differenz zu jetziger Zeit
+    if( (begin - (begin % 86400000)) == (today - (today % 86400000))){
+      end = (today - this.clientDateDiff);
+      end -= end % 60000;
+      sum += end - begin;
+      currMsgList.push(new Message(1, "Test"));
+    }
+    else{     //sonst -> Arbeit AUS vergessen -> melde einen Fehler
+      currMsgList.push(new Message(0, "Kein Arbeitsende gefunden"));
+    }
   }
-  return(sum);
+  else currMsgList.push(new Message(1337, "Alles Bestens!"));
+  return({sum:sum, msgList:currMsgList});
 }
 
   //Copy of makeStamp using makestamp.php

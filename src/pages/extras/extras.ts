@@ -119,7 +119,8 @@ public calcIntervalPHP(){
         }                                   //Teile bis i
         this.buchungenMonth[dayCount] = res.data.slice(i_start,i);
                                          //Berechne die Arbeitszeit
-        let workTimeSum = this.globVars.calcWorkTime(this.buchungenMonth[dayCount]);
+        let calcResult = this.globVars.calcWorkTime(this.buchungenMonth[dayCount]);
+        let workTimeSum = calcResult.sum;
         let workTimeSumDate = new Date(workTimeSum);
         this.workTimeHours[dayCount] = workTimeSumDate.getUTCHours();
         this.workTimeMinutes[dayCount] = workTimeSumDate.getUTCMinutes();

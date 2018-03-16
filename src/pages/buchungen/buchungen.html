@@ -30,6 +30,13 @@
   </ion-item>
 </ion-card>
 
+<ion-card>
+  <ion-item *ngFor="let msg of globVars.msgList;" color="danger">
+    <ion-icon *ngIf="msg.type==1337;" name="planet" item-start></ion-icon>
+      {{msg.text}}
+  </ion-item>
+</ion-card>
+
   <ion-grid>
     <ion-row class="titles">
       <ion-col>
@@ -78,7 +85,61 @@
     </ion-row>
   </ion-grid>
 
-<!-- Alle Buchungen != heute -->
+<!-- Alle Buchungen von LastDay -->
+
+<ion-card>
+  <ion-item>
+    <ion-icon name="time" item-start></ion-icon>
+    Letzter Arbeitstag: &nbsp;
+    <ion-badge>
+      {{workTimeHoursDezimLD}}h
+    </ion-badge>
+    <ion-badge>
+      =
+    </ion-badge>
+    <ion-badge><span *ngIf="workTimeHoursLD">{{workTimeHoursLD}}h</span> {{workTimeMinutesLD}}m</ion-badge>
+  </ion-item>
+</ion-card>
+
+<ion-card>
+  <ion-item *ngFor="let msg of globVars.msgListLD;" color="secondary">
+    <ion-icon *ngIf="msg.type==1337;" name="planet" item-start></ion-icon>
+      {{msg.text}}
+  </ion-item>
+</ion-card>
+
+<ion-grid>
+  <ion-row *ngFor="let buchung of buchungenlastDay; let odd=odd; let even=even;" [ngClass]="{ odd: odd, even: even }">
+
+    <ion-col>
+      {{buchung.date}}
+    </ion-col>
+    <ion-col>
+      <span style="color:#f53d3d" *ngIf="buchung.status=='Krank'"><ion-icon name="radio-button-on"></ion-icon>  </span>
+      <span style="color:#3dcc82" *ngIf="buchung.status=='Arbeit EIN'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      <span style="color:#ffcc00" *ngIf="buchung.status=='AD-Fahrt'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      <span style="color:#ffcc00" *ngIf="buchung.status=='AD-Kunde'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      <span style="color:#3dcc82" *ngIf="buchung.status=='Tele-Arbeit'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      <span style="color:#3dcc82" *ngIf="buchung.status=='Projekt 1'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      <span style="color:#3dcc82" *ngIf="buchung.status=='Projekt 2'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      <span style="color:#488aff" *ngIf="buchung.status=='Pause EIN'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      <span style="color:#488aff" *ngIf="buchung.status=='Urlaub'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      <span style="color:#f53d3d" *ngIf="buchung.status=='Arbeit AUS'"><ion-icon name="radio-button-on"></ion-icon> </span>
+      {{buchung.status}}
+      </ion-col>
+    <ion-col>
+      {{buchung.device}}
+    </ion-col>
+    <ion-col>
+      {{buchung.comment}}
+    </ion-col>
+<!-- <ion-col>
+
+    </ion-col>  -->
+  </ion-row>
+</ion-grid>
+
+<!-- Alle Buchungen != heute bzw lastDay -->
 <ion-grid>
   <ion-row *ngFor="let buchung of buchungen; let odd=odd; let even=even;" [ngClass]="{ odd: odd, even: even }">
 
