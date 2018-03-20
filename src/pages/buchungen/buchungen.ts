@@ -34,7 +34,7 @@ export class BuchungenPage {
   }
 
     //Kopie von unten -> PHP
-  public reloadBuchungenPHP(refresher){
+     public reloadBuchungenPHP(refresher){
     this.nextBuchungenPage = 2;         //sobald refesht wird --> Reset aller TS
 
     var xhr = new XMLHttpRequest();
@@ -83,8 +83,12 @@ export class BuchungenPage {
             //Nur falls nicht bereits zuvor Ende erreicht!
         let lastDayIndexBorder = todayIndexBorder;
         if(todayIndexBorder != res.data.length + 1) {
-            //kreiere ein neues Referenzdatum = lastday
+            //kreiere ein neues Referenzdatum = lastday und speichere es global
           let lastDay = res.data[i].date.substr(0,10);
+          this.globVars.lastWorkDay = new Date(lastDay);
+            //Setz die Uhrzeit auf 00:00 (sollte immer lokaler Zeit entsprechen)
+          this.globVars.lastWorkDay.setHours(0);
+
           i++;
           while (i<res.data.length) {            //Such den ersten TS != lastday
             if(res.data[i].date.substr(0,10) != lastDay)
@@ -109,7 +113,7 @@ export class BuchungenPage {
               //Hol dir die Errors/Warnings aus der Arbeitszeitberechnung
           this.globVars.msgListLD = calcResult.msgList;
         }
-        i==0;
+        i=0;
 
         while (i<res.data.length) {          //UTC Strings -> Lokale Zeit
           datumHelper = new Date(res.data[i].date);

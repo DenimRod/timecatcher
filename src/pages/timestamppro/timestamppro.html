@@ -10,6 +10,16 @@
 
 <ion-content class="page4">
 
+  <ion-card (click)="goToBuchungen()">
+    <span *ngIf="this.globVars.msgList.length > 0 || this.globVars.msgListLD.length > 0;">
+      <ion-item style="text-align:center">
+        <ion-icon name="warning" color="danger" item-start></ion-icon>
+          {{this.globVars.msgList.length + this.globVars.msgListLD.length}} Meldungen: Buchungen überprüfen!
+        <ion-icon name="warning" color="danger" item-end></ion-icon>
+      </ion-item>
+    </span>
+  </ion-card>
+
   <ion-grid>
     <ion-row>
       <ion-col>

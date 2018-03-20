@@ -13,15 +13,16 @@ import { Message } from '../models/message.model';
 @Injectable()
 export class GlobalVars {
   public appNameVers:string="KD-ZEN";
-  public appVers:string="V1.2.3"
+  public appVers:string="V1.2.4"
   public testFlag:number = 1;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                                 //ausliefern: 0!!!
   public comment:string="";
   public globCurrComp:any;
   public globCurrUser:any;  // wird aus DB übernommen
 
-  public msgList: Message[];
-  public msgListLD: Message[];
+  public msgList:Message[]=[];
+  public msgListLD:Message[]=[];
+  public lastWorkDay: Date;
   //         worktimeToday
   //
   // public workTimeRuns = false; // gibt an, dass die Arbeitszeit für den akt User läuft oder nicht -> ergibt sich aber aus akt User.lasttimestamp
@@ -189,6 +190,9 @@ export class GlobalVars {
   //BACKAND-Backup public backand: BackandService, private device:Device,
 constructor(public app:App,  public platform:Platform,
 private toastCtrl: ToastController) {
+    //Initialisiere lastWorkDay = gestern, falls nicht aus Buchungen auslesbar
+  this.lastWorkDay =  new Date(Date.now() - (Date.now() % 86400000) - 86400000 )
+  this.lastWorkDay.setHours(0);
   this.globCurrUser = null;
   this.KW_akt = this.KW();
 //  alert("browserPlatform" + this.browserPlatform);
@@ -318,7 +322,7 @@ public calcWorkTime(tsList:any[]){
   let end=null;
   let sum=0;
     //Messages: 0 = Error, 1 = Warning
-  let currMsgList = new Array<Message>();
+  let currMsgList: Message[] = [];
 
   for(let i=tsList.length-1; i>-1; i--){  //Suche nach Arbeitsbeginn
     let tsNumber = this.getTSNumber(tsList[i].status);
@@ -346,7 +350,7 @@ public calcWorkTime(tsList:any[]){
       end = (today - this.clientDateDiff);
       end -= end % 60000;
       sum += end - begin;
-      currMsgList.push(new Message(1, "Test"));
+      currMsgList.push(new Message(1, "Test: Heute noch offen"));
     }
     else{     //sonst -> Arbeit AUS vergessen -> melde einen Fehler
       currMsgList.push(new Message(0, "Kein Arbeitsende gefunden"));
@@ -712,6 +716,135 @@ public KW(){
   // +0.5 an easy and dirty way to round result (in combinationen with Math.floor)
   var KW = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000/7);
   return KW;
+}
+
+  //Kopie von Buchungen.ts
+ public initBuchungen(){
+//this.nextBuchungenPage = 2;         //sobald refesht wird --> Reset aller TS
+
+var xhr = new XMLHttpRequest();
+xhr.onreadystatechange = () => {
+  if ((xhr.readyState == 4) && (xhr.status == 200 )) {
+      //res Objekt erstellen, analog zu Back& -> Code kompatibel
+    var res = {"data": []};
+    res.data = JSON.parse(xhr.responseText);
+
+    let i=0;
+    let weekDay="";
+    let datumHelper=null;
+    let todayIndexBorder=-1;
+    let todayDate = new Date();
+
+    while (i<res.data.length) {            //Such den ersten TS != heute
+      if(res.data[i].date.substr(0,10) !=     todayDate.toISOString().substr(0,10))
+      {
+        todayIndexBorder = i;
+        i++;
+        break;
+      }
+      i++;
+    }
+    //i=0;         //falls alle TS von heute -> Ende = Ende d. Liste
+    if (todayIndexBorder==-1) todayIndexBorder = res.data.length + 1;
+
+         //Hol dir die Arbeitszeit der heutigen TS und rechne sie in h/m um
+    let calcResult = this.calcWorkTime(res.data.slice(0,todayIndexBorder));
+    let workTimeSum = calcResult.sum;
+    let workTimeSumDate = new Date(workTimeSum);
+  /*  this.workTimeHours = workTimeSumDate.getUTCHours();
+    this.workTimeMinutes = workTimeSumDate.getUTCMinutes();
+         //Anzeige in Dezimaldarstellung
+    let justMinutes = this.workTimeHours*60 + this.workTimeMinutes
+    this.workTimeHoursDezim = (justMinutes / 60).toFixed(2);
+*/
+    this.globCurrUser.worktimeToday = workTimeSum;  //Setze globalen
+    clearTimeout(this.workTimeTimeout);             //Timer
+    this.workTimeCounter();
+
+        //Hol dir die Errors/Warnings aus der Arbeitszeitberechnung
+    this.msgList = calcResult.msgList;
+
+      //repeat for "beforeLastTimestamp" -> Arbeitszeit des Vorarbeitstags
+        //Nur falls nicht bereits zuvor Ende erreicht!
+    let lastDayIndexBorder = todayIndexBorder;
+    if(todayIndexBorder != res.data.length + 1) {
+        //kreiere ein neues Referenzdatum = lastday und speichere es global
+      let lastDay = res.data[i].date.substr(0,10);
+      this.lastWorkDay = new Date(lastDay);
+        //Setz die Uhrzeit auf 00:00 (sollte immer lokaler Zeit entsprechen)
+      this.lastWorkDay.setHours(0);
+
+      i++;
+      while (i<res.data.length) {            //Such den ersten TS != lastday
+        if(res.data[i].date.substr(0,10) != lastDay)
+        {
+          lastDayIndexBorder = i;
+          break;
+        }
+        i++;
+      }
+      if (lastDayIndexBorder==-1) lastDayIndexBorder = res.data.length + 1;
+
+           //Hol dir die Arbeitszeit der lastDay TS und rechne sie in h/m um
+      calcResult = this.calcWorkTime(res.data.slice(todayIndexBorder,lastDayIndexBorder));
+      workTimeSum = calcResult.sum;
+      workTimeSumDate = new Date(workTimeSum);
+  /*    this.workTimeHoursLD = workTimeSumDate.getUTCHours();
+      this.workTimeMinutesLD = workTimeSumDate.getUTCMinutes();
+           //Anzeige in Dezimaldarstellung
+      justMinutes = this.workTimeHoursLD*60 + this.workTimeMinutesLD
+      this.workTimeHoursDezimLD = (justMinutes / 60).toFixed(2);
+
+          //Hol dir die Errors/Warnings aus der Arbeitszeitberechnung
+    */  this.msgListLD = calcResult.msgList;
+    }
+    i=0;
+
+  /*  while (i<res.data.length) {          //UTC Strings -> Lokale Zeit
+      datumHelper = new Date(res.data[i].date);
+      res.data[i].date = datumHelper.toString().substr(0,21);
+      weekDay=res.data[i].date.substr(0,3);
+      switch (weekDay) {
+        case "Mon": weekDay ="Mo";
+          break;
+        case "Tue": weekDay ="Di";
+          break;
+        case "Wed": weekDay ="Mi";
+          break;
+        case "Thu": weekDay ="Do";
+            break;
+        case "Fri": weekDay ="Fr";
+            break;
+        case "Sat": weekDay ="Sa";
+            break;
+        case "Sun": weekDay ="So";
+            break;
+      }
+      res.data[i].date = weekDay+res.data[i].date.substr(3,21);
+      //  alert(i+"-Datum:"+res.data[i].datum+"----"+res.data[i].date);
+      ++i;
+    };*/
+  /*  this.buchungentoday = res.data.slice(0,todayIndexBorder);
+    this.buchungenlastDay = res.data.slice(todayIndexBorder,lastDayIndexBorder);
+    this.buchungen = res.data.slice(lastDayIndexBorder,);
+         //ist das erhaltene Array voll, blende Button ein
+    if(res.data.length == this.buchungenAmount) this.endOfBuchungen = false;
+    else this.endOfBuchungen = true;
+
+    if(refresher){
+     refresher.complete();
+    }
+*/
+  }
+}
+if (this.testFlag==0) {
+  xhr.open("GET", "https://ordination-kutschera.at/zen/php/getstamps.php?userid=" + this.globCurrUser.userID + "&amount=" + 20, true);
+}
+else {
+      xhr.open("GET", "/server/getstamps.php?userid=" + this.globCurrUser.userID + "&amount=" + 20, true);
+}
+
+xhr.send();
 }
 
   //BACKEND-Backup, delete when PHP works without errors

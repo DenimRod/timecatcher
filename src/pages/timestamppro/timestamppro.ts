@@ -1,5 +1,6 @@
 import { Component,ViewChild } from '@angular/core';
 import { GlobalVars } from '../../providers/globalvar';
+import { BuchungenPage } from '../buchungen/buchungen';
 import { NavController } from 'ionic-angular';
 import { Keyboard } from '@ionic-native/keyboard';
 import { ToastController } from 'ionic-angular';
@@ -24,6 +25,8 @@ export class TimestampProPage {
     else globVars.workTimeRuns=false;
     this.globVars.globCurrUser.worktimeToday=0;
     this.globVars.workTimeCounter();
+
+    this.globVars.initBuchungen();
   }
 
   ionViewDidEnter() {
@@ -132,5 +135,9 @@ public handleTEXT(){
     },5000);
     if (this.globVars.currPlatform=="Handy") this.keyboard.close();
   }
+
+public goToBuchungen(){
+  this.navCtrl.push(BuchungenPage);
+}
 
 }

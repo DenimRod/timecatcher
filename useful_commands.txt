@@ -1,2 +1,10 @@
 npm run ionic:build --prod
     Notwendig, damit Version für die Produktion gebuildet wird -> liegt auch im www Ordner
+
+
+ABFRAGE FÜR HANDY/DESKTOP
+      if (this.plt.is('core')) {
+          // This will only print when on Desktop
+          alert("Zeiterfassung läuft auf Desktop-PC!")
+      }
+      else alert("Zeiterfassung läuft auf Handy!");

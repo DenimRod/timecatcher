@@ -4,6 +4,7 @@ import 'rxjs/Rx'
 import { NavController } from 'ionic-angular';
 import { TabsPage } from '../tabs/tabs';
 import { TabsProPage } from '../tabspro/tabspro';
+import { BuchungenPage } from '../buchungen/buchungen';
 import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
 //import { Dialogs } from '@ionic-native/dialogs';
@@ -148,14 +149,6 @@ xhr.send();
     this.checkUserPHP();
   }
 }
-/*
-  if (this.plt.is('core')) {
-      // This will only print when on Desktop
-      alert("Zeiterfassung läuft auf Desktop-PC!")
-  }
-  else alert("Zeiterfassung läuft auf Handy!");
-
-ABFRAGE FÜR HANDY/DESKTOP */
 
   public loginClear() {
     this.textInput = "";
@@ -316,21 +309,10 @@ public checkUserPHP(){
         else {
           xhr1.open("GET", "/server/createlogin.php?jsonString=" + jsonLogin, true);
         }
-
         xhr1.send();
-/*
-        .then((res1:any) => {
-          let params = "";
-          this.backand.object.getOne('Login',res1.data.__metadata.id, params)
-          .then((res2: any) => {
-*/
           //Check Userlevel pro/normal
-        if (this.globVars.globCurrUser.applevel == "pro"){
-          this.navCtrl.push(TabsProPage);
-        }
-        else {
-          this.navCtrl.push(TabsPage);
-        }
+        if (this.globVars.globCurrUser.applevel == "pro")  this.navCtrl.push(TabsProPage);
+        else this.navCtrl.push(TabsPage);
       }
         //sonst -> falscher PIN
       else {

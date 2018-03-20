@@ -31,10 +31,16 @@
 </ion-card>
 
 <ion-card>
-  <ion-item *ngFor="let msg of globVars.msgList;" color="danger">
-    <ion-icon *ngIf="msg.type==1337;" name="planet" item-start></ion-icon>
-      {{msg.text}}
-  </ion-item>
+  <span *ngFor="let msg of globVars.msgList;">
+    <ion-item *ngIf="msg.type==0;" color="danger">
+      <ion-icon  name="warning" item-start></ion-icon>
+        {{msg.text}}
+    </ion-item>
+    <ion-item *ngIf="msg.type!=0;" color="secondary">
+      <ion-icon  name="information-circle" item-start></ion-icon>
+        {{msg.text}}
+    </ion-item>
+  </span>
 </ion-card>
 
   <ion-grid>
@@ -102,10 +108,16 @@
 </ion-card>
 
 <ion-card>
-  <ion-item *ngFor="let msg of globVars.msgListLD;" color="secondary">
-    <ion-icon *ngIf="msg.type==1337;" name="planet" item-start></ion-icon>
-      {{msg.text}}
-  </ion-item>
+  <span *ngFor="let msg of globVars.msgListLD;">
+    <ion-item *ngIf="msg.type==0;" color="danger">
+      <ion-icon  name="warning" item-start></ion-icon>
+        {{msg.text}}
+    </ion-item>
+    <ion-item *ngIf="msg.type!=0;" color="secondary">
+      <ion-icon  name="information-circle" item-start></ion-icon>
+        {{msg.text}}
+    </ion-item>
+  </span>
 </ion-card>
 
 <ion-grid>
