@@ -525,10 +525,17 @@ Def: AS = alter status, NS = neuer Status
 
       //  alert("sD:"+this.serverDate.toISOString()+"ltsISO:"+lastTimeStamp.toISOString());
       if (this.serverDate > new Date(clientMillisec - this.clientDateDiff)) {  //die Korrektur-Buchung ist in der Zukunft
-        var inp = prompt("!!! ACHTUNG !!!", "Korrektur-Zeit wird GESTERN eingetragen - OK?");
+        var inp = prompt("!!! ACHTUNG !!!", "Korrektur-Zeit wird am LETZTEN ARBEITSTAG eingetragen - OK?");
         if (inp !== null) {  // kein Abbruch der Buchung
-          this.serverDate = new Date((this.serverDate.setDate(this.serverDate.getDate()-1)))
-          //alert("gestern:" + this.serverDate.toString());
+          // serverDate wird auf letzten Arbeitstag + Uhrzeit d. Korrekturangabe gestellt
+          let sHours = this.serverDate.getHours();
+          let sMinutes = this.serverDate.getMinutes();
+          this.serverDate = new Date (this.lastWorkDay);
+          this.serverDate.setHours(sHours);
+          this.serverDate.setMinutes(sMinutes);
+
+          //alt: this.serverDate = new Date((this.serverDate.setDate(this.serverDate.getDate()-1)));
+          //alert("letzer Arbeitstag:" + this.serverDate.toString()+"-Time:"+sHours+":"+sMinutes);
         }
         else korrektur = 2; // nicht eintragen !!!
       }
