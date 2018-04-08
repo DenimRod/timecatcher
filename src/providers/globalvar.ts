@@ -13,7 +13,7 @@ import { Message } from '../models/message.model';
 @Injectable()
 export class GlobalVars {
   public appNameVers:string="KD-ZEN";
-  public appVers:string="V1.2.4"
+  public appVers:string="V1.2.6"
   public testFlag:number = 1;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                                 //ausliefern: 0!!!
   public comment:string="";
@@ -350,13 +350,13 @@ public calcWorkTime(tsList:any[]){
       end = (today - this.clientDateDiff);
       end -= end % 60000;
       sum += end - begin;
-      currMsgList.push(new Message(1, "Test: Heute noch offen"));
+      //currMsgList.push(new Message(1, "Test: Heute noch offen"));
     }
     else{     //sonst -> Arbeit AUS vergessen -> melde einen Fehler
       currMsgList.push(new Message(0, "Kein Arbeitsende gefunden"));
     }
   }
-  else currMsgList.push(new Message(1337, "Alles Bestens!"));
+  //else currMsgList.push(new Message(1337, "Alles Bestens!"));
   return({sum:sum, msgList:currMsgList});
 }
 
