@@ -1,33 +1,44 @@
 <ion-header>
-<ion-navbar> <!-- hideBackButton wird vermutlich nicht notwendig sein -->
-  <ion-title>
-    {{globVars.appNameVers}} - <span *ngIf="globVars.workTimeTodayHour">{{globVars.workTimeTodayHour}}h </span> {{globVars.workTimeTodayMin}}m -
-    <span *ngIf="globVars.workTimeRuns"><ion-icon name="time"></ion-icon>  </span>
-    <span *ngIf="globVars.workTimeRuns==false"><ion-icon name="close-circle"></ion-icon> </span>
-  </ion-title>
-</ion-navbar>
+  <ion-navbar>
+    <ion-title>
+      {{globVars.appNameVers}} - <span *ngIf="globVars.workTimeTodayHour">{{globVars.workTimeTodayHour}}h </span> {{globVars.workTimeTodayMin}}m -
+      <span *ngIf="globVars.workTimeRuns"><ion-icon name="time"></ion-icon>  </span>
+      <span *ngIf="globVars.workTimeRuns==false"><ion-icon name="close-circle"></ion-icon> </span>
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content class="page4">
-
-  <ion-card (click)="goToBuchungen()">
-    <span *ngIf="this.globVars.msgList.length > 0 || this.globVars.msgListLD.length > 0;">
-      <ion-item style="text-align:center">
-        <ion-icon name="warning" color="danger" item-start></ion-icon>
-          {{this.globVars.msgList.length + this.globVars.msgListLD.length}} Meldungen: Buchungen überprüfen!
-        <ion-icon name="warning" color="danger" item-end></ion-icon>
-      </ion-item>
+        <!-- Ausgabe der Message List -->
+  <span *ngIf="this.globVars.msgList.length > 0 || this.globVars.msgListLD.length > 0;" >
+    <span *ngIf="this.globVars.msgList.length + this.globVars.msgListLD.length == 1" >
+      <button ion-button (click)="goToBuchungen()" color="danger" large outline style="float:right; text-transform: none;">
+        <div class="message">
+          <ion-icon name="warning" color="danger" item-start></ion-icon>
+            &nbsp;
+            1 Meldung: Buchungen überprüfen!
+        </div>
+      </button>
     </span>
-  </ion-card>
+    <span *ngIf="this.globVars.msgList.length + this.globVars.msgListLD.length > 1">
+      <button ion-button (click)="goToBuchungen()" color="danger" large outline style="float:right; text-transform: none;">
+          <div class="message">
+            <ion-icon name="warning" color="danger" item-start></ion-icon>
+              &nbsp;
+              {{this.globVars.msgList.length + this.globVars.msgListLD.length}} Meldungen: Buchungen überprüfen!
+          </div>
+        </button>
+    </span>
+  </span>
 
+          <!-- Titelzeile -->
   <ion-grid>
     <ion-row>
       <ion-col>
-        <img src="https://ordination-kutschera.at/zen_img.gif" alt="Smiley face" height="80" width="80">
+        <img src="https://ordination-kutschera.at/zen/zen_img.png" alt="Smiley face" height="80" width="80">
       </ion-col>
       <ion-col align="center">
         <h3 style="text-align:center">{{globVars.globCurrUser.name}}</h3>
-    <!--    <ion-badge color="danger"> NEU: KD-Datenbank </ion-badge> <br><br>  -->
       </ion-col>
       <ion-col align="right">
         <h3>[KW:{{globVars.KW_akt}}]</h3>
@@ -46,6 +57,8 @@
  ({{globVars.globCurrUser.lastcomment}}) </span>
  <br>
   seit: {{globVars.globCurrUser.lasttimestamp}} </h4>
+
+      <!--  Eingabezeile -->
 
   <ion-item>
     <ion-label color="primary" stacked>Kommentar:</ion-label>
@@ -91,7 +104,4 @@
     </ion-row>
 
   </ion-grid>
-
-  <!-- <p align="center"> {{globVars.localDate}} </p> -->
-
 </ion-content>

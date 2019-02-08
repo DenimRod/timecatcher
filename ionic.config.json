@@ -1,14 +1,13 @@
 {
   "name": "mytestapp",
-  "app_id": "",
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular",
   "proxies": [
     {
       "path": "/server",
       "proxyUrl": "https://ordination-kutschera.at"
     }
-  ],
-  "integrations": {
-    "cordova": {}
-  }
+  ]
 }

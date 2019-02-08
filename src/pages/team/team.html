@@ -51,12 +51,13 @@
 
       <ion-col>
 
-        <span style="background-color:Grey" *ngIf="(user.name=='Tom')">__{{user.name}}__</span>
-        <span style="background-color:#488aff" *ngIf="(user.name=='David')">_ {{user.name}} _</span>
-        <span style="background-color:Orange" *ngIf="(user.name=='Horst')">_ {{user.name}} _</span>
-        <span style="background-color:Red" *ngIf="(user.name=='Emir')">__{{user.name}}__</span>
-        <span style="background-color:Fuchsia" *ngIf="(user.name=='Thomas')">{{user.name}}</span>
-        <span style="background-color:Yellow" *ngIf="(user.name=='Sigi')">__{{user.name}}__</span>
+        <span [ngSwitch]="user.name">
+          <span style="background-color:#488aff" *ngSwitchCase="'David'" (click)='getAlienBuchungen(user.name)'>&nbsp;&nbsp;&nbsp;&nbsp;{{user.name}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span style="background-color:Orange" *ngSwitchCase="'Horst'" (click)='getAlienBuchungen(user.name)'>&nbsp;&nbsp;&nbsp;&nbsp;{{user.name}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span style="background-color:Fuchsia" *ngSwitchCase="'Thomas'" (click)='getAlienBuchungen(user.name)'>&nbsp;{{user.name}}&nbsp;</span>
+          <span style="background-color:Yellow" *ngSwitchCase="'Sigi'" (click)='getAlienBuchungen(user.name)'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{user.name}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span *ngSwitchDefault (click)='getAlienBuchungen(user.name)'> {{user.name}} </span>
+        </span>
 
   <!--
         <span style="color:Grey" *ngIf="((user.name=='Tom') && (this.globVars.currPlatform =='Handy'))"><ion-icon name="square"></ion-icon></span>
@@ -96,7 +97,7 @@
         <span style="color:Yellow"  *ngIf="((user.name=='Sigi') && (this.globVars.currPlatform =='Desktop'))">
           <ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon><ion-icon name="square"></ion-icon></span>
         -->
-        <span *ngIf="!((user.name=='Tom') || (user.name=='David')|| (user.name=='Horst')|| (user.name=='Emir')|| (user.name=='Thomas')|| (user.name=='Sigi'))"> {{user.name}} </span>
+
       </ion-col>
 
       <ion-col>

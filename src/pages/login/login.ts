@@ -127,7 +127,7 @@ xhr.onreadystatechange = function() {
     }
     //else alert("FEHLER!-state:"+xmlhttp.readyState+"status:"+xmlhttp.status);
 }
-xhr.open("GET", "/server/ri_test.php?param=1", true);
+xhr.open("GET", "/server/zen/php/ri_test.php?param=1", true);
 xhr.send();
 //alert("warten...");
 */
@@ -295,7 +295,7 @@ public checkUserPHP(){
               xhr2.open("GET", "https://ordination-kutschera.at/zen/php/getlogin.php?loginid=" + insert_id, true);
             }
             else {
-              xhr2.open("GET", "/server/getlogin.php?loginid=" + insert_id, true)
+              xhr2.open("GET", "/server/zen/php/getlogin.php?loginid=" + insert_id, true)
             }
             xhr2.send();
           }
@@ -307,7 +307,7 @@ public checkUserPHP(){
           xhr1.open("GET", "https://ordination-kutschera.at/zen/php/createlogin.php?jsonString=" + jsonLogin, true);
         }
         else {
-          xhr1.open("GET", "/server/createlogin.php?jsonString=" + jsonLogin, true);
+          xhr1.open("GET", "/server/zen/php/createlogin.php?jsonString=" + jsonLogin, true);
         }
         xhr1.send();
           //Check Userlevel pro/normal
@@ -325,7 +325,7 @@ public checkUserPHP(){
       xhr.open("GET", "https://ordination-kutschera.at/zen/php/login.php?inputID="  + this.inputID, true);
     }
     else {
-      xhr.open("GET", "/server/login.php?inputID=" + this.inputID, true);
+      xhr.open("GET", "/server/zen/php/login.php?inputID=" + this.inputID, true);
     }
 
   xhr.send();

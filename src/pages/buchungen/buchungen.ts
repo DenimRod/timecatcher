@@ -157,7 +157,7 @@ export class BuchungenPage {
         xhr.open("GET", "https://ordination-kutschera.at/zen/php/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
       }
       else {
-            xhr.open("GET", "/server/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
+            xhr.open("GET", "/server/zen/php/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=" + this.buchungenAmount, true);
       }
 
     xhr.send();

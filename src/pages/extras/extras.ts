@@ -147,7 +147,7 @@ public calcIntervalPHP(){
       xhr.open("GET", "https://ordination-kutschera.at/zen/php/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=1000", true);
     }
     else {
-      xhr.open("GET", "/server/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=1000", true);
+      xhr.open("GET", "/server/zen/php/getstamps.php?userid=" + this.globVars.globCurrUser.userID + "&amount=1000", true);
     }
   xhr.send();
 }

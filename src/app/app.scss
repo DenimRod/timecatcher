@@ -1,6 +1,8 @@
 // http://ionicframework.com/docs/v2/theming/
 .page5 {
 
+
+
   .titles{
     background-color:#ffffff;
     font-weight: bold;
@@ -16,6 +18,11 @@
 
 }
 
+ion-content {
+  .message{
+    font-size: 18px;
+  }
+}
 
 // App Global Sass
 // --------------------------------------------------

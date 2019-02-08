@@ -4,6 +4,7 @@ import { BuchungenPage } from '../buchungen/buchungen';
 import { NavController } from 'ionic-angular';
 import { Keyboard } from '@ionic-native/keyboard';
 import { ToastController } from 'ionic-angular';
+import { Platform } from 'ionic-angular';
 
 @Component({
   templateUrl: 'timestamppro.html',
@@ -13,7 +14,7 @@ import { ToastController } from 'ionic-angular';
 export class TimestampProPage {
 @ViewChild('focusInput') myInput;
 
-  constructor(public globVars: GlobalVars, public navCtrl: NavController,public keyboard: Keyboard, private toastCtrl: ToastController)
+  constructor(public globVars: GlobalVars, public navCtrl: NavController, public platform: Platform, public keyboard: Keyboard, private toastCtrl: ToastController)
   {
     var currStatusNr = 0;
     this.globVars.timer=this.globVars.logoutTime;
@@ -31,6 +32,7 @@ export class TimestampProPage {
 
   ionViewDidEnter() {
     this.globVars.comment = '';
+    if(!this.globVars.autoLogout) this.globVars.resetLogin();
     if (this.globVars.currPlatform=="Desktop")
       setTimeout(() => {
         this.myInput.setFocus();

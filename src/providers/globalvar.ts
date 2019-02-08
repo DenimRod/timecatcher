@@ -1,6 +1,3 @@
-// Ideen für Parameter/USER
-//   teamSortAlpha (Alex)
-
 import { Injectable } from '@angular/core';
 //import { BackandService } from '@backand/angular2-sdk';
 import { App } from 'ionic-angular';
@@ -13,15 +10,19 @@ import { Message } from '../models/message.model';
 @Injectable()
 export class GlobalVars {
   public appNameVers:string="KD-ZEN";
-  public appVers:string="V1.2.6"
-  public testFlag:number = 1;  //lokal = 1, AutoLogin Julian 2, Richie 3,
+  public appVers:string="V1.4"
+  public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                                 //ausliefern: 0!!!
   public comment:string="";
   public globCurrComp:any;
   public globCurrUser:any;  // wird aus DB übernommen
 
+  public globAlienUserID:number = null; //Wird verwendet, um Buchungen eines fremden Users anzuzeigen
+  public globAlienUserName:String = null; //Wird verwendet, um Buchungen eines fremden Users anzuzeigen
+
+
   public msgList:Message[]=[];
-  public msgListLD:Message[]=[];
+  public msgListLD:Message[]=[]; //msgList"LD" = Last Day
   public lastWorkDay: Date;
   //         worktimeToday
   //
@@ -297,6 +298,13 @@ this.timer = this.timer - 1;
     this.app.getRootNav().setRoot(LoginPage);
   }
     //alert(this.timer);
+}
+
+public resetLogin(){
+  let today = Date.now();
+  today = today % 86400000;
+  let tillNextDay = 86400000 - today;
+  setTimeout(()=>{this.app.getRootNav().setRoot(LoginPage);},tillNextDay);
 }
 
 public getTSNumber(stampString:string){
@@ -582,7 +590,7 @@ Def: AS = alter status, NS = neuer Status
           xhr.open("GET", "https://ordination-kutschera.at/zen/php/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
         }
         else {
-          xhr.open("GET", "/server/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+          xhr.open("GET", "/server/zen/php/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
         }
 
       xhr.send();
@@ -634,7 +642,7 @@ Def: AS = alter status, NS = neuer Status
           xhrTS.open("GET", "https://ordination-kutschera.at/zen/php/makestamp.php?jsonString=" + jsonTS, true);
         }
         else {
-          xhrTS.open("GET", "/server/makestamp.php?jsonString=" + jsonTS, true);
+          xhrTS.open("GET", "/server/zen/php/makestamp.php?jsonString=" + jsonTS, true);
         }
 
         xhrTS.send();
@@ -848,7 +856,7 @@ if (this.testFlag==0) {
   xhr.open("GET", "https://ordination-kutschera.at/zen/php/getstamps.php?userid=" + this.globCurrUser.userID + "&amount=" + 20, true);
 }
 else {
-      xhr.open("GET", "/server/getstamps.php?userid=" + this.globCurrUser.userID + "&amount=" + 20, true);
+      xhr.open("GET", "/server/zen/php/getstamps.php?userid=" + this.globCurrUser.userID + "&amount=" + 20, true);
 }
 
 xhr.send();

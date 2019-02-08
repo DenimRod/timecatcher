@@ -11,6 +11,7 @@ import { TeamPage } from '../pages/team/team';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ExtrasPage } from '../pages/extras/extras';
 import { BuchungenPage } from '../pages/buchungen/buchungen';
+import { Buchungen_fremdPage } from '../pages/buchungen_fremd/buchungen_fremd';
 import { TabsProPage } from '../pages/tabspro/tabspro';
 import { TimestampProPage } from '../pages/timestamppro/timestamppro';
 
@@ -38,6 +39,7 @@ import { GlobalVars } from '../providers/globalvar';
     TeamPage,
     ExtrasPage,
     BuchungenPage,
+    Buchungen_fremdPage,
     TabsPage,
     TabsProPage,
     TimestampProPage
@@ -56,6 +58,7 @@ import { GlobalVars } from '../providers/globalvar';
     ExtrasPage,
     TeamPage,
     BuchungenPage,
+    Buchungen_fremdPage,
     TabsPage,
     TabsProPage,
     TimestampProPage
