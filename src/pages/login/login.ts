@@ -148,6 +148,10 @@ xhr.send();
     this.inputID = "222";
     this.checkUserPHP();
   }
+  if(this.globVars.testFlag==4){
+    this.inputID = "643";
+    this.checkUserPHP();
+  }
 }
 
   public loginClear() {

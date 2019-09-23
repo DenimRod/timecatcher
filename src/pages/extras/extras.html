@@ -32,6 +32,7 @@
     <a ion-text color="dark">-> muss vorläufig außerhalb von ZEN mitgeführt werden</a> <br> <br>
 
 <!-- Anzeige der TS eines Monats und Berechnung der Arbeitszeit pro Tag -->
+
 <ion-list>
   <ion-item>
     <ion-label>Von:</ion-label>
@@ -43,7 +44,14 @@
   </ion-item>
 </ion-list>
 
-
+  <ion-row>
+    <ion-col col-6>
+      <button ion-button full (click)="setActualMonth()">Aktueller Monat</button>
+    </ion-col>
+    <ion-col col-6>
+      <button ion-button full (click)="setActualWeek()">Aktuelle Woche</button>
+    </ion-col>
+  </ion-row>
 <button ion-button full align="center" (click)="calcIntervalPHP()" color="light">Arbeitszeit berechnen</button>
 <br>
 <!-- <ion-card class='blue'> -->

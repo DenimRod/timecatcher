@@ -74,6 +74,24 @@ export class ExtrasPage {
 */
 //  alert('nach dialogs');
 
+public setActualMonth(){
+  var date = new Date();
+  var datebuf = new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0);
+  this.wtInterval.start = datebuf.toISOString();
+  datebuf = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
+  this.wtInterval.end = datebuf.toISOString();
+
+}
+
+public setActualWeek(){
+  var date = new Date();
+  var datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() - 6, 0, 0, 0, 0);
+  this.wtInterval.start = datebuf.toISOString();
+  datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay(), 23, 59, 59, 999);
+  this.wtInterval.end = datebuf.toISOString();
+
+}
+
 public calcIntervalPHP(){
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = () => {

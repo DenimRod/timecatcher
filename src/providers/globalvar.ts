@@ -11,7 +11,8 @@ import { Message } from '../models/message.model';
 export class GlobalVars {
   public appNameVers:string="KD-ZEN";
   public appVers:string="V1.4"
-  public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
+  public testFlag:number = 1;  //lokal = 1, AutoLogin Julian 2, Richie 3,
+                               //AutoLogin Tristan 4
                                 //ausliefern: 0!!!
   public comment:string="";
   public globCurrComp:any;
@@ -33,6 +34,7 @@ export class GlobalVars {
   timestamppro: Countdown, Zeile 20 Kommentar entfernt
   */
   public autoLogout = false; // steuert den Logout-Timer
+  //public autoStatusCheck = false; // Automatische Benachrichtigung bei Statusaenderung
   public logoutTime:number = 10;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
   public pinLength:number = 3;  // Länge des Login-Pins
   public serverDateStr:string=""; // UTC-Zeit des Logins = univ.ServerZeit (Zeit kommt vom Backand-Server!)
