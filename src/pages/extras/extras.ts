@@ -85,9 +85,9 @@ public setActualMonth(){
 
 public setActualWeek(){
   var date = new Date();
-  var datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() - 6, 0, 0, 0, 0);
+  var datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - ((date.getDay()-1) % 7), 0, 0, 0, 0);
   this.wtInterval.start = datebuf.toISOString();
-  datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay(), 23, 59, 59, 999);
+  datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - ((date.getDay()-1) % 7) + 6, 23, 59, 59, 999);
   this.wtInterval.end = datebuf.toISOString();
 
 }

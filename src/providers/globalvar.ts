@@ -11,7 +11,7 @@ import { Message } from '../models/message.model';
 export class GlobalVars {
   public appNameVers:string="KD-ZEN";
   public appVers:string="V1.4"
-  public testFlag:number = 1;  //lokal = 1, AutoLogin Julian 2, Richie 3,
+  public testFlag:number = 4;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                                //AutoLogin Tristan 4
                                 //ausliefern: 0!!!
   public comment:string="";
