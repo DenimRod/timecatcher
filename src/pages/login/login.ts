@@ -4,7 +4,6 @@ import 'rxjs/Rx'
 import { NavController } from 'ionic-angular';
 import { TabsPage } from '../tabs/tabs';
 import { TabsProPage } from '../tabspro/tabspro';
-import { BuchungenPage } from '../buchungen/buchungen';
 import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
 //import { Dialogs } from '@ionic-native/dialogs';

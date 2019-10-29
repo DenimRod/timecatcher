@@ -10,7 +10,7 @@ import { Message } from '../models/message.model';
 @Injectable()
 export class GlobalVars {
   public appNameVers:string="KD-ZEN";
-  public appVers:string="V1.5"
+  public appVers:string="V1.6"
   public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                                //AutoLogin Tristan 4
                                 //ausliefern: 0!!!
@@ -573,68 +573,97 @@ Def: AS = alter status, NS = neuer Status
       //Umwandlung von String-> Date-Objekt OK:
       // Stunden,Minuten mit führender 0
 
+          let tempUser = JSON.parse(JSON.stringify(this.globCurrUser));
+
           let Hours="";
           let Minutes="";
           if (this.serverDate.getHours()<10) Hours="0"+this.serverDate.getHours()
           else Hours=this.serverDate.getHours().toString();
           if (this.serverDate.getMinutes()<10) Minutes="0"+this.serverDate.getMinutes()
           else Minutes=this.serverDate.getMinutes().toString();
-          this.globCurrUser.lasttimestamp =  this.serverDate.getDate() + "." + (this.serverDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
-          this.globCurrUser.lasttimestampISO = this.serverDate.toISOString(); //schreibt in Orts-Zeit
+          tempUser.lasttimestamp =  this.serverDate.getDate() + "." + (this.serverDate.getMonth() + 1) + ". um " + Hours + ":" + Minutes;
+          tempUser.lasttimestampISO = this.serverDate.toISOString(); //schreibt in Orts-Zeit
         //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
         //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
             //# in URL nicht erlaubt!
-          this.globCurrUser.lastcomment = encodeURIComponent(this.comment);
-          this.globCurrUser.status=stampType;
+          tempUser.lastcomment = encodeURIComponent(this.comment);
+          tempUser.status=stampType;
 
       //Ab Hier DB-Action! --> Umbau auf PHP
       var xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4) {
+          if(xhr.status==200){
+              this.globCurrUser = JSON.parse(JSON.stringify(tempUser));
+          }
+          else {
+            console.log("Error in UpdateUser: statustext="+xhr.statustext);
+            let toast = this.toastCtrl.create({
+              message: 'Fehler beim Übertragen - Zeitstempel abgebrochen',
+              duration: 4000,
+              position: 'top'
+            });
+            toast.onDidDismiss(() => {});
+            toast.present();
+          }
+        }
+      }
         //User-Objekt -> JSON-String -> PHP-Parameter
         if (this.testFlag == 0) {
-          xhr.open("GET", "https://ordination-kutschera.at/zen/php/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+          xhr.open("GET", "https://ordination-kutschera.at/zen/php/updateuser.php?jsonString=" + JSON.stringify(tempUser), true);
         }
         else {
-          xhr.open("GET", "/server/zen/php/updateuser.php?jsonString=" + JSON.stringify(this.globCurrUser), true);
+          xhr.open("GET", "/server/zen/php/updateuser.php?jsonString=" + JSON.stringify(tempUser), true);
         }
 
       xhr.send();
         //rücksetzen der Raute im lokalen GlobCurrUser-Objekt
       this.globCurrUser.lastcomment = this.comment;
 
-      //BACKAND-Backup
-          //this.backand.object.update('Users', this.globCurrUser.id, this.globCurrUser);
-        };
+      };
          // if-Ende: "normale Buchung" vorbereiten
          // if "autoLogout" = Kennung vorläufig für HAUPT-Terminal
          let hauptTerminal = "";
          if (this.autoLogout) hauptTerminal ="-!!!KD!!!"
 
-       //PHP-DB
+         //PHP-DB
         var xhrTS = new XMLHttpRequest();
           //Sobald Request bereit, schreib den TS und warte auf Erfolg
         xhrTS.onreadystatechange = () => {
-          if ((xhrTS.readyState == 4) && (xhrTS.status == 200 )) {
-            if (korrektur ==0) {
-              let toast = this.toastCtrl.create({
-                message: 'Zeitstempel wurde eingetragen',
-                duration: 3000,
-                position: 'top'
-              });
-              toast.onDidDismiss(() => {});
-              toast.present();
-              this.comment = "";
+          if (xhrTS.readyState == 4) {
+            if (xhrTS.status == 200) {
+              if (korrektur ==0) {
+                let toast = this.toastCtrl.create({
+                  message: 'Zeitstempel wurde eingetragen',
+                  duration: 3000,
+                  position: 'top'
+                });
+                toast.onDidDismiss(() => {});
+                toast.present();
+                this.comment = "";
+              }
+              else {  // korrektur ==1
+                let toast = this.toastCtrl.create({
+                  message: 'Korrektur-Zeitstempel wurde eingetragen',
+                  duration: 4000,
+                  position: 'top'
+                });
+                toast.onDidDismiss(() => {});
+                toast.present();
+                this.comment = "";
+              };
             }
-            else {  // korrektur ==1
+            else {
+              console.log("Error in MakeStamp: statustext="+xhr.statustext);
               let toast = this.toastCtrl.create({
-                message: 'Korrektur-Zeitstempel wurde eingetragen',
+                message: 'Keine Verbindung zum Server - Zeitstempel abgebrochen',
                 duration: 4000,
                 position: 'top'
               });
               toast.onDidDismiss(() => {});
               toast.present();
-              this.comment = "";
-            };
-
+            }
           }
         }
           //Ruf makestamp.php mit dem TS als JSON-Obj. auf
@@ -652,41 +681,6 @@ Def: AS = alter status, NS = neuer Status
         xhrTS.send();
 
         this.comment = "";
-      //BACKAND-Backup
-      /*
-        this.backand.object.create('Timestamps2', "{'date':'" + this.serverDate.toISOString() + "', 'status':'" +
-        stampType + "','userid':'" + this.globCurrUser.id + "','username':'" +
-        this.globCurrUser.name + "','comment':'" + this.comment + "','device':'" + this.currPlatform + hauptTerminal +
-        "','browserPlatform':'" + navigator.platform + "'}")
-        .then((res: any) => {
-    //      alert("nach Create: ms->Date:"+this.serverDate.getTime()+ "cms:" + clientMillisec +"clientdiff-ms"+this.clientDateDiff+
-    //      "serverDate:" + this.serverDate.toLocaleString()+
-    //      "--clientDate:" + this.clientDate.toLocaleString()+"!");
-          if (korrektur ==0) {
-            let toast = this.toastCtrl.create({
-              message: 'Zeitstempel wurde eingetragen',
-              duration: 3000,
-              position: 'top'
-            });
-            toast.onDidDismiss(() => {});
-            toast.present();
-            this.comment = "";
-          }
-          else {  // korrektur ==1
-            let toast = this.toastCtrl.create({
-              message: 'Korrektur-Zeitstempel wurde eingetragen',
-              duration: 4000,
-              position: 'top'
-            });
-            toast.onDidDismiss(() => {});
-            toast.present();
-            this.comment = "";
-          };
-        },
-        (err: any) => {
-          alert(err.data);
-        });
-        this.comment = ""; */
       }
       else { // Fehler
         let toast = this.toastCtrl.create({
@@ -749,8 +743,8 @@ xhr.onreadystatechange = () => {
     res.data = JSON.parse(xhr.responseText);
 
     let i=0;
-    let weekDay="";
-    let datumHelper=null;
+    //let weekDay="";
+    //let datumHelper=null;
     let todayIndexBorder=-1;
     let todayDate = new Date();
 
