@@ -10,7 +10,7 @@
 {{globVars.appVers}} <br>
 
 <h6 ion-text color="dark">Browser-Typ: {{globVars.browserPlatform}} -> {{globVars.currPlatform}}</h6>
-<button ion-button medium align="center" (click)="playTon()">sound-Test</button>
+<button ion-button medium align="center" (click)="asprovider.soundNotif(2)">sound-Test</button>
 
  <h4 ion-text color="primary"><u>Kommentar-Feld-Codes:</u></h4>
 
@@ -33,6 +33,15 @@
 
 <!-- Anzeige der TS eines Monats und Berechnung der Arbeitszeit pro Tag -->
 
+<ion-row>
+  <ion-col col-6 class="noborder">
+    <button ion-button full (click)="setActualMonth()">Aktueller Monat</button>
+  </ion-col>
+  <ion-col col-6 class="noborder">
+    <button ion-button full (click)="setActualWeek()">Aktuelle Woche</button>
+  </ion-col>
+</ion-row>
+
 <ion-list>
   <ion-item>
     <ion-label>Von:</ion-label>
@@ -44,14 +53,6 @@
   </ion-item>
 </ion-list>
 
-  <ion-row>
-    <ion-col col-6>
-      <button ion-button full (click)="setActualMonth()">Aktueller Monat</button>
-    </ion-col>
-    <ion-col col-6>
-      <button ion-button full (click)="setActualWeek()">Aktuelle Woche</button>
-    </ion-col>
-  </ion-row>
 <button ion-button full align="center" (click)="calcIntervalPHP()" color="light">Arbeitszeit berechnen</button>
 <br>
 

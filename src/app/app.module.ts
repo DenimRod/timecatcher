@@ -24,6 +24,7 @@ import { Dialogs } from '@ionic-native/dialogs';
 import { NFC, Ndef } from '@ionic-native/nfc';
 //import { LocalNotifications } from 'ionic-native';
 import { GlobalVars } from '../providers/globalvar';
+import { AutoStatusUpdateProvider } from '../providers/auto-status-update/auto-status-update';
 
 //Imports for Firebase
 //import { AngularFireModule} from 'angularfire2';
@@ -75,6 +76,7 @@ import { GlobalVars } from '../providers/globalvar';
     Dialogs,
     NFC,
     Ndef,
+    AutoStatusUpdateProvider,
 //    ShoppingListService
 //    LocalNotifications,
   ]

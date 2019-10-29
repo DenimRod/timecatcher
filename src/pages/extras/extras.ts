@@ -8,6 +8,8 @@ import { GlobalVars } from '../../providers/globalvar';
 //import { Item } from '../../models/item/item.model';
 //import { ShoppingListService } from "../../providers/shopping-list.service";
 
+import { AutoStatusUpdateProvider } from '../../providers/auto-status-update/auto-status-update';
+
 @Component({
     templateUrl: 'extras.html',
     selector: 'page-extras',
@@ -41,7 +43,7 @@ export class ExtrasPage {
 };
     // Firebase_Test: private shopping: ShoppingListService,
     // BACKAND-Backup  private backand: BackandService,
-  constructor(public navCtrl: NavController, public globVars: GlobalVars) {
+  constructor(public navCtrl: NavController, public globVars: GlobalVars, public asprovider: AutoStatusUpdateProvider) {
     //this.globVars.timer=30;
   }
 

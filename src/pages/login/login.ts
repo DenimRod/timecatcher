@@ -9,6 +9,9 @@ import { GlobalVars } from '../../providers/globalvar';
 import { Platform } from 'ionic-angular';
 //import { Dialogs } from '@ionic-native/dialogs';
 import { NFC, Ndef } from '@ionic-native/nfc';
+
+
+
 //import { LocalNotifications } from 'ionic-native';
 
 //angeblich notwendig, damit die Dialoge "aktiviert" werden.
@@ -33,9 +36,11 @@ export class LoginPage {
 
     //private backand: BackandService, private dialogs: Dialogs,
   constructor(public navCtrl: NavController, public globVars: GlobalVars,
-     public plt: Platform, private nfc: NFC, private ndef: Ndef,
+     public plt: Platform, private nfc: NFC, private ndef: Ndef
      // private localNotifications: LocalNotifications
-  ) {  }
+  ) {
+
+  }
 
 
   NFC_onSuccess()

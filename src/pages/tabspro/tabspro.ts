@@ -14,5 +14,4 @@ export class TabsProPage {
   tab3Root: any = ExtrasPage;
   tab4Root: any = BuchungenPage;
    constructor() {}
-
 }

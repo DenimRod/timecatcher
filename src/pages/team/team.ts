@@ -6,6 +6,9 @@ import { NavController } from 'ionic-angular';
 import { GlobalVars } from '../../providers/globalvar';
 import { Buchungen_fremdPage } from '../buchungen_fremd/buchungen_fremd';
 
+import { AutoStatusUpdateProvider } from '../../providers/auto-status-update/auto-status-update';
+import { Subscription } from 'rxjs/Subscription';
+
 @Component({
     templateUrl: 'team.html',
     selector: 'page-team', //passt das?
@@ -13,14 +16,30 @@ import { Buchungen_fremdPage } from '../buchungen_fremd/buchungen_fremd';
 export class TeamPage {
 
   public users:any[]=[];
+  private _listener: Subscription = new Subscription();
+  private _refListener: Subscription = new Subscription();
     //private backand: BackandService
-  constructor(public navCtrl: NavController, public globVars: GlobalVars) {
+  constructor(public navCtrl: NavController, public globVars: GlobalVars,  public asprovider: AutoStatusUpdateProvider) {
     //this.globVars.timer=30;
   }
 
   ionViewWillEnter() {
+    //  aktualisiere TeamPage, falls aktiv
     this.reloadTeamPHP(null);
-  };
+    this._listener = this.asprovider.teamPageReload$.subscribe(users => {
+        this.users = users;
+    });
+  }
+
+  ionViewDidLeave() {
+    this._listener.unsubscribe();
+    this._refListener.unsubscribe();
+  }
+
+  ngOnDestroy() {
+    this._listener.unsubscribe();
+    this._refListener.unsubscribe();
+  }
 
   getAlienBuchungen(alienName:String){
     this.globVars.globAlienUserName = alienName;
@@ -63,35 +82,9 @@ export class TeamPage {
     // Falls mit Parameter aufgerufen -> Refresher-Objekt für Pull-Reload
 
 reloadTeamPHP(refresher){
-  let sortby: String;
-  let direction: String;
-  if (this.globVars.teamSortAlpha) {      //alphabetisch sortiert
-      sortby = "name";
-      direction = "ASC";
-  }
-  else {                                  //nach Zeitpunkt sortiert
-    sortby = "lasttimestampISO";
-    direction = "DESC";
-  };
-
-  var xhr = new XMLHttpRequest();
-    //Sobald Request bereit, hol dir die entsprechenden USER
-  xhr.onreadystatechange = () => {
-    if ((xhr.readyState == 4) && (xhr.status == 200 )) {
-        this.users = JSON.parse(xhr.responseText);
-      if(refresher){
-        refresher.complete();
-      }
-    }
-  }
-    //Ruf reloadteam.php mit den entsprechenden Parametern auf
-    if (this.globVars.testFlag == 0) {
-      xhr.open("GET", "https://ordination-kutschera.at/zen/php/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction=" + direction, true);
-    }
-    else {
-        xhr.open("GET", "/server/zen/php/reloadteam.php?companyid=" + this.globVars.globCurrUser.companyid + "&sortby=" + sortby + "&direction=" + direction, true);
-    }
-  xhr.send();
+  this._refListener = this.asprovider.getTeamPHPContents(refresher).subscribe(users => {
+    this.users = users;
+  });
 };
     //BACKEND-Backup
       // Falls mit Parameter aufgerufen -> Refresher-Objekt für Pull-Reload

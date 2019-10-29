@@ -6,6 +6,8 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { ToastController } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 
+import { AutoStatusUpdateProvider } from '../../providers/auto-status-update/auto-status-update';
+
 @Component({
   templateUrl: 'timestamppro.html',
   selector: 'page-timestamppro'
@@ -14,7 +16,7 @@ import { Platform } from 'ionic-angular';
 export class TimestampProPage {
 @ViewChild('focusInput') myInput;
 
-  constructor(public globVars: GlobalVars, public navCtrl: NavController, public platform: Platform, public keyboard: Keyboard, private toastCtrl: ToastController)
+  constructor(public globVars: GlobalVars, public navCtrl: NavController, public platform: Platform, public keyboard: Keyboard, private toastCtrl: ToastController, public asprovider: AutoStatusUpdateProvider)
   {
     var currStatusNr = 0;
     this.globVars.timer=this.globVars.logoutTime;
@@ -28,6 +30,7 @@ export class TimestampProPage {
     this.globVars.workTimeCounter();
 
     this.globVars.initBuchungen();
+
   }
 
   ionViewDidEnter() {
