@@ -19,6 +19,8 @@ export class AutoStatusUpdateProvider {
   private _timerlistener: Subscription = new Subscription(); // beim Schliessen unsubscribe, damit keine Memory Leaks enstehen koennen
   public subject$ = new Subject<any>();
   public timer$: Observable<number> = Observable.interval(this.globVars.autoStatusRefreshTime);
+
+  public toastMsgs: any = []; // list of displayed messages
   constructor(public globVars: GlobalVars, private toastCtrl: ToastController /*, public http: Http*/) {
 
     //AutoStatusCheck:
@@ -54,9 +56,10 @@ export class AutoStatusUpdateProvider {
                                                    && configdata[this.globVars.globCurrUser.name]['names'].includes(users[0]['name'])
                                                    && configdata[this.globVars.globCurrUser.name]['tsTypes'].includes(users[0]['status']))))
                 {
+                  this.toastMsgs.push('Statusänderung von ' + users[0]['name'] + ' auf ' + users[0]['status'] + ".");
                   let toast = this.toastCtrl.create({
-                    message: 'Statusänderung von ' + users[0]['name'] + ' auf ' + users[0]['status'] + '.',
-                    duration: 4000,
+                    message: this.toastMsgs.toString().split(",").join("\n"),
+                    duration: this.globVars.autoStatusToastTime,
                     showCloseButton: false,
                     position: 'middle'
                   });
@@ -93,7 +96,7 @@ export class AutoStatusUpdateProvider {
           }
         }
         if (this.globVars.testFlag == 0) {
-          namexhr.open("GET", "https://ordination-kutschera.at/zen_bet/assets/autostatusconfig2.json", true);
+          namexhr.open("GET", "https://ordination-kutschera.at/zen_bet/assets/autostatusconfig" + this.globVars.globCurrUser.companyid + ".json", true);
         }
         else {
           namexhr.open("GET", "assets/autostatusconfig2.json", true);

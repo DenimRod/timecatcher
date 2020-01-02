@@ -27,6 +27,9 @@ ion-content {
   }
 }
 
+.toast-message { // damit kann "\n" in Toasts als Zeilentrenner verwendet werden
+  white-space: pre-line;
+}
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These

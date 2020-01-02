@@ -10,7 +10,7 @@ import { Message } from '../models/message.model';
 @Injectable()
 export class GlobalVars {
   public appNameVers:string="KD-ZEN";
-  public appVers:string="V1.6"
+  public appVers:string="V1.7"
   public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                                //AutoLogin Tristan 4
                                 //ausliefern: 0!!!
@@ -35,7 +35,8 @@ export class GlobalVars {
   */
   public autoLogout = false; // steuert den Logout-Timer
   public autoStatusCheck = false; // Automatische Benachrichtigung bei Statusaenderung
-  public autoStatusRefreshTime = 5000; // Aktualisierung der Statusaenderung alle . ms
+  public autoStatusRefreshTime = 10000; // Aktualisierung der Statusaenderung alle . ms
+  public autoStatusToastTime = 30000; // Anzeige der Statusaenderung dauert . ms
 
   public logoutTime:number = 10;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
   public pinLength:number = 3;  // Länge des Login-Pins
@@ -586,7 +587,7 @@ Def: AS = alter status, NS = neuer Status
         //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
         //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
             //# in URL nicht erlaubt!
-          tempUser.lastcomment = encodeURIComponent(this.comment);
+          tempUser.lastcomment = this.comment;
           tempUser.status=stampType;
 
       //Ab Hier DB-Action! --> Umbau auf PHP
@@ -598,7 +599,7 @@ Def: AS = alter status, NS = neuer Status
               this.globCurrUser = JSON.parse(JSON.stringify(tempUser));
           }
           else {
-            console.log("Error in UpdateUser: statustext="+xhr.statustext);
+            console.log("Error in UpdateUser: statusText="+xhr.statusText);
             let toast = this.toastCtrl.create({
               message: 'Fehler beim Übertragen - Zeitstempel abgebrochen',
               duration: 4000,
@@ -655,7 +656,7 @@ Def: AS = alter status, NS = neuer Status
               };
             }
             else {
-              console.log("Error in MakeStamp: statustext="+xhr.statustext);
+              console.log("Error in MakeStamp: statusText="+xhr.statusText);
               let toast = this.toastCtrl.create({
                 message: 'Keine Verbindung zum Server - Zeitstempel abgebrochen',
                 duration: 4000,
@@ -748,7 +749,9 @@ xhr.onreadystatechange = () => {
     let todayIndexBorder=-1;
     let todayDate = new Date();
 
-    while (i<res.data.length) {            //Such den ersten TS != heute
+
+    //while (i<res.data.length) {            //Such den ersten TS != heute
+    while (i<res.data.length-1) { // 7.12.19 Tristan
       if(res.data[i].date.substr(0,10) !=     todayDate.toISOString().substr(0,10))
       {
         todayIndexBorder = i;
@@ -757,6 +760,7 @@ xhr.onreadystatechange = () => {
       }
       i++;
     }
+
     //i=0;         //falls alle TS von heute -> Ende = Ende d. Liste
     if (todayIndexBorder==-1) todayIndexBorder = res.data.length + 1;
 
@@ -782,6 +786,7 @@ xhr.onreadystatechange = () => {
     let lastDayIndexBorder = todayIndexBorder;
     if(todayIndexBorder != res.data.length + 1) {
         //kreiere ein neues Referenzdatum = lastday und speichere es global
+
       let lastDay = res.data[i].date.substr(0,10);
       this.lastWorkDay = new Date(lastDay);
         //Setz die Uhrzeit auf 00:00 (sollte immer lokaler Zeit entsprechen)

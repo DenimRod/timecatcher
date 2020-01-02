@@ -33,14 +33,24 @@
 
 <!-- Anzeige der TS eines Monats und Berechnung der Arbeitszeit pro Tag -->
 
-<ion-row>
-  <ion-col col-6 class="noborder">
-    <button ion-button full (click)="setActualMonth()">Aktueller Monat</button>
-  </ion-col>
-  <ion-col col-6 class="noborder">
-    <button ion-button full (click)="setActualWeek()">Aktuelle Woche</button>
-  </ion-col>
-</ion-row>
+<ion-grid>
+  <ion-row>
+    <ion-col class="noborder">
+      <button ion-button full (click)="setMonth(0)">Aktueller Monat</button>
+    </ion-col>
+    <ion-col class="noborder">
+      <button ion-button full (click)="setWeek(0)">Aktuelle Woche</button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col class="noborder">
+      <button ion-button full (click)="setMonth(1)">Letzter Monat</button>
+    </ion-col>
+    <ion-col class="noborder">
+      <button ion-button full (click)="setWeek(1)">Letzte Woche</button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
 
 <ion-list>
   <ion-item>

@@ -76,22 +76,23 @@ export class ExtrasPage {
 */
 //  alert('nach dialogs');
 
-public setActualMonth(){
+// offset bezeichnet die Verschiebung des Monats um . Monate nach hinten
+public setMonth(offset: number){
   var date = new Date();
-  var datebuf = new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0);
+  var datebuf = new Date(date.getFullYear(), date.getMonth() - offset, 1, 0, 0, 0, 0);
   this.wtInterval.start = datebuf.toISOString();
-  datebuf = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
+  datebuf = new Date(date.getFullYear(), date.getMonth() - offset + 1, 0, 23, 59, 59, 999);
   this.wtInterval.end = datebuf.toISOString();
 
 }
 
-public setActualWeek(){
+// offset bezeichnet die Verschiebung der Woche um . Wochen nach hinten
+public setWeek(offset: number){
   var date = new Date();
-  var datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - ((date.getDay()-1) % 7), 0, 0, 0, 0);
+  var datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - ((date.getDay()-1) % 7) - 7*offset, 0, 0, 0, 0);
   this.wtInterval.start = datebuf.toISOString();
-  datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - ((date.getDay()-1) % 7) + 6, 23, 59, 59, 999);
+  datebuf = new Date(date.getFullYear(), date.getMonth(), date.getDate() - ((date.getDay()-1) % 7) - 7*offset + 6, 23, 59, 59, 999);
   this.wtInterval.end = datebuf.toISOString();
-
 }
 
 public calcIntervalPHP(){

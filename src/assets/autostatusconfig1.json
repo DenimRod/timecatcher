@@ -1,0 +1,92 @@
+{
+    "Alex": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Angelika": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "David": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Horst": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Julian": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Klarissa": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Marcel": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Richie": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Romeo": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Sigi": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Stefan": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Susanna": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "Thomas": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    }
+}
