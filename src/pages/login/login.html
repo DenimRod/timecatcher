@@ -42,6 +42,12 @@
     <ion-checkbox [(ngModel)]="this.globVars.autoStatusCheck" color="dark" checked="false"></ion-checkbox>
   </ion-item>
 
+  <!-- Checkbox fuer Terminal-Funktion: -->
+  <ion-item>
+    <ion-label> = Terminal-Funktion</ion-label>
+    <ion-checkbox [(ngModel)]="this.globVars.isTerminal" color="dark" checked="false" [disabled]="!this.globVars.autoStatusCheck"></ion-checkbox>
+  </ion-item>
+
 
   <span>
     <p align="center">{{loginfehler}} </span>

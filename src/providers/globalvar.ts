@@ -11,7 +11,7 @@ import { Message } from '../models/message.model';
 export class GlobalVars {
   public appNameVers:string="KD-ZEN";
   public appVers:string="V1.7"
-  public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
+  public testFlag:number = 1;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                                //AutoLogin Tristan 4
                                 //ausliefern: 0!!!
   public comment:string="";
@@ -35,8 +35,12 @@ export class GlobalVars {
   */
   public autoLogout = false; // steuert den Logout-Timer
   public autoStatusCheck = false; // Automatische Benachrichtigung bei Statusaenderung
-  public autoStatusRefreshTime = 10000; // Aktualisierung der Statusaenderung alle . ms
-  public autoStatusToastTime = 30000; // Anzeige der Statusaenderung dauert . ms
+  public autoStatusRefreshTime = 5000; // Aktualisierung der Statusaenderung alle . ms
+  public autoStatusToastTime = 5000; // Anzeige der Statusaenderung dauert . ms
+  public autoStatusToastNumber = 5; // Zeige hoechstens . Statusmeldungen gleichzeitig an
+
+  public isTerminal = false; // Terminal-Funktion
+  public isLoggedIn = false; // Terminal-Funktion
 
   public logoutTime:number = 10;//20*60*60; // = 20*60*60 Sekunden= 20 Stunden - einmal pro Tag
   public pinLength:number = 3;  // Länge des Login-Pins

@@ -9,6 +9,8 @@ import { Platform } from 'ionic-angular';
 //import { Dialogs } from '@ionic-native/dialogs';
 import { NFC, Ndef } from '@ionic-native/nfc';
 
+import { AutoStatusUpdateProvider } from '../../providers/auto-status-update/auto-status-update';
+
 
 
 //import { LocalNotifications } from 'ionic-native';
@@ -35,7 +37,7 @@ export class LoginPage {
 
     //private backand: BackandService, private dialogs: Dialogs,
   constructor(public navCtrl: NavController, public globVars: GlobalVars,
-     public plt: Platform, private nfc: NFC, private ndef: Ndef
+     public plt: Platform, private nfc: NFC, private ndef: Ndef, public asprovider: AutoStatusUpdateProvider
      // private localNotifications: LocalNotifications
   ) {
 
@@ -318,6 +320,10 @@ public checkUserPHP(){
           xhr1.open("GET", "/server/zen/php/createlogin.php?jsonString=" + jsonLogin, true);
         }
         xhr1.send();
+
+        // set Login-Flag
+        this.globVars.isLoggedIn = true;
+
           //Check Userlevel pro/normal
         if (this.globVars.globCurrUser.applevel == "pro")  this.navCtrl.push(TabsProPage);
         else this.navCtrl.push(TabsPage);

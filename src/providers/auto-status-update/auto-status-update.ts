@@ -23,86 +23,106 @@ export class AutoStatusUpdateProvider {
   public toastMsgs: any = []; // list of displayed messages
   constructor(public globVars: GlobalVars, private toastCtrl: ToastController /*, public http: Http*/) {
 
+    this.globVars.globCurrUser = {companyid:2};
+
     //AutoStatusCheck:
-    if (this.globVars.autoStatusCheck)
-    {
-      var userbuf: any[];
-      this.getTeamPHPContents(null).subscribe(users => {
-        userbuf = users;
-      });
+    var userbuf: any[];
+    this.getTeamPHPContents(null).subscribe(users => {
+      userbuf = users;
+    });
 
-      //Namen, fuer die Benachrichtigungen erwuenscht sind, auslesen
-      var configdata: any;
-      var namexhr = new XMLHttpRequest();
-      namexhr.onreadystatechange = () => {
-        if (namexhr.readyState == 4) {
-          if (namexhr.status == 200) {
-            configdata = JSON.parse(namexhr.responseText);
-          }
-          //Startet alle autoStatusRefreshTime Millisekunden
-          this._timerlistener = this.timer$.subscribe(() => {
-              this.getTeamPHPContents(null).subscribe(users => {
+    //Namen, fuer die Benachrichtigungen erwuenscht sind, auslesen
+    var configdata: any;
+    var namexhr = new XMLHttpRequest();
+    namexhr.onreadystatechange = () => {
+      if (namexhr.readyState == 4) {
+        if (namexhr.status == 200) {
+          configdata = JSON.parse(namexhr.responseText);
+        }
+        //Startet alle autoStatusRefreshTime Millisekunden
+        this._timerlistener = this.timer$.subscribe(() => {
+          if (this.globVars.autoStatusCheck && (this.globVars.isLoggedIn || this.globVars.isTerminal)) {
+            this.getTeamPHPContents(null).subscribe(users => {
 
-                // aktualisiere TeamPage, falls aktiv
-                this.subject$.next(users);
+              // aktualisiere TeamPage, falls aktiv
+              this.subject$.next(users);
+              var displayChange: boolean;
 
-                // eigene Statusaenderung soll nicht angezeigt werden
-                // vergleiche Zeitstempel
-                // ob Name im Configfile
-                // ob tsTyp im Configfile
-                if ((users[0]['name'] != this.globVars.globCurrUser.name)
-                      &&(userbuf[0]['lasttimestampISO'] != users[0].lasttimestampISO)
-                      &&(namexhr.status != 200 || (typeof configdata[this.globVars.globCurrUser.name] !== 'undefined'
-                                                   && configdata[this.globVars.globCurrUser.name]['names'].includes(users[0]['name'])
-                                                   && configdata[this.globVars.globCurrUser.name]['tsTypes'].includes(users[0]['status']))))
-                {
-                  this.toastMsgs.push('Statusänderung von ' + users[0]['name'] + ' auf ' + users[0]['status'] + ".");
-                  let toast = this.toastCtrl.create({
-                    message: this.toastMsgs.toString().split(",").join("\n"),
-                    duration: this.globVars.autoStatusToastTime,
-                    showCloseButton: false,
-                    position: 'middle'
-                  });
-                  toast.onDidDismiss(() => {});
-                  toast.present();
 
-                  switch(users[0].status) {
-                    case this.globVars.tsTyp[1]:
-                    case this.globVars.tsTyp[2]:
-                    case this.globVars.tsTyp[3]:
-                    case this.globVars.tsTyp[4]:
-                    case this.globVars.tsTyp[5]:
-                    case this.globVars.tsTyp[6]:
-                      this.soundNotif(0); // Sound: Arbeit an
-                      break;
-                    case this.globVars.tsTyp[7]:
-                      this.soundNotif(1); // Sound: Pause
-                      break;
-                    case this.globVars.tsTyp[8]:
-                      this.soundNotif(2); // Sound: Urlaub
-                      break;
-                    case this.globVars.tsTyp[9]:
-                      this.soundNotif(3); // Sound: Arbeit aus
-                      break;
-                    case this.globVars.tsTyp[0]:
-                      this.soundNotif(4); // Sound: Krank
-                    default:
-                      console.log('ASU: Invalid Status detected.');
-                  }
+              if (this.globVars.isLoggedIn) {
+                displayChange = (users[0]['name'] != this.globVars.globCurrUser.name)
+                              &&(userbuf[0]['lasttimestampISO'] != users[0].lasttimestampISO)
+                              &&(namexhr.status != 200 || (typeof configdata[this.globVars.globCurrUser.name] !== 'undefined'
+                                                       && configdata[this.globVars.globCurrUser.name]['names'].includes(users[0]['name'])
+                                                       && configdata[this.globVars.globCurrUser.name]['tsTypes'].includes(users[0]['status'])))
+              }
+              else if (this.globVars.isTerminal) {
+                displayChange = (userbuf[0]['lasttimestampISO'] != users[0].lasttimestampISO)
+                              &&(namexhr.status != 200 || (typeof configdata['TERMINAL'] !== 'undefined'
+                                                       && configdata['TERMINAL']['names'].includes(users[0]['name'])
+                                                       && configdata['TERMINAL']['tsTypes'].includes(users[0]['status'])))
+              }
+              else { // occurs, when not logged in and terminal function is disabled
+                displayChange = false;
+              }
+
+              if (displayChange)
+              {
+                var currentdate = new Date();
+                if (this.toastMsgs.length >= this.globVars.autoStatusToastNumber){ // only display as many status texts as wished
+                  this.toastMsgs.shift();
                 }
-                userbuf = users;
-              });
+                this.toastMsgs.push(currentdate.getHours() + ':' + currentdate.getMinutes() + ':' + currentdate.getSeconds() + ': '
+                                  + users[0]['name'] + ' - ' + users[0]['status'] + ".");
+
+                let toast = this.toastCtrl.create({
+                  message: this.toastMsgs.toString().split(",").join("\n"),
+                  duration: this.globVars.autoStatusToastTime,
+                  showCloseButton: true,
+                  position: 'middle'
+                });
+                toast.onDidDismiss(() => {});
+                toast.present();
+
+                switch(users[0].status) {
+                  case this.globVars.tsTyp[1]:
+                  case this.globVars.tsTyp[2]:
+                  case this.globVars.tsTyp[3]:
+                  case this.globVars.tsTyp[4]:
+                  case this.globVars.tsTyp[5]:
+                  case this.globVars.tsTyp[6]:
+                    this.soundNotif(0); // Sound: Arbeit an
+                    break;
+                  case this.globVars.tsTyp[7]:
+                    this.soundNotif(1); // Sound: Pause
+                    break;
+                  case this.globVars.tsTyp[8]:
+                    this.soundNotif(2); // Sound: Urlaub
+                    break;
+                  case this.globVars.tsTyp[9]:
+                    this.soundNotif(3); // Sound: Arbeit aus
+                    break;
+                  case this.globVars.tsTyp[0]:
+                    this.soundNotif(4); // Sound: Krank
+                  default:
+                    console.log('ASU: Invalid Status detected.');
+                }
+              }
+              userbuf = users;
             });
           }
-        }
-        if (this.globVars.testFlag == 0) {
-          namexhr.open("GET", "https://ordination-kutschera.at/zen_bet/assets/autostatusconfig" + this.globVars.globCurrUser.companyid + ".json", true);
-        }
-        else {
-          namexhr.open("GET", "assets/autostatusconfig2.json", true);
-        }
-        namexhr.send();
+        });
       }
+    }
+    if (this.globVars.testFlag == 0) {
+      var id: any;
+      namexhr.open("GET", "https://ordination-kutschera.at/zen_bet/assets/autostatusconfig" + this.globVars.globCurrUser.companyid + ".json", true);
+    }
+    else {
+      namexhr.open("GET", "assets/autostatusconfig2.json", true);
+    }
+    namexhr.send();
+
   }
 
   ngOnDestroy() {

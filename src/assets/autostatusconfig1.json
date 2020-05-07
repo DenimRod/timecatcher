@@ -88,5 +88,12 @@
                 "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
       "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
                   "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
+    },
+
+    "TERMINAL": {
+      "names":[ "Alex", "Angelika", "David", "Horst", "Julian", "Klarissa",
+                "Marcel", "Richie", "Romeo", "Sigi", "Stefan", "Susanna", "Thomas"],
+      "tsTypes":[ "Krank", "Arbeit EIN", "AD-Fahrt", "Tele-Arbeit", "AD-Kunde",
+                  "Projekt 1", "Projekt 2", "Pause EIN", "Urlaub", "Arbeit AUS"]
     }
 }
