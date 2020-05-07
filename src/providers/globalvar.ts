@@ -10,11 +10,12 @@ import { Message } from '../models/message.model';
 @Injectable()
 export class GlobalVars {
   public appNameVers:string="KD-ZEN";
-  public appVers:string="V1.7"
-  public testFlag:number = 1;  //lokal = 1, AutoLogin Julian 2, Richie 3,
+  public appVers:string="V1.8"
+  public testFlag:number = 0;  //lokal = 1, AutoLogin Julian 2, Richie 3,
                                //AutoLogin Tristan 4
                                 //ausliefern: 0!!!
   public comment:string="";
+  public commentSave:string="";
   public globCurrComp:any;
   public globCurrUser:any;  // wird aus DB übernommen
 
@@ -567,7 +568,6 @@ Def: AS = alter status, NS = neuer Status
       // "--clientMillisec:"+clientMillisec+"clientDateDiff:"+this.clientDateDiff+ "Test-Ende!");
       if (this.serverDate <= newDate) {  //die Korrektur-Buchung ist NICHT in der Zukunft
         if (this.serverDate > lastTimeStamp) {  //die Buchung sollte auch auf TOP angezeigt werden
-      // alert("das zu buchende Datum ist neuer als der letzte Timestamp");
       // normale Buchung vorbereiten
 
       // Server-Zeitproblem auf KD-Desktops -> geht 10 min vor - Workaround
@@ -590,17 +590,22 @@ Def: AS = alter status, NS = neuer Status
           tempUser.lasttimestampISO = this.serverDate.toISOString(); //schreibt in Orts-Zeit
         //this.globCurrUser.lasttimestampUTC = this.localDate.toUTCString(); //schreibt in ISO Zeit
         //  this.globCurrUser.lasttimestampUTC_d = this.localDate; //schreibt in Backand-"Date"-Feld -> ISO-Zeit
-            //# in URL nicht erlaubt!
-          tempUser.lastcomment = this.comment;
-          tempUser.status=stampType;
 
-      //Ab Hier DB-Action! --> Umbau auf PHP
+            //# in URL nicht erlaubt! Muss daher "encodet" werden!
+          tempUser.lastcomment = encodeURIComponent(this.comment);
+          tempUser.status=stampType;
+            //Da this.comment später geleert wird, wird der Originalkommentar gespeichert
+          this.commentSave = this.comment
+
+      //Ab Hier DB-Action!
       var xhr = new XMLHttpRequest();
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState == 4) {
           if(xhr.status==200){
               this.globCurrUser = JSON.parse(JSON.stringify(tempUser));
+              // Wiederherstellung des "uncodierten" Originalkommentars mit #
+            this.globCurrUser.lastcomment = this.commentSave;
           }
           else {
             console.log("Error in UpdateUser: statusText="+xhr.statusText);
@@ -623,9 +628,6 @@ Def: AS = alter status, NS = neuer Status
         }
 
       xhr.send();
-        //rücksetzen der Raute im lokalen GlobCurrUser-Objekt
-      this.globCurrUser.lastcomment = this.comment;
-
       };
          // if-Ende: "normale Buchung" vorbereiten
          // if "autoLogout" = Kennung vorläufig für HAUPT-Terminal
